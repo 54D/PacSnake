@@ -2,6 +2,32 @@
 
 comp2012h best course
 
+## First steps to Qt
+
+### Installation
+
+Steps:
+1. Head to Qt's download section: https://www.qt.io/download.
+2. Scroll down and click **Go open source**.
+3. Scroll down and click **Download the Qt Online Installer**.
+4. Click **Download**. The file is around 22,400 KB.
+5. Open the installer, and go through the sections one by one. Some (probably) important options include:
+    - You need to register a free Qt account upon reaching the **Welcome** section.
+    - Expect around gigabytes of files to be downloaded in total, so choose a custom installation location if needed in the **Installation Folder** section.
+    - Important -- In **Select Components** section, you need to manually select the components to download. The default options are not enough. 
+        + In Qt --> Developer and Designer Tools, select a MinGW distribution. For instance, I selected MinGW 8.1.0 x64.
+        + In Qt --> Qt (any verison), select the SAME MinGW distribution. For instance, I selected Qt 5.15.1 --> MinGW 8.1.0 x64
+    - The rest are straightforward enough. Aggregating all the necessary tools to download, the total size should not reach 5 GB.
+6. Now wait and do whatever you want, there'll be a lot of files downloaded.
+
+Useful links:
+- No useful kits found: https://forum.qt.io/topic/84198/no-valid-kits-found or https://stackoverflow.com/questions/26499404/
+
+### Project init
+
+Useful links: 
+- Qt quick project kickstart: https://doc.qt.io/qtcreator/quick-projects.html
+
 ## git cheatsheet
 
 ### Better way: GitHub Desktop
