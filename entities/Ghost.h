@@ -15,6 +15,7 @@ private:
 	double speed {INIT_SPEED};
 };
 
+
 double Ghost::INIT_SPEED = 0.75;
 
 #endif /* GHOST_H_ */

@@ -8,6 +8,9 @@ public:
 
 	Fruit();
 	virtual ~Fruit();
+	
+	int get_row() const;
+	int get_col() const;
 
 protected:
 	int row, col;

@@ -8,6 +8,9 @@ public:
 	GameMap();
 	~GameMap();
 	
+	int get_num_row() const;
+	int get_num_col() const;
+
 private:
 	int num_row, num_col;
 };

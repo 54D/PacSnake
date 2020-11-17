@@ -1,9 +1,9 @@
 #ifndef SNAKEBODY_H_
 #define SNAKEBODY_H_
 
-#include "Body.h"
+#include "../entities/EntitiesBody.h"
 
-class SnakeBody : public Body {
+class SnakeBody : public EntitiesBody {
 public:
 	SnakeBody();
 	virtual ~SnakeBody();
