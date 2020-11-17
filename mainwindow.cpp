@@ -25,6 +25,7 @@ void MainWindow::on_pushButton_clicked()
     scene->addItem(snake);
     snake->setFlag(QGraphicsItem::ItemIsFocusable);
     snake->setFocus();
-    QGraphicsView *view = new QGraphicsView(scene);
-    view->show();
+    ui->graphicsView->show(scene);
+    //QGraphicsView *view = new QGraphicsView(scene);
+    //view->show();
 }

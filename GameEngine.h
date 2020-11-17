@@ -3,15 +3,17 @@
 
 #include <QTcore>
 
-
-/*
-#include <QEventLoop>
-
-class loop: public QEventLoop{
+class Timer : public QObject{
+    Q_OBJECT
+    
 public:
-    void keyPressEvent(QKeyEvent * event);
+    Timer();
+    QTimer *timer;
+    
+public slots:
+    void Myslot();
 };
-*/
+
 
 
 

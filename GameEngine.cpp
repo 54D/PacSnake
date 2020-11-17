@@ -1,11 +1,13 @@
-/*#ifndef GAMEENGINE_H
-#define GAMEENGINE_H
+#include "GameEngine.h"
+#include <QTCore>
+#include <QtDebug>
 
-#include <QEventLoop>
+Timer::Timer(){
+    timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT());
+}
 
-class loop: public QEventLoop{
-public:
-    void keyPressEvent(QKeyEvent * event);
-};
+void Timer::Myslot(){
 
-#endif // GAMEENGINE_H*/
+   qDebug() << "Testing";
+}
