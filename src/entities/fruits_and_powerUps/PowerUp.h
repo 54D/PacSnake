@@ -1,7 +1,7 @@
 #ifndef POWERUP_H_
 #define POWERUP_H_
 
-#include "../fruits_and_powerUps/Fruit.h"
+#include "Fruit.h"
 
 class PowerUp : public Fruit {
 public:

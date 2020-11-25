@@ -1,6 +1,9 @@
 #ifndef GHOST_H_
 #define GHOST_H_
 
+// TODO
+// Include header
+
 class Ghost {
 public:
 	// Need to discuss on the other type of ghost
@@ -13,6 +16,8 @@ public:
 private:
 	GhostType type;
 	double speed {INIT_SPEED};
+
+	int health;
 };
 
 
