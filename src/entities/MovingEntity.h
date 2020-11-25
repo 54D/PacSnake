@@ -12,8 +12,8 @@ public:
 	double get_speed() const;
 	Direction get_headingDirection() const;
 
-	void set_speed(double speed);
-	void set_headingDirection(MovingEntity::Direction headingDirection);
+	virtual void set_speed(double speed);
+	virtual void set_headingDirection(MovingEntity::Direction headingDirection);
 	
 protected:
 	MovingEntity();

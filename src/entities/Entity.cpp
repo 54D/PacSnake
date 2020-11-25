@@ -23,6 +23,11 @@ void Entity::set_coordinate(double row, double col) {
 	this->col = col;
 }
 
+void Entity::set_relative_coordinate(double delta_row, double delta_col) {
+	this->row = row + delta_row;
+	this->col = col + delta_col;
+}
+
 Entity::Entity() {}
 
 Entity::Entity(double row, double col) : 

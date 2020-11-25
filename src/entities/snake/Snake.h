@@ -13,15 +13,23 @@ public:
 	static double INIT_SPEED;
 	static const int MAX_PU = 3;
 
-	Snake(double row, double col, double speed, Direction headingDirection = Direction::NORTH);
+	Snake(double row, double col, double speed = INIT_SPEED, Direction headingDirection = Direction::NORTH);
 	virtual ~Snake();
 
 	int get_max_health() const;
 	int get_health() const;
 	int get_length() const;
 
+	virtual void set_headingDirection(Direction headingDirection);
+
+	// The WHOLE snake will move forward base on its speed and each parts' headingDirection 
+	void move_forward();
+	virtual void set_speed(double speed);
+
 	// TODO
-	// Set whole Snake position and speed
+	void remove_tail(int index);
+	void remove_tail(SnakeBody* index);
+
 private:
 	int max_health {INIT_HEALTH};
 	int health {INIT_HEALTH};

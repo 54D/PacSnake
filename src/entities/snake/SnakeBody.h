@@ -1,7 +1,7 @@
 #ifndef SNAKEBODY_H_
 #define SNAKEBODY_H_
 
-#include "src/entities/MovingEntity.h"
+#include "../MovingEntity.h"
 
 class SnakeBody : public MovingEntity {	
 public:
