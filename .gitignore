@@ -39,4 +39,4 @@
 # Qt Project specificatiaons
 CMakeLists.txt
 *.pro
-*.user
+*.user*
