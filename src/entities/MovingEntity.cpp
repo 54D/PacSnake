@@ -11,6 +11,9 @@ MovingEntity::Direction MovingEntity::get_headingDirection() const {
 }
 
 void MovingEntity::set_speed(double speed) {
+	if (speed < 0.0)
+		return;
+		
 	this->speed = speed;
 }
 

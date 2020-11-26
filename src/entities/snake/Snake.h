@@ -5,7 +5,7 @@
 #include "SnakeBody.h"
 #include "../fruits_and_powerUps/PowerUp.h"
 
-// The "brain" of the snake, consider as a moving entity of snake as well
+// The "head / brain" of the snake, consider as a moving entity of snake as well
 class Snake : public SnakeBody {	
 public:
 	static const int INIT_HEALTH = 3;
@@ -13,22 +13,31 @@ public:
 	static double INIT_SPEED;
 	static const int MAX_PU = 3;
 
-	Snake(double row, double col, double speed = INIT_SPEED, Direction headingDirection = Direction::NORTH);
+	Snake(double row, double col, double speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
 	virtual ~Snake();
 
 	int get_max_health() const;
 	int get_health() const;
 	int get_length() const;
 
-	virtual void set_headingDirection(Direction headingDirection);
+	virtual void set_headingDirection(Direction headingDirection); 
+	void set_health(int health);
+	void set_relative_health(int delta_health);
 
 	// The WHOLE snake will move forward base on its speed and each parts' headingDirection 
 	void move_forward();
 	virtual void set_speed(double speed);
 
-	// TODO
+	// Increase / Decrease the length of the Snake
+	// Increase the length of Snake by length at the end of Snake
+	void increase_length(int length);
+
+	// Remove the tail of Snake after the index
+	// index = 0 is Snake ("head / brain" of the snake)
+	// index = 1 is the first snakeBody after Snake
+	// index = length - 1 is the last SankeBody
 	void remove_tail(int index);
-	void remove_tail(SnakeBody* index);
+	void remove_tail(SnakeBody* snakeBody);
 
 private:
 	int max_health {INIT_HEALTH};

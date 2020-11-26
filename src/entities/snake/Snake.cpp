@@ -4,26 +4,26 @@
 
 double Snake::INIT_SPEED = 1.0;
 
-Snake::Snake(double row, double col, double speed, Direction headingDirection) :
+Snake::Snake(double row, double col, double speed, Direction headingDirection, int max_health, int length) :
 	SnakeBody(row, col, speed, headingDirection), 
-	max_health(INIT_HEALTH), health(INIT_HEALTH), length(INIT_LENGTH), 
+	max_health(max_health), health(max_health), length(length), 
 	pu_inventory(MAX_PU, PowerUp::PowerUpType::NONE), pu_active(PowerUp::PowerUpType::NONE)
 	{
 	// Initialise SnakeBody by creating a linked list
 	double temp_row = row;
 	double temp_col = col;
-	SnakeBody* lastSnakeBody = this;
+	SnakeBody* prevSnakeBody = this;
 	for (int i = 0; i < length; i++) {
 		switch (headingDirection) {
 			case Direction::NORTH: 	temp_row += 1.0;	break;
-			case Direction::EAST:	temp_col += 1.0;	break;
+			case Direction::EAST:	temp_col -= 1.0;	break;
 			case Direction::SOUTH:	temp_row -= 1.0;	break;
-			case Direction::WEST:	temp_col -= 1.0;	break;
+			case Direction::WEST:	temp_col += 1.0;	break;
 		}
 		SnakeBody* currentSnakeBody = new SnakeBody {temp_row, temp_col, speed, headingDirection};
-		lastSnakeBody->next = currentSnakeBody;
-		currentSnakeBody->prev = lastSnakeBody;
-		lastSnakeBody = currentSnakeBody;
+		prevSnakeBody->next = currentSnakeBody;
+		currentSnakeBody->prev = prevSnakeBody;
+		prevSnakeBody = currentSnakeBody;
 	}
 }
 
@@ -50,7 +50,7 @@ int Snake::get_length() const {
 }
 
 void Snake::set_headingDirection(Direction headingDirection) {
-	// Avoid headingDirection is the opposite of the current headingDirection
+	// Avoid setting the headingDirection the opposite of the current headingDirection
 	if (this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH ||
 		this->headingDirection == Direction::EAST && headingDirection == Direction::WEST ||
 		this->headingDirection == Direction::SOUTH && headingDirection == Direction::NORTH ||
@@ -60,9 +60,35 @@ void Snake::set_headingDirection(Direction headingDirection) {
 		this->headingDirection = headingDirection;
 }
 
+void Snake::set_health(int health) {
+	// If the input is out-of-bound, make it to 0 or max_health
+	if (health < 0) {
+		this->health = 0;
+		return;
+	}
+	else if (health > max_health) {
+		this->health = max_health;
+	}
+	else
+		this->health = health;
+}
+
+void Snake::set_relative_health(int delta_health) {
+	// If the input is out-of-bound, make it to 0 or max_health
+	if ((health + delta_health) < 0) {
+		health = 0;
+		return;
+	}
+	else if ((health + delta_health) > max_health) {
+		health = max_health;
+	}
+	else
+		health = health + delta_health;
+}
+
 void Snake::move_forward() {
 	SnakeBody* currentSnakeBody = this;
-	Direction currentHeadingDirection, lastHeadingDirection;
+	Direction currentHeadingDirection, prevHeadingDirection;
 	while (currentSnakeBody != nullptr) {
 		// As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate 
 		switch(currentSnakeBody->headingDirection) {
@@ -75,10 +101,9 @@ void Snake::move_forward() {
 		currentHeadingDirection = currentSnakeBody->headingDirection;
 		// Change headingDiection according to the last snakeBody
 		if (currentSnakeBody->prev != nullptr) {
-			currentSnakeBody->headingDirection = lastHeadingDirection;
+			currentSnakeBody->headingDirection = prevHeadingDirection;
 		}
-		lastHeadingDirection = currentHeadingDirection;
-		
+		prevHeadingDirection = currentHeadingDirection;
 		
 		// Move to next SnakeBody
 		currentSnakeBody = currentSnakeBody->next;
@@ -86,6 +111,9 @@ void Snake::move_forward() {
 }
 
 void Snake::set_speed(double speed) {
+	if (speed < 0.0)
+		return;
+
 	SnakeBody* currentSnakeBody = this;
 	while (currentSnakeBody != nullptr) {
 		currentSnakeBody->speed = speed;
@@ -93,4 +121,67 @@ void Snake::set_speed(double speed) {
 		// Move to next SnakeBody
 		currentSnakeBody = currentSnakeBody->next;
 	}
+}
+
+void Snake::increase_length(int length) {
+	if (length <= 0)
+		return;
+	
+	// Search for end of  SnakeBody (index = length - 1)
+	SnakeBody* endSnakeBody = this;
+	while (endSnakeBody->next != nullptr) {
+		endSnakeBody = endSnakeBody->next;
+	}
+	
+	double temp_row = endSnakeBody->row;
+	double temp_col = endSnakeBody->col;
+	SnakeBody* prevSnakeBody = endSnakeBody;
+	for (int i = 0; i < length; i++) {
+		switch (prevSnakeBody->headingDirection) {
+			case Direction::NORTH: 	temp_row += 1.0;	break;
+			case Direction::EAST:	temp_col -= 1.0;	break;
+			case Direction::SOUTH:	temp_row -= 1.0;	break;
+			case Direction::WEST:	temp_col += 1.0;	break;
+		}
+		SnakeBody* currentSnakeBody = new SnakeBody {temp_row, temp_col, speed, prevSnakeBody->headingDirection};
+		prevSnakeBody->next = currentSnakeBody;
+		currentSnakeBody->prev = prevSnakeBody;
+		prevSnakeBody = currentSnakeBody;
+	}
+
+	// Increase length to Snake
+	this->length += length;
+}
+
+void Snake::remove_tail(int index) {
+	if (index < 0 || index >= length)
+		return;
+		
+	SnakeBody* currentSnakeBody = this;
+	for (int i = 0; i < index; i++) {
+		currentSnakeBody = currentSnakeBody->next;
+	}
+	currentSnakeBody->remove_tail();
+	
+	// Update length
+	currentSnakeBody = this;
+	int count = 0;
+	do {
+		count++;
+		currentSnakeBody = currentSnakeBody->next;
+	} while (currentSnakeBody != nullptr);
+	length = count;
+}
+
+void Snake::remove_tail(SnakeBody* snakeBody) {
+	snakeBody->remove_tail();
+	
+	// Update length
+	SnakeBody* currentSnakeBody = this;
+	int count = 0;
+	do {
+		count++;
+		currentSnakeBody = currentSnakeBody->next;
+	} while (currentSnakeBody != nullptr);
+	length = count;
 }

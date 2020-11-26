@@ -12,6 +12,10 @@ public:
 	const SnakeBody* get_prev() const;
 	const SnakeBody* get_next() const;
 
+protected:
+	// Remove all the SnakeBody after this SnakeBody
+	void remove_tail();
+
 private:
 	SnakeBody* prev {nullptr};
 	SnakeBody* next {nullptr};

@@ -12,3 +12,10 @@ const SnakeBody* SnakeBody::get_prev() const {
 const SnakeBody* SnakeBody::get_next() const {
 	return next;
 }
+
+void SnakeBody::remove_tail() {
+	if (next->next != nullptr)
+		next->remove_tail();
+	delete next;
+	next = nullptr;
+}
