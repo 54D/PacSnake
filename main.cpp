@@ -1,5 +1,6 @@
 // SNADBOX / PLAYGROUND / WHATEVER YOU LIKE TO CALL, JUST USE TO TEST STUFF
 #include <iostream>
+#include <deque>
 #include <windows.h>
 #include <string>
 
@@ -7,6 +8,8 @@
 #include "src/entities/MovingEntity.h"
 #include "src/entities/snake/SnakeBody.h"
 #include "src/entities/snake/Snake.h"
+#include "src/entities/fruits_and_powerUps/PowerUp.h"
+#include "src/entities/fruits_and_powerUps/PU_Dash.h"
 
 using namespace std;
 
@@ -29,8 +32,12 @@ void printMap(Snake* s) {
 	gotoxy(10, 0);
 	currentSB = s;
 	cout << s->get_health() << "/" << s->get_max_health() << "\t" << s->get_speed() << "\t" << s->get_length() << endl; 
-	cout << "Power Up:";
-	// TODO	
+	cout << "Power Up List:";
+	deque<PowerUp::PowerUpType> inventory = s->get_pu_inventory();
+	for (auto it = inventory.begin(); it != inventory.end(); it++) {
+		cout << static_cast<int>(*it) << " ";
+	}
+	cout << "Current PU: " << static_cast<int>(s->get_pu_active()) << endl;	
 	cout << endl;
 	cout << "SnakeBody coord: " << endl;
     while (currentSB != nullptr) {
@@ -79,6 +86,16 @@ int main() {
 				cin >> index;
 				s->remove_tail(index);
 				break;
+			case 'p':
+				char pu;
+				cout << "Enter pu: (d)";
+				cin >> pu;
+				switch (pu) {
+					case 'd':
+						// Call dash constructor and assume it was eaten
+						PU_Dash(0, 0);
+						break;
+				}
 			case 'x':
 				cout << "Exit" << endl;	
 				break;

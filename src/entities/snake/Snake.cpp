@@ -1,5 +1,5 @@
 #include <iostream>
-#include <queue>
+#include <deque>
 #include "src/entities/Entity.h"
 #include "Snake.h"
 
@@ -12,7 +12,7 @@ Snake::Snake(double row, double col, double speed, Direction headingDirection, i
 	{
 	// Inialise pu_inventory
 	for (int i = 0; i < MAX_PU; i++)
-		pu_inventory.push(PowerUp::PowerUpType::NONE);
+		pu_inventory.push_back(PowerUp::PowerUpType::NONE);
 
 	// Initialise SnakeBody by creating a linked list
 	double temp_row = row;
@@ -54,6 +54,14 @@ int Snake::get_length() const {
 	return length;
 }
 
+std::deque<PowerUp::PowerUpType> Snake::get_pu_inventory() const {
+	return pu_inventory;
+}
+
+PowerUp::PowerUpType Snake::get_pu_active() const {
+	return pu_active;
+}
+
 void Snake::set_headingDirection(Direction headingDirection) {
 	// Avoid setting the headingDirection the opposite of the current headingDirection
 	if (this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH ||
@@ -91,6 +99,10 @@ void Snake::set_relative_health(int delta_health) {
 		health = health + delta_health;
 }
 
+void Snake::set_pu_active(PowerUp::PowerUpType powerUp) {
+	pu_active = powerUp;
+}
+
 void Snake::move_forward() {
 	SnakeBody* currentSnakeBody = this;
 	Direction currentHeadingDirection, prevHeadingDirection;
@@ -126,6 +138,17 @@ void Snake::set_speed(double speed) {
 		// Move to next SnakeBody
 		currentSnakeBody = currentSnakeBody->next;
 	}
+}
+
+double Snake::calculate_level_speed() const {
+	// In case some power up affect the speed calculation, return the current value
+	if (pu_active != PowerUp::PowerUpType::NONE)
+		return speed;
+
+	double newSpeed;
+	// TODO: Change an appropraite value 
+	newSpeed = speed * static_cast<double>(fruits_eaten) / 10;
+	return newSpeed;
 }
 
 void Snake::increase_length(int length) {
@@ -193,18 +216,23 @@ void Snake::remove_tail(SnakeBody* snakeBody) {
 
 void Snake::addPUToInventory(PowerUp::PowerUpType& powerUp) {
 	// Push the power up as the last element of the queue
-	pu_inventory.push(powerUp);
+	pu_inventory.push_back(powerUp);
 	// If the inventory, remove the first element in queue
 	if (pu_inventory.size() > MAX_PU) {
-		pu_inventory.pop();
+		pu_inventory.pop_front();
 	}
 }
 
+// TODO
 void Snake::usePU() {
+	// If no power up to use, ignore
+	if (pu_inventory.size() == 0)
+		return;
+	
 	// Get the type of power up
 	PowerUp::PowerUpType puType = pu_inventory.front();
-	pu_inventory.pop();
-	
+	pu_inventory.pop_front();
+
 	// Case switch or use function poiter to call the coreesponding powerup use function
 	switch (puType) {
 

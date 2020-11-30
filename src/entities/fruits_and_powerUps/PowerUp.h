@@ -1,17 +1,18 @@
 #ifndef POWERUP_H_
 #define POWERUP_H_
 
-#include "Fruit.h"
+#include "src/entities/Entity.h"
+#include "src/entities/snake/Snake.h"
 
-class PowerUp {
+class PowerUp : public Entity {
 public:
 	enum class PowerUpType {NONE, DASH, SHIELD, INVISIBLE};
-	PowerUp();
-	~PowerUp();
-	virtual void use() = 0;
+	virtual ~PowerUp();
+	virtual void activate(Snake& snake) = 0;
+	virtual void deactivate(Snake& snake) = 0;
 
-private:
-
+protected:
+	PowerUp(double row, double col);
 };
 
 #endif /* POWERUP_H_ */

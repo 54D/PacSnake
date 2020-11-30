@@ -1,7 +1,7 @@
 #ifndef SNAKE_H_
 #define SNAKE_H_
 
-#include <queue>
+#include <deque>
 #include "SnakeBody.h"
 #include "src/entities/fruits_and_powerUps/PowerUp.h"
 
@@ -19,17 +19,20 @@ public:
 	int get_max_health() const;
 	int get_health() const;
 	int get_length() const;
-
-	//std::queue<PowerUp::PowerUpType>::const_iterator get_pu_inventory_begin() const;
-	//std::queue<int>::iterator x;
+	std::deque<PowerUp::PowerUpType> get_pu_inventory() const;
+	PowerUp::PowerUpType get_pu_active() const;
 
 	virtual void set_headingDirection(Direction headingDirection); 
 	void set_health(int health);
 	void set_relative_health(int delta_health);
+	void set_pu_active(PowerUp::PowerUpType powerUp);
 
 	// The WHOLE snake will move forward base on its speed and each parts' headingDirection 
 	void move_forward();
 	virtual void set_speed(double speed);
+	// Calculate the speed of the snake according to the number of frutis eaten
+	// Should be executed whenever a fruit is eaten
+	double calculate_level_speed() const;
 
 	// Increase / Decrease the length of the Snake
 	// Increase the length of Snake by length at the end of Snake
@@ -49,9 +52,10 @@ private:
 	int max_health {INIT_HEALTH};
 	int health {INIT_HEALTH};
 	int length {INIT_LENGTH};
+	int fruits_eaten {0};
 
 	// Power Up (PU)
-	std::queue<PowerUp::PowerUpType> pu_inventory;
+	std::deque<PowerUp::PowerUpType> pu_inventory;
 	PowerUp::PowerUpType pu_active {PowerUp::PowerUpType::NONE};
 };
 
