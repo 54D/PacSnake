@@ -29,6 +29,9 @@ void printMap(Snake* s) {
 	gotoxy(10, 0);
 	currentSB = s;
 	cout << s->get_health() << "/" << s->get_max_health() << "\t" << s->get_speed() << "\t" << s->get_length() << endl; 
+	cout << "Power Up:";
+	// TODO	
+	cout << endl;
 	cout << "SnakeBody coord: " << endl;
     while (currentSB != nullptr) {
         if (currentSB == s)

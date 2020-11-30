@@ -1,9 +1,9 @@
 #ifndef SNAKE_H_
 #define SNAKE_H_
 
-#include <list>
+#include <queue>
 #include "SnakeBody.h"
-#include "../fruits_and_powerUps/PowerUp.h"
+#include "src/entities/fruits_and_powerUps/PowerUp.h"
 
 // The "head / brain" of the snake, consider as a moving entity of snake as well
 class Snake : public SnakeBody {	
@@ -19,6 +19,9 @@ public:
 	int get_max_health() const;
 	int get_health() const;
 	int get_length() const;
+
+	//std::queue<PowerUp::PowerUpType>::const_iterator get_pu_inventory_begin() const;
+	//std::queue<int>::iterator x;
 
 	virtual void set_headingDirection(Direction headingDirection); 
 	void set_health(int health);
@@ -39,13 +42,16 @@ public:
 	void remove_tail(int index);
 	void remove_tail(SnakeBody* snakeBody);
 
+	void addPUToInventory(PowerUp::PowerUpType& powerUp);
+	void usePU();
+
 private:
 	int max_health {INIT_HEALTH};
 	int health {INIT_HEALTH};
 	int length {INIT_LENGTH};
 
 	// Power Up (PU)
-	std::list<PowerUp::PowerUpType> pu_inventory {MAX_PU, PowerUp::PowerUpType::NONE};
+	std::queue<PowerUp::PowerUpType> pu_inventory;
 	PowerUp::PowerUpType pu_active {PowerUp::PowerUpType::NONE};
 };
 

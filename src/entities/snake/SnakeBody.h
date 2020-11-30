@@ -1,7 +1,7 @@
 #ifndef SNAKEBODY_H_
 #define SNAKEBODY_H_
 
-#include "../MovingEntity.h"
+#include "src/entities/MovingEntity.h"
 
 class SnakeBody : public MovingEntity {	
 public:
@@ -14,9 +14,8 @@ public:
 
 protected:
 	// Remove all the SnakeBody after this SnakeBody
-	void remove_tail();
+	virtual void remove_tail();
 
-private:
 	SnakeBody* prev {nullptr};
 	SnakeBody* next {nullptr};
 };

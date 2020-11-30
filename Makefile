@@ -2,7 +2,7 @@
 # Edward CHUI 2020
 
 CXX = g++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++11 -I.
 OBJDIR = obj
 SRCDIR = src
 OBJS = Entity.o MovingEntity.o SnakeBody.o Snake.o main.o

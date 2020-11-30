@@ -1,5 +1,6 @@
 #include <iostream>
-#include "../Entity.h"
+#include <queue>
+#include "src/entities/Entity.h"
 #include "Snake.h"
 
 double Snake::INIT_SPEED = 1.0;
@@ -7,8 +8,12 @@ double Snake::INIT_SPEED = 1.0;
 Snake::Snake(double row, double col, double speed, Direction headingDirection, int max_health, int length) :
 	SnakeBody(row, col, speed, headingDirection), 
 	max_health(max_health), health(max_health), length(length), 
-	pu_inventory(MAX_PU, PowerUp::PowerUpType::NONE), pu_active(PowerUp::PowerUpType::NONE)
+	pu_active(PowerUp::PowerUpType::NONE)
 	{
+	// Inialise pu_inventory
+	for (int i = 0; i < MAX_PU; i++)
+		pu_inventory.push(PowerUp::PowerUpType::NONE);
+
 	// Initialise SnakeBody by creating a linked list
 	double temp_row = row;
 	double temp_col = col;
@@ -156,7 +161,7 @@ void Snake::increase_length(int length) {
 void Snake::remove_tail(int index) {
 	if (index < 0 || index >= length)
 		return;
-		
+
 	SnakeBody* currentSnakeBody = this;
 	for (int i = 0; i < index; i++) {
 		currentSnakeBody = currentSnakeBody->next;
@@ -184,4 +189,24 @@ void Snake::remove_tail(SnakeBody* snakeBody) {
 		currentSnakeBody = currentSnakeBody->next;
 	} while (currentSnakeBody != nullptr);
 	length = count;
+}
+
+void Snake::addPUToInventory(PowerUp::PowerUpType& powerUp) {
+	// Push the power up as the last element of the queue
+	pu_inventory.push(powerUp);
+	// If the inventory, remove the first element in queue
+	if (pu_inventory.size() > MAX_PU) {
+		pu_inventory.pop();
+	}
+}
+
+void Snake::usePU() {
+	// Get the type of power up
+	PowerUp::PowerUpType puType = pu_inventory.front();
+	pu_inventory.pop();
+	
+	// Case switch or use function poiter to call the coreesponding powerup use function
+	switch (puType) {
+
+	}
 }
