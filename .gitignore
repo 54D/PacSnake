@@ -38,6 +38,5 @@
 
 # Qt Project specificatiaons
 CMakeLists.txt
-*.pro
 *.user*
 CMakeLists.txt.user
