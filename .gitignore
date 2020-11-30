@@ -40,3 +40,4 @@
 CMakeLists.txt
 *.pro
 *.user*
+CMakeLists.txt.user
