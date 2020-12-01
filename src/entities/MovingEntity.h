@@ -5,22 +5,22 @@
 
 class MovingEntity : public Entity {
 public:
-	enum class Direction {NORTH, EAST, SOUTH, WEST};
+    enum class Direction {NORTH, EAST, SOUTH, WEST};
 
-	virtual ~MovingEntity();
+    virtual ~MovingEntity();
 
-	double get_speed() const;
-	Direction get_headingDirection() const;
+    double get_speed() const;
+    Direction get_headingDirection() const;
 
-	virtual void set_speed(double speed);
-	virtual void set_headingDirection(MovingEntity::Direction headingDirection);
-	
+    virtual void set_speed(double speed);
+    virtual void set_headingDirection(MovingEntity::Direction headingDirection);
+
 protected:
-	MovingEntity();
-	MovingEntity(double row, double col, double speed, Direction headingDirection = Direction::NORTH);
+    MovingEntity();
+    MovingEntity(double row, double col, double speed, Direction headingDirection = Direction::NORTH);
 
-	double speed;
-	Direction headingDirection;
+    double speed;
+    Direction headingDirection;
 };
 
 #endif /* MOVINGENTITY_H_ */
