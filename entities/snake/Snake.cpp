@@ -28,6 +28,7 @@ Snake::Snake(int row, int col, int speed, Direction headingDirection, int max_he
 }
 
 Snake::~Snake() {
+	// Delete the whole snake
     SnakeBody* currentSnakeBody = this->next;
     SnakeBody* nextSnakeBody = nullptr;
     while (currentSnakeBody != nullptr) {
@@ -35,6 +36,11 @@ Snake::~Snake() {
         delete currentSnakeBody;
         currentSnakeBody = nextSnakeBody;
     }
+	// Empty pu_inventpry
+	for (auto it = pu_inventory.begin(); it != pu_inventory.end(); it++) {
+		delete (*it);
+	}
+	pu_inventory.clear();
 }
 
 int Snake::get_max_health() const {

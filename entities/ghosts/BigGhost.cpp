@@ -19,7 +19,14 @@ BigGhost::BigGhost(int row, int col, int speed, Direction headingDirection) :
 	set_random_stepUntilDirctionChange();
 }
 
-BigGhost::~BigGhost() {}
+BigGhost::~BigGhost() {
+	GhostBody* currentGhostBody = this->next;
+	while (currentGhostBody != this) {
+		GhostBody* nextGhostBody = currentGhostBody->next;
+		delete currentGhostBody;
+		currentGhostBody = nextGhostBody;
+	}
+}
 
 void BigGhost::set_speed(int speed) {
 	GhostBody* currentGhostBody = this;
