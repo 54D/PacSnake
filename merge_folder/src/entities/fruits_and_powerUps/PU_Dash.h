@@ -3,10 +3,9 @@
 
 #include "PowerUp.h"
 #include <entities/snake/Snake.h>
-/*  Power Up Ability - Dash
-    When activate, the snake will gain a short movement speed bonus for a split second (i.e.: few game ticks)
+/* Power Up Ability - Dash
+ * When activate, the snake will gain a short movement speed bonus for a split second (i.e.: few game ticks)
 */
-
 class Snake;
 
 class PU_Dash : public PowerUp {

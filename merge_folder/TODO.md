@@ -2,11 +2,13 @@
 As a self-reminder
 
 ## Add Out-of bound Checking Condition
-No info for num_row and num_col at the moment
-- [ ] Entity::set_row()
-- [ ] Entity::set_col()
-- [ ] Entity::set_coordinate();
-- [ ] Entity::set_relative_coordinate();
+~~No info for num_row and num_col at the moment~~
+- [ ] ~~Entity::set_row()~~
+- [ ] ~~Entity::set_col()~~
+- [ ] ~~Entity::set_coordinate()~~
+- [ ] ~~Entity::set_relative_coordinate()~~
+
+Need to be done outside as num_row and num_col are data member of game_map
 
 ## Review Permission of Member Function
 public, protected, private, friend

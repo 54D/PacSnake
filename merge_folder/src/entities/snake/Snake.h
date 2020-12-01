@@ -7,7 +7,7 @@
 #include <entities/fruits_and_powerUps/PowerUp.h>
 
 // The "head / brain" of the snake, consider as a moving entity of snake as well
-class Snake : public SnakeBody {
+class Snake final : public SnakeBody {
 public:
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
@@ -29,7 +29,7 @@ public:
     void set_pu_activate(PowerUp* powerUp);
 
     // The WHOLE snake will move forward base on its speed and each parts' headingDirection
-    void move_forward();
+    virtual void move_forward() override;
     virtual void set_speed(int speed) override;
     // Calculate the speed of the snake according to the number of fruits eaten
     // Should be executed whenever a fruit is eaten
@@ -50,6 +50,8 @@ public:
     void usePU();
 
 private:
+	void move_forward_one_unit();
+	
     int max_health {INIT_HEALTH};
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};

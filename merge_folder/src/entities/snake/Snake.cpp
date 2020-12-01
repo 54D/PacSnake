@@ -99,27 +99,9 @@ void Snake::set_pu_activate(PowerUp* powerUp) {
 }
 
 void Snake::move_forward() {
-    SnakeBody* currentSnakeBody = this;
-    Direction currentHeadingDirection, prevHeadingDirection;
-    while (currentSnakeBody != nullptr) {
-        // As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate
-        switch(currentSnakeBody->headingDirection) {
-            case Direction::NORTH:	currentSnakeBody->set_relative_coordinate(-1 * currentSnakeBody->speed, 0.0);	break;
-            case Direction::EAST:	currentSnakeBody->set_relative_coordinate(0.0, currentSnakeBody->speed);		break;
-            case Direction::SOUTH:	currentSnakeBody->set_relative_coordinate(currentSnakeBody->speed, 0.0);		break;
-            case Direction::WEST:	currentSnakeBody->set_relative_coordinate(0.0, -1 * currentSnakeBody->speed);	break;
-        }
-
-        currentHeadingDirection = currentSnakeBody->headingDirection;
-        // Change headingDirection according to the last snakeBody
-        if (currentSnakeBody->prev != nullptr) {
-            currentSnakeBody->headingDirection = prevHeadingDirection;
-        }
-        prevHeadingDirection = currentHeadingDirection;
-
-        // Move to next SnakeBody
-        currentSnakeBody = currentSnakeBody->next;
-    }
+	for (int i = 0; i < speed; i++){
+		move_forward_one_unit();
+	}
 }
 
 void Snake::set_speed(int speed) {
@@ -238,4 +220,28 @@ void Snake::usePU() {
     		// emit signal to wait for deactivate (time out)
     		break;
     }
+}
+
+void Snake::move_forward_one_unit() {
+	SnakeBody* currentSnakeBody = this;
+	Direction currentHeadingDirection, prevHeadingDirection;
+	while (currentSnakeBody != nullptr) {
+		// As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate
+		switch(currentSnakeBody->headingDirection) {
+			case Direction::NORTH:	currentSnakeBody->set_relative_coordinate(-1, 0);	break;
+			case Direction::EAST:	currentSnakeBody->set_relative_coordinate(0, 1);	break;
+			case Direction::SOUTH:	currentSnakeBody->set_relative_coordinate(1, 0);	break;
+			case Direction::WEST:	currentSnakeBody->set_relative_coordinate(0, -1);	break;
+		}
+		
+		currentHeadingDirection = currentSnakeBody->headingDirection;
+		// Change headingDirection according to the last snakeBody
+		if (currentSnakeBody->prev != nullptr) {
+			currentSnakeBody->headingDirection = prevHeadingDirection;
+		}
+		prevHeadingDirection = currentHeadingDirection;
+		
+		// Move to next SnakeBody
+		currentSnakeBody = currentSnakeBody->next;
+	}
 }

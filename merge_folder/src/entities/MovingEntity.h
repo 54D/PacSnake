@@ -14,11 +14,13 @@ public:
 
     virtual void set_speed(int speed);
     virtual void set_headingDirection(MovingEntity::Direction headingDirection);
-
+ 
 protected:
     MovingEntity();
     MovingEntity(int row, int col, int speed, Direction headingDirection = Direction::NORTH);
-
+	void set_random_headingDirection();
+	virtual void move_forward();
+    
     int speed;
     Direction headingDirection;
 };
