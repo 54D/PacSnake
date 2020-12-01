@@ -4,7 +4,7 @@ GhostBody::~GhostBody() {}
 
 GhostBody::GhostBody(int row, int col, int speed, Direction headingDirection, GhostBody* next) :
     MovingEntity(row, col, speed, headingDirection), next(next) {
-    this->pixmap = QPixmap(":/assets/image");
+    //this->pixmap = QPixmap(":/assets/image");
 }
 
 GhostBody* GhostBody::get_next() const {

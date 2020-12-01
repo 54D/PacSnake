@@ -17,15 +17,13 @@ public:
     void set_col(int col);
     void set_coordinate(int row, int col);
     void set_relative_coordinate(int delta_row, int delta_col);
-    QPixmap get_pixmap();
+    //QPixmap get_pixmap();
 
 protected:
     Entity();
     Entity(int row, int col);
 
     int row, col;
-
-    QPixmap pixmap;
 };
 
 

@@ -79,7 +79,7 @@ void game_view::on_pushButton_clicked()
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
         // TODO: 54D: lines 62 and 63 error: you're adding a SnakeBody *, but addItem only accepts QGraphicsItem *. These lines are commented for build
-        //scene.addItem(temp);
+        //scene.addPixmap(temp->pixmap);
         //temp = temp->get_next();
     }
     //ui->graphicsView->setScene(scene);

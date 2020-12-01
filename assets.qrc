@@ -1,5 +1,14 @@
 <RCC>
     <qresource prefix="/">
         <file>assets/mike_wazowski.png</file>
+        <file>assets/big1.png</file>
+        <file>assets/big2.png</file>
+        <file>assets/big3.png</file>
+        <file>assets/big4.png</file>
+        <file>assets/blue.png</file>
+        <file>assets/green.png</file>
+        <file>assets/orange.png</file>
+        <file>assets/pink.png</file>
+        <file>assets/red.png</file>
     </qresource>
 </RCC>
