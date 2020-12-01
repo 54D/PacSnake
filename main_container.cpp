@@ -51,7 +51,13 @@ void main_container::on_creditsButton_clicked()
     ui->stackedWidget->setCurrentIndex(3);
 }
 
-void main_container::bring_back(){
+void main_container::on_leaveButton_clicked()
+{
+    QCoreApplication::exit(0);
+}
+
+void main_container::bring_back()
+{
     qDebug() << "bring_back | RECEIVE";
     ui->stackedWidget->setCurrentIndex(0);
 }

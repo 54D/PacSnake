@@ -35,51 +35,63 @@
      <number>0</number>
     </property>
     <widget class="QWidget" name="main_menu">
-     <widget class="QWidget" name="verticalLayoutWidget">
+     <widget class="QPushButton" name="startButton">
       <property name="geometry">
        <rect>
         <x>200</x>
-        <y>200</y>
+        <y>270</y>
         <width>401</width>
-        <height>261</height>
+        <height>51</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QPushButton" name="startButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="achButton">
-         <property name="text">
-          <string>Achievements</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="creditsButton">
-         <property name="text">
-          <string>Credits</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="leaveButton">
-         <property name="text">
-          <string>Leave</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Start</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="achButton">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>330</y>
+        <width>401</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Achievements</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="creditsButton">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>360</y>
+        <width>191</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Credits</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="leaveButton">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>360</y>
+        <width>191</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Leave</string>
+      </property>
      </widget>
     </widget>
    </widget>
