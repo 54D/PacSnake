@@ -204,6 +204,10 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
     }
 }
 
+QPixmap Snake::get_pixmap() {
+    return QPixmap(":/assets/snake-head.png");
+}
+
 // TODO
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
