@@ -1,11 +1,14 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include "entities/snake/SnakeBody.h"
+#include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
 #include "credits_container.h"
 #include "credits_view.h"
 #include "ui_achievements_container.h"
-#include "ui_achievements.h"
 #include "GameEngine.h"
+#include <QGraphicsRectItem>
+#include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTimer>
@@ -13,6 +16,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
+Snake snakeobj {100.0, 100.0, 10.0};
+Snake* s = &snakeobj;
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -31,14 +37,45 @@ Widget::~Widget()
     delete ui;
 }
 
+void Widget::keyPressEvent(QKeyEvent *event) {
+    //qDebug() << event->text();
+    if (event->key() == Qt::Key_A){
+        s->set_headingDirection(MovingEntity::Direction::WEST);
+        s->move_forward();
+    }
+    else if (event->key() == Qt::Key_D){
+        s->set_headingDirection(MovingEntity::Direction::EAST);
+        s->move_forward();
+    }
+    else if (event->key() == Qt::Key_W){
+        s->set_headingDirection(MovingEntity::Direction::NORTH);
+        s->move_forward();
+    }
+    else if (event->key() == Qt::Key_S){
+        s->set_headingDirection(MovingEntity::Direction::SOUTH);
+        s->move_forward();
+    }
+}
+
 void Widget::on_pushButton_clicked()
 {
-    QGraphicsScene * scene = new QGraphicsScene(0,0,1000,600,this);
-    scene->addItem(user);
-    ui->graphicsView->setScene(scene);
+    //QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
+    SnakeBody* temp = &snakeobj;
+    for (int i = 0; i <= s->get_length(); i++){
+        scene.addItem(temp);
+        temp = temp->get_next();
+    }
+    //ui->graphicsView->setScene(scene);
     //start_game();
     //QGraphicsView *view = new QGraphicsView(scene);
-    ui->graphicsView->show();
+    //ui->graphicsView->show();
+    /*for (int i = 0; i < 100; i++){
+        for (int j = 0; j < 100; j++){
+            QGraphicsRectItem *map_bg = new QGraphicsRectItem(j*16,i*16,16,16);
+            scene->addItem(map_bg);
+        }
+    }*/
+    //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     timer->start(1000);
@@ -54,7 +91,6 @@ void Widget::on_pushButton_5_clicked()
     ui->stackedWidget->setCurrentIndex(4);
 }
 
-// TODO: 54D: move global variable elsewhere
 long timeCount = 0;
 
 static QString parseTime(long seconds){
@@ -68,13 +104,12 @@ static QString parseTime(long seconds){
 }
 
 void Widget::game_timer(){
-    //qDebug() << "hi";
-    user->setPos(user->x()+20,user->y());
-
-    //54D: add timer
-    ++timeCount;
-    ui->Timer_label->setText(parseTime(timeCount));
-    //54D: end of change, hopefully this works.
+       //qDebug() << "hi";
+       //s->increase_length(1);
+       s->move_forward();
+       ++timeCount;
+       ui->Timer_label->setText(parseTime(timeCount));
+       //s->setPos(s->x()+20,s->y());
 }
 
 void Widget::bring_back(){

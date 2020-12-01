@@ -16,18 +16,27 @@ SOURCES += \
     credits_view.cpp \
     entities/Entity.cpp \
     entities/MovingEntity.cpp \
+    entities/snake/Snake.cpp \
+    entities/snake/SnakeBody.cpp \
     main.cpp \
     snake.cpp \
     widget.cpp
 
 HEADERS += \
     GameEngine.h \
+    GameMap.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
     credits_container.h \
     credits_view.h \
     entities/Entity.h \
     entities/MovingEntity.h \
+    entities/fruits_and_powerUps/Fruit.h \
+    entities/fruits_and_powerUps/PowerUp.h \
+    entities/ghosts/Ghost.h \
+    entities/ghosts/NormalGhost.h \
+    entities/snake/Snake.h \
+    entities/snake/SnakeBody.h \
     snake.h \
     widget.h
 
