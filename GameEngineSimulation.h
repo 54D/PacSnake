@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "GameMap.h"
+#include "GameMapSimulation.h"
 #include <entities/fruits_and_powerUps/PowerUp.h>
 
 class GameEngineSimulation {
@@ -19,7 +19,7 @@ private:
 	
 	bool is_game_over() const;
 	
-	GameMap game_map;
+    GameMapSimulation game_map;
 	Snake* snake;
 	std::vector<PowerUp*> powerUps;
 };

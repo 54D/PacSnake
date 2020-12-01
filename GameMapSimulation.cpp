@@ -7,11 +7,11 @@
 
 using namespace std;	// For display map, suggested to remove for real project
 
-GameMap::GameMap() {}
+GameMapSimulation::GameMapSimulation() {}
 
-GameMap::~GameMap() {}
+GameMapSimulation::~GameMapSimulation() {}
 
-void GameMap::temp_create_map() {
+void GameMapSimulation::temp_create_map() {
 	num_row = num_col = 100;
 	
 	// Create obstacle
@@ -25,7 +25,7 @@ static void gotoxy(int row, int col) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
 }
 
-void GameMap::temp_print_map(Snake* snake) const {
+void GameMapSimulation::temp_print_map(Snake* snake) const {
 	
 	// Clear screen
 	system("cls");
