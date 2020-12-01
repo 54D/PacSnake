@@ -17,6 +17,11 @@ SOURCES += \
     credits_view.cpp \
     entities/Entity.cpp \
     entities/MovingEntity.cpp \
+    entities/fruits_and_powerUps/PU_Dash.cpp \
+    entities/fruits_and_powerUps/PowerUp.cpp \
+    entities/fruits_and_powerUps/PuShield.cpp \
+    entities/ghosts/GhostBody.cpp \
+    entities/ghosts/NormalGhost.cpp \
     entities/snake/Snake.cpp \
     entities/snake/SnakeBody.cpp \
     game_view.cpp \
@@ -33,7 +38,10 @@ HEADERS += \
     entities/Entity.h \
     entities/MovingEntity.h \
     entities/fruits_and_powerUps/Fruit.h \
+    entities/fruits_and_powerUps/PU_Dash.h \
     entities/fruits_and_powerUps/PowerUp.h \
+    entities/fruits_and_powerUps/PuShield.h \
+    entities/ghosts/GhostBody.h \
     entities/ghosts/NormalGhost.h \
     entities/snake/Snake.h \
     entities/snake/SnakeBody.h \

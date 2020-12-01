@@ -9,7 +9,7 @@ public:
 	
 protected:
 	GhostBody(int row, int col, int speed, Direction headingDirection = Direction::NORTH, GhostBody* next = nullptr);
-	virtual void move_forward();
+    virtual void move_forward();
 	
 private:
 	GhostBody* next {nullptr};
