@@ -1,13 +1,13 @@
-#ifndef GAMEMAP_H
-#define GAMEMAP_H
+#ifndef GAMEMAPSIMULATION_H
+#define GAMEMAPSIMULATION_H
 
 #include <entities/snake/Snake.h>
 
-class GameMap {
+class GameMapSimulation {
 public:
 	enum class TerrainState { EMPTY, BLOCKED, OCCUPIED };
-	GameMap();
-	~GameMap();
+    GameMapSimulation();
+    ~GameMapSimulation();
 	
 	void temp_create_map();
 	void temp_print_map(Snake* snake) const;
@@ -19,4 +19,4 @@ private:
 };
 
 
-#endif /* GAMEMAP_H */
+#endif /* GAMEMAPSIMULATION_H */

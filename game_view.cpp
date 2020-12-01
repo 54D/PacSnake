@@ -18,7 +18,7 @@
 #include <sstream>
 #include <string>
 
-Snake snakeobj {100.0, 100.0, 10.0};
+Snake snakeobj {100, 100, 10};
 Snake* s = &snakeobj;
 
 game_view::game_view(QWidget *parent) :
