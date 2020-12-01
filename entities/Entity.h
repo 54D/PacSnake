@@ -19,11 +19,10 @@ public:
     void set_col(int col);
     void set_coordinate(int row, int col);
     void set_relative_coordinate(int delta_row, int delta_col);
+    virtual QPixmap get_pixmap();
 
 protected:
     int row, col;
-
-    QPixmap pixmap;
 };
 
 

@@ -50,6 +50,9 @@ public:
     void addPUToInventory(PowerUp* powerUp);
     void usePU();
 
+protected:
+    virtual QPixmap get_pixmap() override;
+
 private:
 	void move_forward_one_unit();
 	
