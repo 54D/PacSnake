@@ -8,6 +8,8 @@ class Entity : public QObject {
     Q_OBJECT
 
 public:
+	Entity();
+	Entity(int row, int col);
     virtual ~Entity();
 
     int get_row() const;
@@ -19,9 +21,6 @@ public:
     void set_relative_coordinate(int delta_row, int delta_col);
 
 protected:
-    Entity();
-    Entity(int row, int col);
-
     int row, col;
 
     QPixmap pixmap;

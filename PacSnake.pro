@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     GameEngineSimulation.cpp \
+    GameMap.cpp \
     GameMapSimulation.cpp \
     achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 
 HEADERS += \
     GameEngineSimulation.h \
+    GameMap.h \
     GameMapSimulation.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
