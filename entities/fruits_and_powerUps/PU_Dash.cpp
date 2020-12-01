@@ -1,8 +1,12 @@
 #include "PowerUp.h"
 #include "PU_Dash.h"
 
+#include <QGraphicsPixmapItem>
+
 PU_Dash::PU_Dash(int row, int col) :
-	PowerUp(row, col, PowerUp::PowerUpType::DASH) {}
+    PowerUp(row, col, PowerUp::PowerUpType::DASH) {
+    this->pixmap = QPixmap(":/assets/image");
+}
 	
 PU_Dash::~PU_Dash() {}
 

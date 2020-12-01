@@ -2,7 +2,9 @@
 #include "PU_Shield.h"
 
 PU_Shield::PU_Shield(int row, int col) :
-	PowerUp(row, col, PowerUp::PowerUpType::SHIELD) {}
+    PowerUp(row, col, PowerUp::PowerUpType::SHIELD) {
+    this->pixmap = QPixmap(":/assets/image");
+}
 
 PU_Shield::~PU_Shield() {}
 

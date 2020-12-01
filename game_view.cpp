@@ -26,6 +26,7 @@ game_view::game_view(QWidget *parent) :
     ui(new Ui::game_view)
 {
     ui->setupUi(this);
+    ui->graphicsView->installEventFilter(this);
 }
 
 game_view::~game_view()
@@ -34,7 +35,7 @@ game_view::~game_view()
 }
 
 void game_view::keyPressEvent(QKeyEvent *event) {
-    //qDebug() << event->text();
+    qDebug() << event->text();
     if (event->key() == Qt::Key_A){
         s->set_headingDirection(MovingEntity::Direction::WEST);
         s->move_forward();
@@ -51,6 +52,25 @@ void game_view::keyPressEvent(QKeyEvent *event) {
         s->set_headingDirection(MovingEntity::Direction::SOUTH);
         s->move_forward();
     }
+}
+
+bool game_view::eventFilter(QObject *obj, QEvent *event)
+{
+    QKeyEvent *keyEvent = NULL;     // event data, if this is a keystroke event
+    bool result = false;            // return true to consume the keystroke
+
+    if(event->type() == QEvent::KeyPress){
+         keyEvent = dynamic_cast<QKeyEvent*>(event);
+         this->keyPressEvent(keyEvent);
+         result = true;
+    }else if(event->type() == QEvent::KeyRelease){
+        keyEvent = dynamic_cast<QKeyEvent*>(event);
+        this->keyReleaseEvent(keyEvent);
+        result = true;
+    }else{                           // standard event processing
+        result = QObject::eventFilter(obj,event);
+    }
+    return result;
 }
 
 void game_view::on_pushButton_clicked()
@@ -75,6 +95,7 @@ void game_view::on_pushButton_clicked()
     //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
     timer->start(1000);
 }
 
@@ -97,4 +118,11 @@ void game_view::game_timer(){
        ++timeCount;
        ui->Timer_label->setText(parseTime(timeCount));
        //s->setPos(s->x()+20,s->y());
+}
+
+void game_view::collisionEmitter(){
+    QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake);
+    if(!collisions.empty()){
+        emit snake_collided(collisions);
+    }
 }

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/mike_wazowski.png</file>
+    </qresource>
+</RCC>
