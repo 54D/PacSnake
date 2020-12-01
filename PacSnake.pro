@@ -9,13 +9,28 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    GameEngine.cpp \
+    achievements/achievements_container.cpp \
+    achievements/base_achievement.cpp \
+    credits_container.cpp \
+    credits_view.cpp \
     main.cpp \
+    snake.cpp \
     widget.cpp
 
 HEADERS += \
+    GameEngine.h \
+    achievements/achievements_container.h \
+    achievements/base_achievement.h \
+    credits_container.h \
+    credits_view.h \
+    snake.h \
     widget.h
 
 FORMS += \
+    achievements/achievements_container.ui \
+    credits_container.ui \
+    credits_view.ui \
     widget.ui
 
 # Default rules for deployment.
