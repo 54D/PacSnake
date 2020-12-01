@@ -27,27 +27,44 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
+file(GLOB pacsnake_SRC
+    "*.h"
+    "*.cpp"
+    "*.ui"
+)
+
 if(ANDROID)
   add_library(pacsnake SHARED
-    main.cpp
-    widget.cpp
-    widget.h
-    widget.ui
-    Snake.cpp
-    Snake.h
-    GameEngine.h
-    GameEngine.cpp
+      ${pacsnake_SRC}
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/Entity.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/MovingEntity.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/Entity.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/MovingEntity.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/fruits_and_powerUps/Fruit.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/fruits_and_powerUps/PowerUp.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/ghosts/Ghost.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/ghosts/NormalGhost.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/Snake.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/Snake.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/SnakeBody.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/SnakeBody.h
+
   )
 else()
   add_executable(pacsnake
-      main.cpp
-      widget.cpp
-      widget.h
-      widget.ui
-      Snake.cpp
-      Snake.h
-      GameEngine.h
-      GameEngine.cpp
+      ${pacsnake_SRC}
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/Entity.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/MovingEntity.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/Entity.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/MovingEntity.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/fruits_and_powerUps/Fruit.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/fruits_and_powerUps/PowerUp.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/ghosts/Ghost.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/ghosts/NormalGhost.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/Snake.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/Snake.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/SnakeBody.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/entities/snake/SnakeBody.h
   )
 endif()
 

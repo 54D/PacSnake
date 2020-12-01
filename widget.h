@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QGraphicsScene>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -14,12 +15,17 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+    void Game_start();
+
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void on_pushButton_clicked();
     void game_timer();
 
 private:
+    QGraphicsScene scene;
     Ui::Widget *ui;
 };
 #endif // WIDGET_H
