@@ -1,7 +1,7 @@
 #include "game_view.h"
 #include "ui_game_view.h"
 #include "main_container.h"
-#include "ui_widget.h"
+#include "ui_main_container.h"
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
