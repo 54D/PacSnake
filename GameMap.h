@@ -1,18 +1,22 @@
-#ifndef GAMEMAP_H_
-#define GAMEMAP_H_
+#ifndef GAMEMAP_H
+#define GAMEMAP_H
+
+#include <entities/snake/Snake.h>
 
 class GameMap {
 public:
-	enum class TerrainState {EMPTY, BLOCKED, OCCUPIED};
-
+	enum class TerrainState { EMPTY, BLOCKED, OCCUPIED };
 	GameMap();
 	~GameMap();
 	
-	int get_num_row() const;
-	int get_num_col() const;
-
+	void temp_create_map();
+	void temp_print_map(Snake* snake) const;
+	
 private:
-	int num_row, num_col;
+	int num_row;
+	int num_col;
+	// obstacle;
 };
 
-#endif /* GAMEMAP_H_ */
+
+#endif /* GAMEMAP_H */
