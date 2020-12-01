@@ -27,6 +27,7 @@ private slots:
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
+    bool eventFilter(QObject*, QEvent*) override;
 };
 
 #endif // GAME_VIEW_H
