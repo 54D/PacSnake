@@ -27,6 +27,7 @@ public:
     void set_health(int health);
     void set_relative_health(int delta_health);
     void set_pu_activate(PowerUp* powerUp);
+	void set_ghost_immunity(bool state);
 
     // The WHOLE snake will move forward base on its speed and each parts' headingDirection
     virtual void move_forward() override;
@@ -43,7 +44,7 @@ public:
     // index = 0 is Snake ("head / brain" of the snake)
     // index = 1 is the first snakeBody after Snake
     // index = length - 1 is the last SnakeBody
-    void remove_tail(int index);
+	void remove_tail(int index);
     void remove_tail(SnakeBody* snakeBody);
 
     void addPUToInventory(PowerUp* powerUp);
@@ -56,6 +57,8 @@ private:
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};
     int fruits_eaten {0};
+
+	bool ghost_immunity {false};
 
     // Power Up (PU)
     std::deque<PowerUp*> pu_inventory;

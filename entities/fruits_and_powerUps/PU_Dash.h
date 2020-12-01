@@ -6,8 +6,6 @@
 /* Power Up Ability - Dash
  * When activate, the snake will gain a short movement speed bonus for a split second (i.e.: few game ticks)
 */
-class Snake;
-
 class PU_Dash : public PowerUp {
 public:
     PU_Dash(int row, int col);

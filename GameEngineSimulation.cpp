@@ -120,7 +120,7 @@ void GameEngineSimulation::temp_process_game() {
 						// Simulate a power up is created and being eaten by the snake and being used after it moves 1 step
 						
 						// A power up is first randomly generated on map
-						PU_Dash* dash = new PU_Dash {0, 0};
+						PU_Dash* dash = new PU_Dash (0, 0);
 						// Store the power up on the map in a vector of game
 						powerUps.push_back(dash);
 						

@@ -1,7 +1,7 @@
 #include <iostream>		// For display map
 #include <windows.h>	// For display map, suggested to remove for real project
 
-#include "GameMap.h"
+#include "GameMapSimulation.h"
 #include <entities/snake/SnakeBody.h>
 #include <entities/snake/Snake.h>
 

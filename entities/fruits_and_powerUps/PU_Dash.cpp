@@ -1,4 +1,3 @@
-#include <iostream>
 #include "PowerUp.h"
 #include "PU_Dash.h"
 
@@ -19,6 +18,8 @@ void PU_Dash::activate(Snake* snake) {
     // TODO
     int newSpeed= snake->get_speed() * 2;
     snake->set_speed(newSpeed);
+
+	// Set activated power up
     snake->set_pu_activate(this);
 }
 
