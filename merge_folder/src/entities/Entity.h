@@ -5,19 +5,19 @@ class Entity {
 public:
     virtual ~Entity();
 
-    double get_row() const;
-    double get_col() const;
+    int get_row() const;
+    int get_col() const;
 
-    void set_row(double row);
-    void set_col(double col);
-    void set_coordinate(double row, double col);
-    void set_relative_coordinate(double delta_row, double delta_col);
+    void set_row(int row);
+    void set_col(int col);
+    void set_coordinate(int row, int col);
+    void set_relative_coordinate(int delta_row, int delta_col);
 
 protected:
     Entity();
-    Entity(double row, double col);
+    Entity(int row, int col);
 
-    double row, col;
+    int row, col;
 };
 
 

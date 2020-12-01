@@ -11,10 +11,10 @@ class Snake : public SnakeBody {
 public:
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
-    static double INIT_SPEED;
+    static const int INIT_SPEED = 1;
     static const int MAX_PU = 3;
 
-    Snake(double row, double col, double speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
+    Snake(int row, int col, int speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
     virtual ~Snake();
 
     int get_max_health() const;
@@ -30,19 +30,19 @@ public:
 
     // The WHOLE snake will move forward base on its speed and each parts' headingDirection
     void move_forward();
-    virtual void set_speed(double speed) override;
+    virtual void set_speed(int speed) override;
     // Calculate the speed of the snake according to the number of fruits eaten
     // Should be executed whenever a fruit is eaten
-    double calculate_level_speed() const;
+    int calculate_level_speed() const;
 
     // Increase / Decrease the length of the Snake
     // Increase the length of Snake by length at the end of Snake
-    void increase_length(int length);
+    void increase_length(int len);
 
     // Remove the tail of Snake after the index
     // index = 0 is Snake ("head / brain" of the snake)
     // index = 1 is the first snakeBody after Snake
-    // index = length - 1 is the last SankeBody
+    // index = length - 1 is the last SnakeBody
     void remove_tail(int index);
     void remove_tail(SnakeBody* snakeBody);
 

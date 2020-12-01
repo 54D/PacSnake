@@ -11,12 +11,13 @@ class Snake;
 
 class PU_Dash : public PowerUp {
 public:
-    PU_Dash(double row, double col);
+    PU_Dash(int row, int col);
     virtual ~PU_Dash();
-    virtual void activate(Snake* snake);
-    virtual void deactivate(Snake* snake);
-	
-	PowerUp::PowerUpType get_type() const;
+    
+	virtual PowerUp::PowerUpType get_type() const override;
+    
+    virtual void activate(Snake* snake) override;
+    virtual void deactivate(Snake* snake) override;
 };
 
 #endif /* PU_DASH_H_ */

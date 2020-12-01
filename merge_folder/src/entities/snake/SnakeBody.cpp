@@ -1,6 +1,6 @@
 #include "SnakeBody.h"
 
-SnakeBody::SnakeBody(double row, double col, double speed, Direction headingDirection, SnakeBody* prev, SnakeBody* next) :
+SnakeBody::SnakeBody(int row, int col, int speed, Direction headingDirection, SnakeBody* prev, SnakeBody* next) :
         MovingEntity(row, col, speed, headingDirection) , prev(prev), next(next) {}
 
 SnakeBody::~SnakeBody() {}

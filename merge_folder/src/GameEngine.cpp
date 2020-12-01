@@ -28,7 +28,7 @@ void GameEngine::temp_load_game() {
 	// TODO: Create ghost
 	
 	// Create snake
-	snake = new Snake {10.0, 70.0, 1.0};
+	snake = new Snake {10, 70};
 }
 
 // Temp function for display snake status, suggested to remove for real project

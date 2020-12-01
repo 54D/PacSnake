@@ -12,7 +12,7 @@ GameMap::GameMap() {}
 GameMap::~GameMap() {}
 
 void GameMap::temp_create_map() {
-	num_row = num_col = 100.0;
+	num_row = num_col = 100;
 	
 	// Create obstacle
 }
@@ -33,7 +33,7 @@ void GameMap::temp_print_map(Snake* snake) const {
 	// Print snake on map
 	const SnakeBody* currentSnakeBody = snake;
 	while (currentSnakeBody != nullptr) {
-		gotoxy(static_cast<int>(currentSnakeBody->get_row()), static_cast<int>(currentSnakeBody->get_col()));
+		gotoxy(currentSnakeBody->get_row(), currentSnakeBody->get_col());
 		cout << static_cast<int>(currentSnakeBody->get_headingDirection());
 		currentSnakeBody = currentSnakeBody->get_next();
 	}

@@ -6,7 +6,7 @@
 class SnakeBody : public MovingEntity {
 public:
 	friend class Snake;
-	SnakeBody(double row, double col, double speed, Direction headingDirection = Direction::NORTH, SnakeBody* prev = nullptr, SnakeBody* next = nullptr);
+	SnakeBody(int row, int col, int speed, Direction headingDirection = Direction::NORTH, SnakeBody* prev = nullptr, SnakeBody* next = nullptr);
     virtual ~SnakeBody();
     
     const SnakeBody* get_prev() const;

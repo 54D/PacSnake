@@ -9,17 +9,17 @@ public:
 
     virtual ~MovingEntity();
 
-    double get_speed() const;
+    int get_speed() const;
     Direction get_headingDirection() const;
 
-    virtual void set_speed(double speed);
+    virtual void set_speed(int speed);
     virtual void set_headingDirection(MovingEntity::Direction headingDirection);
 
 protected:
     MovingEntity();
-    MovingEntity(double row, double col, double speed, Direction headingDirection = Direction::NORTH);
+    MovingEntity(int row, int col, int speed, Direction headingDirection = Direction::NORTH);
 
-    double speed;
+    int speed;
     Direction headingDirection;
 };
 

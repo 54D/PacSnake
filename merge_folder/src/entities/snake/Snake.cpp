@@ -4,16 +4,14 @@
 #include <entities/Entity.h>
 #include <entities/snake/Snake.h>
 
-double Snake::INIT_SPEED = 1.0;
-
-Snake::Snake(double row, double col, double speed, Direction headingDirection, int max_health, int length) :
+Snake::Snake(int row, int col, int speed, Direction headingDirection, int max_health, int length) :
         SnakeBody(row, col, speed, headingDirection),
-        max_health(max_health), health(max_health), length(length),
+        max_health(max_health), health(max_health), length(length), fruits_eaten(0),
 		pu_activate(nullptr)
 {
     // Initialise SnakeBody by creating a linked list
-    double temp_row = row;
-    double temp_col = col;
+    int temp_row = row;
+    int temp_col = col;
     SnakeBody* prevSnakeBody = this;
     for (int i = 0; i < length; i++) {
         switch (headingDirection) {
@@ -124,8 +122,8 @@ void Snake::move_forward() {
     }
 }
 
-void Snake::set_speed(double speed) {
-    if (speed < 0.0)
+void Snake::set_speed(int speed) {
+    if (speed < 0)
         return;
 
     SnakeBody* currentSnakeBody = this;
@@ -137,14 +135,14 @@ void Snake::set_speed(double speed) {
     }
 }
 
-double Snake::calculate_level_speed() const {
+int Snake::calculate_level_speed() const {
     // In case some power up affect the speed calculation, return the current value
     if (pu_activate != nullptr)
         return speed;
 
-    double newSpeed;
+    int newSpeed;
     // TODO: Change an appropriate value (/ 10?)
-    newSpeed = speed * static_cast<double>(fruits_eaten) / 10.0 + 1.0;
+    newSpeed = fruits_eaten / 10 + INIT_SPEED;
     return newSpeed;
 }
 
@@ -158,8 +156,8 @@ void Snake::increase_length(int len) {
         endSnakeBody = endSnakeBody->next;
     }
 
-    double temp_row = endSnakeBody->row;
-    double temp_col = endSnakeBody->col;
+    int temp_row = endSnakeBody->row;
+    int temp_col = endSnakeBody->col;
     SnakeBody* prevSnakeBody = endSnakeBody;
     for (int i = 0; i < len; i++) {
         switch (prevSnakeBody->headingDirection) {
@@ -223,7 +221,7 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
 // TODO
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
-    if (pu_inventory.front() == nullptr || pu_activate != nullptr)
+    if (pu_inventory.empty() || pu_activate != nullptr)
         return;
     
     PowerUp* pu = pu_inventory.front();

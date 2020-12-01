@@ -5,6 +5,7 @@
 
 class GameMap {
 public:
+	enum class TerrainState { EMPTY, BLOCKED, OCCUPIED };
 	GameMap();
 	~GameMap();
 	
@@ -12,8 +13,8 @@ public:
 	void temp_print_map(Snake* snake) const;
 	
 private:
-	double num_row;
-	double num_col;
+	int num_row;
+	int num_col;
 	// obstacle;
 };
 
