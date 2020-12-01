@@ -5,7 +5,7 @@
 #include <QGraphicsPixmapItem>
 
 class Entity : public QObject {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
     virtual ~Entity();
@@ -24,7 +24,7 @@ protected:
 
     int row, col;
 
-	QGraphicsPixmapItem* view {nullptr};
+    QPixmap pixmap;
 };
 
 

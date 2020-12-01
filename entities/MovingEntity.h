@@ -1,6 +1,8 @@
 #ifndef MOVINGENTITY_H_
 #define MOVINGENTITY_H_
 
+#include <QGraphicsItem>
+
 #include "Entity.h"
 
 class MovingEntity : public Entity {

@@ -11,7 +11,9 @@ const SnakeBody* SnakeBody::get_next() const {
 }
 
 SnakeBody::SnakeBody(int row, int col, int speed, Direction headingDirection, SnakeBody* prev, SnakeBody* next) :
-MovingEntity(row, col, speed, headingDirection) , prev(prev), next(next) {}
+MovingEntity(row, col, speed, headingDirection) , prev(prev), next(next) {
+    this->pixmap = QPixmap(":/assets/image");
+}
 
 void SnakeBody::move_forward() {
 	switch(headingDirection) {

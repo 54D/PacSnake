@@ -14,7 +14,7 @@ public:
 	virtual PowerUp::PowerUpType get_type() const override;
 
 	virtual void activate(Snake* snake) override;
-	virtual void deactivate(Snake* snake) override;
+    virtual void deactivate(Snake* snake) override;
 };
 
 

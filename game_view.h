@@ -33,7 +33,8 @@ private:
     bool eventFilter(QObject*, QEvent*) override;
     void collisionEmitter();
 
-    QGraphicsItem *snake; // TODO: change to Snake class after merging Edward's code
+    QGraphicsPixmapItem *snake;
+    QList<QGraphicsPixmapItem> *terrain;
 };
 
 #endif // GAME_VIEW_H
