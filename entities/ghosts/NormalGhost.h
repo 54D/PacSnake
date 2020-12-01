@@ -13,6 +13,8 @@ public:
 private:
 	// Generate a number [min, max] that the NormalGhost will change direction if stepCount reaches that number
 	void set_random_stepUntilDirctionChange(int lower = 1, int upper = 15);
+	void move_forward_one_unit();
+
 	int stepUntilDirctionChange;
 	int stepCount {0};
 };

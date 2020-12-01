@@ -18,7 +18,7 @@ public:
 protected:
     MovingEntity();
     MovingEntity(int row, int col, int speed, Direction headingDirection = Direction::NORTH);
-	void set_random_headingDirection();
+	virtual void set_random_headingDirection();
 	virtual void move_forward();
     
     int speed;
