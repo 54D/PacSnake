@@ -10,5 +10,9 @@
         <file>assets/orange.png</file>
         <file>assets/pink.png</file>
         <file>assets/red.png</file>
+        <file>assets/snake-body.png</file>
+        <file>assets/snake-corner.png</file>
+        <file>assets/snake-head.png</file>
+        <file>assets/snake-tail.png</file>
     </qresource>
 </RCC>
