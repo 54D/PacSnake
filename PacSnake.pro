@@ -10,20 +10,24 @@ CONFIG += c++11
 
 SOURCES += \
     GameEngine.cpp \
+    achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
-    achievements/base_achievement.cpp \
     credits_container.cpp \
     credits_view.cpp \
+    entities/Entity.cpp \
+    entities/MovingEntity.cpp \
     main.cpp \
     snake.cpp \
     widget.cpp
 
 HEADERS += \
     GameEngine.h \
+    achievements/Achievement.h \
     achievements/achievements_container.h \
-    achievements/base_achievement.h \
     credits_container.h \
     credits_view.h \
+    entities/Entity.h \
+    entities/MovingEntity.h \
     snake.h \
     widget.h
 
