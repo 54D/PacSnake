@@ -30,3 +30,10 @@ void SnakeBody::remove_tail() {
     delete next;
     next = nullptr;
 }
+
+QPixmap SnakeBody::get_pixmap() {
+    if(prev==nullptr)return QPixmap(":/assets/snake-head.png");
+    if(next==nullptr)return QPixmap(":/assets/snake-tail.png");
+    if(prev->headingDirection!=next->headingDirection)return QPixmap(":/assets/snake-corner.png");
+    return QPixmap(":/assets/snake-straight.png");
+}

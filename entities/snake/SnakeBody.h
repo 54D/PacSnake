@@ -17,6 +17,7 @@ protected:
 	
 	virtual void move_forward() override;
 	void remove_tail();
+    virtual QPixmap get_pixmap() override;
     
     SnakeBody* prev {nullptr};
     SnakeBody* next {nullptr};
