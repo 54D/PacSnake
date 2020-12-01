@@ -22,8 +22,8 @@ Widget::Widget(QWidget *parent)
     ui->stackedWidget->addWidget(new achievements_container);
     ui->stackedWidget->addWidget(new credits_container);
 
-    connect(ui->stackedWidget->widget(3), SIGNAL(previous_menu()), this, SLOT(bring_back()));
-    connect(ui->stackedWidget->widget(4), SIGNAL(previous_menu()), this, SLOT(bring_back()));
+    connect(ui->stackedWidget->widget(1), SIGNAL(previous_menu()), this, SLOT(bring_back()));
+    connect(ui->stackedWidget->widget(2), SIGNAL(previous_menu()), this, SLOT(bring_back()));
 }
 
 Widget::~Widget()
