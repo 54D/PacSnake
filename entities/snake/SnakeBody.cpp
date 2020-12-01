@@ -13,6 +13,15 @@ const SnakeBody* SnakeBody::get_next() const {
 SnakeBody::SnakeBody(int row, int col, int speed, Direction headingDirection, SnakeBody* prev, SnakeBody* next) :
 MovingEntity(row, col, speed, headingDirection) , prev(prev), next(next) {}
 
+void SnakeBody::move_forward() {
+	switch(headingDirection) {
+		case Direction::NORTH:	set_relative_coordinate(-1, 0);	break;
+		case Direction::EAST:	set_relative_coordinate(0, 1);	break;
+		case Direction::SOUTH:	set_relative_coordinate(1, 0);	break;
+		case Direction::WEST:	set_relative_coordinate(0, -1);	break;
+	}
+}
+
 void SnakeBody::remove_tail() {
     if (next->next != nullptr)
         next->remove_tail();

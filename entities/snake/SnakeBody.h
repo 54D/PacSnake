@@ -15,8 +15,8 @@ protected:
     // Remove all the SnakeBody after this SnakeBody
 	SnakeBody(int row, int col, int speed, Direction headingDirection = Direction::NORTH, SnakeBody* prev = nullptr, SnakeBody* next = nullptr);
 	
-    //virtual void move_forward() override;
-	virtual void remove_tail();
+	virtual void move_forward() override;
+	void remove_tail();
     
     SnakeBody* prev {nullptr};
     SnakeBody* next {nullptr};

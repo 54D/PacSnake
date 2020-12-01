@@ -1,7 +1,12 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-class Entity {
+#include <QObject>
+#include <QGraphicsPixmapItem>
+
+class Entity : public QObject {
+	Q_OBJECT
+
 public:
     virtual ~Entity();
 
@@ -18,6 +23,8 @@ protected:
     Entity(int row, int col);
 
     int row, col;
+
+	QGraphicsPixmapItem* view {nullptr};
 };
 
 
