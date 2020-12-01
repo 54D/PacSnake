@@ -16,10 +16,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -33,6 +29,14 @@
 
 # Compressed Files
 *.zip
+*.tar
+*.7z
+*.rar
 
 # File Directory
 .vscode
+
+# Qt Project specificatiaons
+CMakeLists.txt
+*.user*
+CMakeLists.txt.user
