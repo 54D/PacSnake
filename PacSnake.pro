@@ -9,7 +9,6 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    GameEngine.cpp \
     achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
     credits_container.cpp \
@@ -18,12 +17,11 @@ SOURCES += \
     entities/MovingEntity.cpp \
     entities/snake/Snake.cpp \
     entities/snake/SnakeBody.cpp \
+    game_view.cpp \
     main.cpp \
-    snake.cpp \
-    widget.cpp
+    main_container.cpp
 
 HEADERS += \
-    GameEngine.h \
     GameMap.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
@@ -37,14 +35,15 @@ HEADERS += \
     entities/ghosts/NormalGhost.h \
     entities/snake/Snake.h \
     entities/snake/SnakeBody.h \
-    snake.h \
-    widget.h
+    game_view.h \
+    main_container.h
 
 FORMS += \
     achievements/achievements_container.ui \
     credits_container.ui \
     credits_view.ui \
-    widget.ui
+    game_view.ui \
+    main_container.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

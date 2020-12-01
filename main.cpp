@@ -1,6 +1,6 @@
 // SNADBOX / PLAYGROUND / WHATEVER YOU LIKE TO CALL, JUST USE TO TEST STUFF
 #include <QApplication>
-#include "widget.h"
+#include "main_container.h"
 /*#include "src/entities/Entity.h"
 #include "src/entities/MovingEntity.h"
 #include "src/entities/snake/SnakeBody.h"
@@ -40,7 +40,7 @@ void printMap(Snake* s) {
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    Widget main_menu;
+    main_container main_menu;
     main_menu.show();
     return a.exec();
     /*char operation;

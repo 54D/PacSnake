@@ -231,7 +231,8 @@ void Snake::usePU() {
     
     // Case switch or use function pointer to call the corresponding power up use function
     // TODO: Can simplify the code
-    switch (pu->get_type()) {
+    // TODO: 54D: lines 235 and 240 error: no member named get_type / activate in PowerUp. Commented for successful build
+    /*switch (pu->get_type()) {
     	case PowerUp::PowerUpType::NONE:
     		std::cerr << "UNEXPECTED ERROR OCCUR" << std::endl;
     		break;
@@ -239,5 +240,5 @@ void Snake::usePU() {
     		pu->activate(this);
     		// emit signal to wait for deactivate (time out)
     		break;
-    }
+    }*/
 }
