@@ -59,10 +59,10 @@ const PowerUp* Snake::get_pu_activate() const {
 
 void Snake::set_headingDirection(Direction headingDirection) {
     // Avoid setting the headingDirection the opposite of the current headingDirection
-    if (this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH ||
-        this->headingDirection == Direction::EAST && headingDirection == Direction::WEST ||
-        this->headingDirection == Direction::SOUTH && headingDirection == Direction::NORTH ||
-        this->headingDirection == Direction::WEST && headingDirection == Direction::EAST)
+    if ((this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH) ||
+        (this->headingDirection == Direction::EAST && headingDirection == Direction::WEST) ||
+        (this->headingDirection == Direction::SOUTH && headingDirection == Direction::NORTH) ||
+        (this->headingDirection == Direction::WEST && headingDirection == Direction::EAST))
         return;
     else
         this->headingDirection = headingDirection;

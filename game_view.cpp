@@ -95,6 +95,7 @@ void game_view::on_pushButton_clicked()
     //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
     timer->start(1000);
 }
 
@@ -117,4 +118,11 @@ void game_view::game_timer(){
        ++timeCount;
        ui->Timer_label->setText(parseTime(timeCount));
        //s->setPos(s->x()+20,s->y());
+}
+
+void game_view::collisionEmitter(){
+    QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake);
+    if(!collisions.empty()){
+        emit snake_collided(collisions);
+    }
 }
