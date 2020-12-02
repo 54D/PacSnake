@@ -1,18 +1,28 @@
-#ifndef GAMEMAP_H_
-#define GAMEMAP_H_
+#ifndef GAMEMAP_H
+#define GAMEMAP_H
+
+#include <vector>
+#include <string>
+
+#include <entities/Entity.h>
 
 class GameMap {
 public:
-	enum class TerrainState {EMPTY, BLOCKED, OCCUPIED};
+	enum class TerrainState { EMPTY, BLOCKED };
+	static const char TERRAIN_EMPTY_CHAR {' '};
+	static const char TERRAIN_BLOCKED_CHAR {'#'};
+
+    int get_num_rows() const;
+    int get_num_cols() const;
+
+	void load_terrian_map(const std::string& filename);
 
 	GameMap();
 	~GameMap();
-	
-	int get_num_row() const;
-	int get_num_col() const;
-
 private:
-	int num_row, num_col;
+	int num_rows {0}, num_cols {0};
+	TerrainState** terrain_map {nullptr};
+	std::vector<Entity*> obstacle;
 };
 
-#endif /* GAMEMAP_H_ */
+#endif // GAMEMAP_H

@@ -20,6 +20,7 @@ private slots:
     void on_startButton_clicked();
     void on_achButton_clicked();
     void on_creditsButton_clicked();
+    void on_leaveButton_clicked();
     void bring_back();
 
 private:

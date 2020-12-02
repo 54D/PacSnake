@@ -7,14 +7,12 @@
 #include "src/entities/snake/Snake.h"
 */
 /*using namespace std;
-
 void gotoxy(int row,int col) {
     COORD c;
     c.X = col;
     c.Y = row;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
 }
-
 void printMap(Snake* s) {
     system("cls");
     const SnakeBody* currentSB = s;
@@ -23,7 +21,6 @@ void printMap(Snake* s) {
         cout << static_cast<int>(currentSB->get_headingDirection());
         currentSB = currentSB->get_next();
     };
-
     gotoxy(10, 0);
     currentSB = s;
     cout << s->get_health() << "/" << s->get_max_health() << "\t" << s->get_speed() << "\t" << s->get_length() << endl;

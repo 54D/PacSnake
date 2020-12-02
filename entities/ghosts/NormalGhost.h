@@ -1,14 +1,22 @@
-#ifndef NORMALGHOST_H_
-#define NORMALGHOST_H_
+#ifndef NORMALGHOST_H
+#define NORMALGHOST_H
 
-#include "./Ghost.h"
+#include "GhostBody.h"
 
-class NormalGhost : public Ghost {
+class NormalGhost final : public GhostBody {
 public:
-	NormalGhost();
+	NormalGhost(int row, int col, int speed, Direction headingDirection = Direction::NORTH);
 	virtual ~NormalGhost();
+	
+	virtual void move_forward() override;
+	
 private:
+	// Generate a number [min, max] that the NormalGhost will change direction if stepCount reaches that number
+	void set_random_stepUntilDirctionChange(int lower = 1, int upper = 15);
 
+	int stepUntilDirctionChange;
+	int stepCount {0};
 };
 
-#endif /* NORMALGHOST_H_ */
+
+#endif // NORMALGHOST_H

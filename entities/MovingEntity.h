@@ -1,25 +1,30 @@
 #ifndef MOVINGENTITY_H_
 #define MOVINGENTITY_H_
 
+#include <QGraphicsItem>
+
 #include "Entity.h"
 
 class MovingEntity : public Entity {
 public:
+	static const int MAX_SPEED = 10;
     enum class Direction {NORTH, EAST, SOUTH, WEST};
 
     virtual ~MovingEntity();
 
-    double get_speed() const;
+    int get_speed() const;
     Direction get_headingDirection() const;
 
-    virtual void set_speed(double speed);
+    virtual void set_speed(int speed);
     virtual void set_headingDirection(MovingEntity::Direction headingDirection);
-
+ 
 protected:
     MovingEntity();
-    MovingEntity(double row, double col, double speed, Direction headingDirection = Direction::NORTH);
-
-    double speed;
+    MovingEntity(int row, int col, int speed, Direction headingDirection = Direction::NORTH);
+	virtual void set_random_headingDirection();
+	virtual void move_forward();
+    
+    int speed;
     Direction headingDirection;
 };
 

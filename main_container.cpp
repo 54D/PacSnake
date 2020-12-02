@@ -1,5 +1,5 @@
 #include "main_container.h"
-#include "ui_widget.h"
+#include "ui_main_container.h"
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
@@ -51,7 +51,13 @@ void main_container::on_creditsButton_clicked()
     ui->stackedWidget->setCurrentIndex(3);
 }
 
-void main_container::bring_back(){
+void main_container::on_leaveButton_clicked()
+{
+    QCoreApplication::exit(0);
+}
+
+void main_container::bring_back()
+{
     qDebug() << "bring_back | RECEIVE";
     ui->stackedWidget->setCurrentIndex(0);
 }
