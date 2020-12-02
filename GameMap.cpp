@@ -2,6 +2,11 @@
 #include <string>
 #include <fstream>
 
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+
 #include "GameMap.h"
 #include <entities/Entity.h>
 
@@ -35,20 +40,22 @@ void GameMap::load_terrian_map(const std::string& filename) {
 	delete [] terrain_map;
 	terrain_map = nullptr;
 
-	// Delete elements in obstacle
-	for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
-		delete (*it);
+	// Delete elements in
+	if (obstacle.size() > 0) {
+		for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
+			delete (*it);
+		}
+		obstacle.clear();
 	}
-	obstacle.clear();
 
 	// File Input
-	std::ifstream terrain_map_file(filename);
-	if (!terrain_map_file)
+	QFile terrain_map_file(QString::fromStdString(filename));
+	if (!terrain_map_file.open(QIODevice::ReadOnly | QIODevice::Text))
 			return;
 
-	terrain_map_file >> num_rows >> num_cols;
-	terrain_map_file >> std::ws;
-	terrain_map_file >> std::noskipws;
+	QTextStream input(&terrain_map_file);
+	input >> num_rows >> num_cols;
+	input >> Qt::ws;
 
 	// Create map
 	terrain_map = new TerrainState* [num_rows];
@@ -60,7 +67,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 	for (int row = 0; row < num_rows; row++) {
 		for (int col = 0; col < num_cols; col++) {
 			char current_character;
-			terrain_map_file >> current_character;
+			input >> current_character;
 			switch (current_character) {
 				case TERRAIN_EMPTY_CHAR:
 					terrain_map[row][col] = TerrainState::EMPTY;
@@ -74,6 +81,6 @@ void GameMap::load_terrian_map(const std::string& filename) {
 					break;
 			}
 		}
-		terrain_map_file >> std::ws;
+		input >> Qt::ws;
 	}
 }
