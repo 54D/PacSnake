@@ -27,10 +27,10 @@ Snake* s = &snakeobj;
 
 const QString game_view::image_lookup[1][4] {
     {
-        ":/assets/snake-head.png",
-        ":/assets/snake-body.png",
-        ":/assets/snake-corner.png",
-        ":/assets/snake-tail.png"
+        ":/assets/sprite/snake-head-up.png",
+        ":/assets/sprite/snake-body-vertical.png",
+        ":/assets/sprite/snake-corner-up-right.png",
+        ":/assets/sprite/snake-tail-up.png"
     }
 };
 
@@ -70,15 +70,15 @@ void game_view::render_game_map(){
             switch(game_map->get_terrainState(r,c)){
             case GameMap::TerrainState::EMPTY:
                 qDebug() << "render_game_map | TerrainState::EMPTY";
-                path = ":/assets/plains.png";
+                path = ":/assets/sprite/plains.png";
                 break;
             case GameMap::TerrainState::BLOCKED:
                 qDebug() << "render_game_map | TerrainState::BLOCKED";
-                path = ":/assets/mountain.png";
+                path = ":/assets/sprite/mountain.png";
                 break;
             default:
                 qDebug() << "render_game_map | Invalid TerrainState read";
-                path = ":/assets/mike_wazowski.png";
+                path = ":/assets/sprite/mike_wazowski.png";
                 break;
             }
             QGraphicsPixmapItem *img = scene.addPixmap(QPixmap(path));
