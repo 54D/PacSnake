@@ -61,7 +61,8 @@ FORMS += \
     credits_container.ui \
     credits_view.ui \
     game_view.ui \
-    main_container.ui
+    main_container.ui \
+    main_container_old.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
