@@ -13,6 +13,14 @@ PowerUp::PowerUpType PU_Shield::get_type() const {
 }
 
 void PU_Shield::activate(Snake *snake) {
+	// Play sound effect
+	if (activateSound->state() == QMediaPlayer::PlayingState) {
+		activateSound->setPosition(0);
+	}
+	else if (activateSound->state() == QMediaPlayer::StoppedState) {
+		activateSound->play();
+	}
+
 	// Only one power up can be activated at the same time
 	if (snake->get_pu_activate() != nullptr)
 		return;

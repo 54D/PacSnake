@@ -3,10 +3,10 @@
 #include <string>
 
 #include <QGraphicsRectItem>
+#include <QTimer>
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QTimer>
 #include <QDebug>
 #include <QMediaPlayer>
 
@@ -14,6 +14,7 @@
 #include "ui_game_view.h"
 #include "main_container.h"
 #include "ui_main_container.h"
+#include "entities/MovingEntity.h"
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
@@ -21,9 +22,6 @@
 #include "credits_view.h"
 #include "ui_achievements_container.h"
 #include "GameMap.h"
-
-Snake snakeobj {25, 25, 10};
-Snake* s = &snakeobj;
 
 const QString game_view::image_lookup[1][4] {
     {
@@ -43,27 +41,60 @@ game_view::game_view(QWidget *parent) :
     ui->graphicsView->setScene(&scene);
     ui->graphicsView->show();
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
+	connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
 
+	// Gametick for game update
+	gameTickTimer = new QTimer(this);
+	connect(gameTickTimer, SIGNAL(timeout()), this, SLOT(gameTickUpdate()));
+
+	// Init select sound
 	selectSound = new QMediaPlayer();
 	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
 }
 
 game_view::~game_view()
 {
-	delete selectSound;
 	delete ui;
-    timer->stop();
+	delete game_map;
+	delete snake;
+	for (auto it = ghosts.begin(); it != ghosts.end(); it++) {
+		delete (*it);
+	}
+	ghosts.clear();
+
+	for (auto it = fruits.begin(); it != fruits.end(); it++) {
+		delete (*it);
+	}
+	fruits.clear();
+
+	for (auto it = powerups.begin(); it != powerups.end(); it++) {
+		delete (*it);
+	}
+	powerups.clear();
+
+	timer->stop();
     delete timer;
+	gameTickTimer->stop();
+	delete gameTickTimer;
+
+	for(int i=0;i<terrain_pixmaps.size();i++){
+		scene.removeItem(terrain_pixmaps.at(i));
+		delete terrain_pixmaps.at(i);
+	}
+	terrain_pixmaps.clear();
+
+	delete selectSound;
 }
 
 void game_view::render_game_map(){
-    for(int i=0;i<terrain_pixmaps.size();i++){
+	// Clear previous content
+	for(int i=0;i<terrain_pixmaps.size();i++){
         scene.removeItem(terrain_pixmaps.at(i));
         delete terrain_pixmaps.at(i);
     }
     terrain_pixmaps.clear();
+
+	// Render game map
     for(int r=0;r<game_map->get_num_rows();r++){
         for(int c=0;c<game_map->get_num_cols();c++){
             QString path;
@@ -95,20 +126,16 @@ void game_view::render_game_map(){
 void game_view::keyPressEvent(QKeyEvent *event) {
     qDebug() << event->text();
     if (event->key() == Qt::Key_A){
-        s->set_headingDirection(MovingEntity::Direction::WEST);
-        s->move_forward();
+		snake->set_headingDirection(MovingEntity::Direction::WEST);
     }
     else if (event->key() == Qt::Key_D){
-        s->set_headingDirection(MovingEntity::Direction::EAST);
-        s->move_forward();
-    }
+		snake->set_headingDirection(MovingEntity::Direction::EAST);
+	}
     else if (event->key() == Qt::Key_W){
-        s->set_headingDirection(MovingEntity::Direction::NORTH);
-        s->move_forward();
+		snake->set_headingDirection(MovingEntity::Direction::NORTH);
     }
     else if (event->key() == Qt::Key_S){
-        s->set_headingDirection(MovingEntity::Direction::SOUTH);
-        s->move_forward();
+		snake->set_headingDirection(MovingEntity::Direction::SOUTH);
     }
 }
 
@@ -133,17 +160,21 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
+	// Play sound effect
 	selectSound->play();
 
 	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
-    SnakeBody* temp = &snakeobj;
-    for (int i = 0; i <= s->get_length(); i++){
-        qDebug() << temp->get_col() << temp->get_row();
+	snake = new Snake {25, 25, 10};
+
+	// Render snake on scene
+	SnakeBody* temp = snake;
+	for (int i = 0; i <= snake->get_length(); i++){
+		qDebug() << temp->get_col() << temp->get_row();
 
         int pic_ref = -1;
         if (temp->get_prev() == nullptr) pic_ref = 0;
         if (temp->get_next() == nullptr) pic_ref = 3;
-        if (temp->get_prev() != nullptr && temp->get_next() != nullptr){
+		if (temp->get_prev() != nullptr && temp->get_next() != nullptr){
             if (temp->get_prev()->get_headingDirection()!= temp->get_next()->get_headingDirection()) pic_ref = 2;
         }
         if (pic_ref == -1) pic_ref = 1;
@@ -154,9 +185,15 @@ void game_view::on_pushButton_clicked()
         snake_pic->setOffset(temp->get_col()*32,temp->get_row()*32);
         temp = temp->get_next();
     }
+	// Start gameTickTimer update every 0.1
+	gameTickTimer->start(GAME_TICK_UPDATE_TIME);
+	// Start timer to update every 1 seconds
     timer->start(1000);
-    // TODO: 54D: possible memory leak? since old game_map is not removed?
-    game_map = new GameMap();
+	// load and render map
+	// TODO:	54D: possible memory leak? since old game_map is not removed?
+	//			ED: Possible, delete game_map is added
+	delete game_map;
+	game_map = new GameMap();
     game_map->load_terrian_map(":/game_map/GameMap.txt");
     render_game_map();
     ui->graphicsView->setScene(&scene);
@@ -169,6 +206,7 @@ void game_view::reset_view(){
     timer->stop();
     timeCount = 0;
     ui->pushButton->setVisible(true);
+	// TODO: ED: if this part is reset everything, remember to avoid memory leak and dangling pointer
 }
 
 void game_view::on_stackedWidget_currentChanged(int index){
@@ -191,27 +229,40 @@ static QString parseTime(long seconds){
     return QString::fromStdString(builder.str());
 }
 
-void game_view::game_timer(){
-    //qDebug() << "hi";
-    //s->increase_length(1);
-    s->move_forward();
-    SnakeBody* temp = &snakeobj;
-    for (int i = 0; i <= s->get_length(); i++){
-        temp->get_pixmap()->setOffset(temp->get_col()*32,temp->get_row()*32);
-        temp->refresh_pixmap();
-        temp = temp->get_next();
-    }
+void game_view::update_timer(){
     ++timeCount;
     ui->Timer_label->setText(parseTime(timeCount));
-    //s->setPos(s->x()+20,s->y());
 }
 
 void game_view::collisionEmitter(){
-    QList<QGraphicsItem*> empty;
-    emit snake_collided(empty);
-    /*
-    QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake_pixmap);
-    if(!collisions.empty()){
-        emit snake_collided(collisions);
-    }*/
+	QList<QGraphicsItem*> empty;
+	emit snake_collided(empty);
+	/*
+	QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake_pixmap);
+	if(!collisions.empty()){
+		emit snake_collided(collisions);
+	}*/
+}
+
+void game_view::gameTickUpdate() {
+	gameTickCount++;
+	// TODO: Game Over Condition Checking
+
+
+	// Update snake movement
+	if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+		snake->move_forward();
+		qDebug() << snake->get_row() << snake->get_col();
+	}
+
+	/* Collision checking */
+
+	/* UI Update  */
+	// Update snake UI
+	SnakeBody* currentSnakeBody = snake;
+	while (currentSnakeBody != nullptr){
+		currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
+		currentSnakeBody->refresh_pixmap();
+		currentSnakeBody = currentSnakeBody->get_next();
+	}
 }
