@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <QDebug>
 
 #include "GameMap.h"
 #include <entities/Entity.h>
@@ -26,6 +27,11 @@ int GameMap::get_num_rows() const {
 }
 int GameMap::get_num_cols() const {
     return num_cols;
+}
+
+GameMap::TerrainState GameMap::get_terrainState(int row,int col) const {
+    qDebug() << "get_terrainState | Read " << row << ";" << col << ":" << static_cast<int>(terrain_map[row][col]);
+    return terrain_map[row][col];
 }
 
 void GameMap::load_terrian_map(const std::string& filename) {

@@ -35,15 +35,31 @@ game_view::~game_view()
     delete ui;
 }
 
-void game_view::render_game_map(GameMap *game_map){
+void game_view::render_game_map(){
     for(int i=0;i<terrain_pixmaps.size();i++){
         scene.removeItem(terrain_pixmaps.at(i));
         delete terrain_pixmaps.at(i);
     }
     terrain_pixmaps.clear();
     for(int r=0;r<game_map->get_num_rows();r++){
-        for(int c=0;c<game_map->>get_num_cols();c++){
-            //render
+        for(int c=0;c<game_map->get_num_cols();c++){
+            std::string path;
+            switch(game_map->get_terrainState(r,c)){
+            case GameMap::TerrainState::EMPTY:
+                path = ":/assets/plains.png";
+                break;
+            case GameMap::TerrainState::BLOCKED:
+                path = ":/assets/mountain.png";
+                break;
+            default:
+                qDebug() << "Invalid TerrainState read";
+                path = ":/assets/mike_wazowski.png";
+                break;
+            }
+            QGraphicsPixmapItem *img = scene.addPixmap(QPixmap(QString::fromStdString(path)));
+            img->setOffset(c*32,r*32);
+            img->setZValue(0);
+            terrain_pixmaps.append(img);
         }
     }
 }
@@ -108,9 +124,15 @@ void game_view::on_pushButton_clicked()
     }*/
     //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
     QTimer *timer = new QTimer(this);
+    // TODO: 54D: this connects multiple times
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
     timer->start(1000);
+    // TODO: 54D: possible memory leak? since old game_map is not removed?
+    GameMap *game_map = new GameMap();
+    //game_map->load_terrian_map(":/maps/map1.txt");
+    //render_game_map();
+    //ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
 }
 
 long timeCount = 0;
@@ -135,8 +157,11 @@ void game_view::game_timer(){
 }
 
 void game_view::collisionEmitter(){
-    QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake);
+    QList<QGraphicsItem*> empty;
+    emit snake_collided(empty);
+    /*
+    QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake_pixmap);
     if(!collisions.empty()){
         emit snake_collided(collisions);
-    }
+    }*/
 }
