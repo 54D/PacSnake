@@ -16,8 +16,8 @@
   <widget class="QLabel" name="Timer_label">
    <property name="geometry">
     <rect>
-     <x>600</x>
-     <y>60</y>
+     <x>560</x>
+     <y>20</y>
      <width>47</width>
      <height>12</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>50</y>
+     <y>20</y>
      <width>80</width>
      <height>20</height>
     </rect>
@@ -42,18 +42,18 @@
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>90</y>
+     <x>120</x>
+     <y>40</y>
      <width>541</width>
-     <height>441</height>
+     <height>541</height>
     </rect>
    </property>
   </widget>
   <widget class="QLabel" name="timer_text">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>50</y>
+     <x>600</x>
+     <y>20</y>
      <width>47</width>
      <height>20</height>
     </rect>
