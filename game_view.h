@@ -18,6 +18,7 @@ public:
     game_view(QWidget *parent = nullptr);
     ~game_view();
     void Game_start();
+    static const QString image_lookup[1][4];
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -42,7 +43,7 @@ private:
     QTimer *timer;
     long timeCount = 0;
 
-    QGraphicsPixmapItem *snake_pixmap;
+    //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
 };
 

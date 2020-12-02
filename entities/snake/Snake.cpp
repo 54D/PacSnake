@@ -233,9 +233,6 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
     }
 }
 
-QPixmap Snake::get_pixmap() {
-    return QPixmap(":/assets/snake-head.png");
-}
 
 // TODO
 void Snake::usePU() {

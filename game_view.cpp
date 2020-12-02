@@ -22,12 +22,23 @@
 Snake snakeobj {100, 100, 10};
 Snake* s = &snakeobj;
 
+const QString game_view::image_lookup[1][4] {
+    {
+        ":/assets/snake-head.png",
+        ":/assets/snake-body.png",
+        ":/assets/snake-corner.png",
+        ":/assets/snake-tail.png"
+    }
+};
+
 game_view::game_view(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::game_view)
 {
     ui->setupUi(this);
     ui->graphicsView->installEventFilter(this);
+    ui->graphicsView->setScene(&scene);
+    ui->graphicsView->show();
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
@@ -126,6 +137,21 @@ void game_view::on_pushButton_clicked()
 	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
+        qDebug() << temp->get_col() << temp->get_row();
+
+        int pic_ref = -1;
+        if (temp->get_prev() == nullptr) pic_ref = 0;
+        if (temp->get_next() == nullptr) pic_ref = 3;
+        if (temp->get_prev() != nullptr && temp->get_next() != nullptr){
+            if (temp->get_prev()->get_headingDirection()!= temp->get_next()->get_headingDirection()) pic_ref = 2;
+        }
+        if (pic_ref == -1) pic_ref = 1;
+        QPixmap pic(image_lookup[0][pic_ref]);
+        QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
+        temp->register_view(snake_pic);
+        snake_pic->setOffset(temp->get_col(),temp->get_row());
+        temp = temp->get_next();
+
         // TODO: 54D: lines 62 and 63 error: you're adding a SnakeBody *, but addItem only accepts QGraphicsItem *. These lines are commented for build
         //scene.addPixmap(temp->pixmap);
         //temp = temp->get_next();
@@ -179,12 +205,18 @@ static QString parseTime(long seconds){
 }
 
 void game_view::game_timer(){
-       //qDebug() << "hi";
-       //s->increase_length(1);
-       s->move_forward();
-       ++timeCount;
-       ui->Timer_label->setText(parseTime(timeCount));
-       //s->setPos(s->x()+20,s->y());
+    //qDebug() << "hi";
+    //s->increase_length(1);
+    s->move_forward();
+    SnakeBody* temp = &snakeobj;
+    for (int i = 0; i <= s->get_length(); i++){
+        temp->get_pixmap()->setOffset(temp->get_col(),temp->get_row());
+        temp->refresh_pixmap();
+        temp = temp->get_next();
+    }
+    ++timeCount;
+    ui->Timer_label->setText(parseTime(timeCount));
+    //s->setPos(s->x()+20,s->y());
 }
 
 void game_view::collisionEmitter(){

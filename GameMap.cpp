@@ -62,7 +62,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 
 	QTextStream input(&terrain_map_file);
 	input >> num_rows >> num_cols;
-	input >> Qt::ws;
+    input >> Qt::ws;
 
 	// Create map
 	terrain_map = new TerrainState* [num_rows];
@@ -89,7 +89,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 					break;
 			}
 		}
-		input >> Qt::ws;
+        input >> Qt::ws;
 	}
 
     // Close File
