@@ -110,8 +110,6 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
-	GameMap *game_map = new GameMap();
-	game_map->load_terrian_map(":/game_map/GameMap.txt");
 	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
@@ -133,9 +131,9 @@ void game_view::on_pushButton_clicked()
     timer->start(1000);
     // TODO: 54D: possible memory leak? since old game_map is not removed?
     game_map = new GameMap();
-    game_map->load_terrian_map(":/GameMap/GameMap.txt");
-    //render_game_map();
-    //ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
+    game_map->load_terrian_map(":/game_map/GameMap.txt");
+    render_game_map();
+    ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
     ui->pushButton->setVisible(false);
 }
 
