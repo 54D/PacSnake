@@ -184,7 +184,7 @@ void game_view::reset_view(){
     ui->pushButton->setVisible(true);
 }
 
-void game_view::on_main_container_currentChanged(int index){
+void game_view::on_stackedWidget_currentChanged(int index){
     if(index==1){
         reset_view();
     }

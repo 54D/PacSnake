@@ -25,7 +25,7 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
-    void on_main_container_currentChanged(int index);
+    void on_stackedWidget_currentChanged(int index);
     void game_timer();
     void collisionEmitter();
 

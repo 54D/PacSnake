@@ -61,10 +61,9 @@ void GameMap::load_terrian_map(const std::string& filename) {
 	if (!terrain_map_file.open(QIODevice::ReadOnly | QIODevice::Text))
 			return;
 
-	QTextStream input(&terrain_map_file);
+    QTextStream input(&terrain_map_file);
 	input >> num_rows >> num_cols;
     input.skipWhiteSpace();
-    //input >> Qt::ws;
 
 	// Create map
 	terrain_map = new TerrainState* [num_rows];
@@ -75,7 +74,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 
 	// Input map and create obstacle object
 	for (int row = 0; row < num_rows; row++) {
-		for (int col = 0; col < num_cols; col++) {
+        for (int col = 0; col < num_cols; col++) {
 			char current_character;
 			input >> current_character;
 			switch (current_character) {
@@ -89,9 +88,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 					Entity* temp_obstacle = new Entity(row, col);
 					obstacle.push_back(temp_obstacle);
 					break;
-			}
-		}
-        //input >> Qt::ws;
+            }
         input.skipWhiteSpace();
 	}
 
