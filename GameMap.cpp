@@ -3,6 +3,11 @@
 #include <fstream>
 #include <QDebug>
 
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+
 #include "GameMap.h"
 #include <entities/Entity.h>
 
@@ -42,26 +47,22 @@ void GameMap::load_terrian_map(const std::string& filename) {
     terrain_map = nullptr;
     qDebug() << "load_terrain_map | Remove previous content";
 
-	// Delete elements in obstacle
-    if (obstacle.size() > 0) {
-        for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
-            delete (*it);
-        }
-        obstacle.clear();
-    }
-    qDebug() << "load_terrain_map | Delete elements in obstacle";
+	// Delete elements in
+	if (obstacle.size() > 0) {
+		for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
+			delete (*it);
+		}
+		obstacle.clear();
+	}
 
 	// File Input
-	std::ifstream terrain_map_file(filename);
-    if (!terrain_map_file){
-        qDebug() << "load_terrain_map | File not found";
-        return;
-    }
+	QFile terrain_map_file(QString::fromStdString(filename));
+	if (!terrain_map_file.open(QIODevice::ReadOnly | QIODevice::Text))
+			return;
 
-	terrain_map_file >> num_rows >> num_cols;
-	terrain_map_file >> std::ws;
-	terrain_map_file >> std::noskipws;
-    qDebug() << "load_terrain_map | File input";
+	QTextStream input(&terrain_map_file);
+	input >> num_rows >> num_cols;
+	input >> Qt::ws;
 
 	// Create map
 	terrain_map = new TerrainState* [num_rows];
@@ -74,7 +75,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 	for (int row = 0; row < num_rows; row++) {
 		for (int col = 0; col < num_cols; col++) {
 			char current_character;
-			terrain_map_file >> current_character;
+			input >> current_character;
 			switch (current_character) {
 				case TERRAIN_EMPTY_CHAR:
 					terrain_map[row][col] = TerrainState::EMPTY;
@@ -86,8 +87,8 @@ void GameMap::load_terrian_map(const std::string& filename) {
 					Entity* temp_obstacle = new Entity(row, col);
 					obstacle.push_back(temp_obstacle);
 					break;
-            }
-        }
-		terrain_map_file >> std::ws;
+			}
+		}
+		input >> Qt::ws;
 	}
 }

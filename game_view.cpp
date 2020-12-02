@@ -47,6 +47,8 @@ void game_view::render_game_map(){
     }
     terrain_pixmaps.clear();
     for(int r=0;r<game_map->get_num_rows();r++){
+		for(int c=0;c<game_map->get_num_cols();c++){
+            //render
         for(int c=0;c<game_map->get_num_cols();c++){
             std::string path;
             switch(game_map->get_terrainState(r,c)){
@@ -66,7 +68,7 @@ void game_view::render_game_map(){
             img->setZValue(0);
             terrain_pixmaps.append(img);
         }
-    }
+	}
 }
 
 void game_view::keyPressEvent(QKeyEvent *event) {
@@ -110,7 +112,9 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
-    //QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
+	GameMap *game_map = new GameMap();
+	game_map->load_terrian_map(":/game_map/GameMap.txt");
+	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
         // TODO: 54D: lines 62 and 63 error: you're adding a SnakeBody *, but addItem only accepts QGraphicsItem *. These lines are commented for build
@@ -173,6 +177,10 @@ void game_view::game_timer(){
 }
 
 void game_view::collisionEmitter(){
+	QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake);
+    if(!collisions.empty()){
+        emit snake_collided(collisions);
+	}
     QList<QGraphicsItem*> empty;
     emit snake_collided(empty);
     /*
