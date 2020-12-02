@@ -29,6 +29,9 @@ BigGhost::~BigGhost() {
 }
 
 void BigGhost::set_speed(int speed) {
+	if (speed < 0 || speed > MAX_SPEED)
+		return;
+
 	GhostBody* currentGhostBody = this;
 	do {
 		currentGhostBody->speed = speed;
@@ -45,26 +48,6 @@ void BigGhost::set_headingDirection(MovingEntity::Direction headingDirection) {
 }
 
 void BigGhost::move_forward() {
-	for (int i = 0; i < speed; i++)
-		move_forward_one_unit();
-}
-
-void BigGhost::set_random_stepUntilDirctionChange(int lower, int upper) {
-	srand(time(NULL));
-	stepUntilDirctionChange = (rand() % (upper - lower + 1)) + lower;
-}
-
-void BigGhost::set_random_headingDirection() {
-	srand(time(NULL));
-	switch (rand() % 4) {
-	case 0: set_headingDirection(Direction::NORTH);	break;
-	case 1: set_headingDirection(Direction::EAST);	break;
-	case 2: set_headingDirection(Direction::SOUTH);	break;
-	case 3: set_headingDirection(Direction::WEST);	break;
-	}
-}
-
-void BigGhost::move_forward_one_unit() {
 	GhostBody* currentGhostBody = this;
 	do {
 		switch(currentGhostBody->headingDirection) {
@@ -81,5 +64,20 @@ void BigGhost::move_forward_one_unit() {
 		stepCount = 0;
 		set_random_stepUntilDirctionChange();
 		set_random_headingDirection();
+	}
+}
+
+void BigGhost::set_random_stepUntilDirctionChange(int lower, int upper) {
+	srand(time(NULL));
+	stepUntilDirctionChange = (rand() % (upper - lower + 1)) + lower;
+}
+
+void BigGhost::set_random_headingDirection() {
+	srand(time(NULL));
+	switch (rand() % 4) {
+	case 0: set_headingDirection(Direction::NORTH);	break;
+	case 1: set_headingDirection(Direction::EAST);	break;
+	case 2: set_headingDirection(Direction::SOUTH);	break;
+	case 3: set_headingDirection(Direction::WEST);	break;
 	}
 }

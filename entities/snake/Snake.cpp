@@ -109,13 +109,31 @@ void Snake::set_ghost_immunity(bool state) {
 }
 
 void Snake::move_forward() {
-	for (int i = 0; i < speed; i++){
-		move_forward_one_unit();
+	SnakeBody* currentSnakeBody = this;
+	Direction currentHeadingDirection, prevHeadingDirection;
+	while (currentSnakeBody != nullptr) {
+		// As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate
+		switch(currentSnakeBody->headingDirection) {
+			case Direction::NORTH:	currentSnakeBody->set_relative_coordinate(-1, 0);	break;
+			case Direction::EAST:	currentSnakeBody->set_relative_coordinate(0, 1);	break;
+			case Direction::SOUTH:	currentSnakeBody->set_relative_coordinate(1, 0);	break;
+			case Direction::WEST:	currentSnakeBody->set_relative_coordinate(0, -1);	break;
+		}
+
+		currentHeadingDirection = currentSnakeBody->headingDirection;
+		// Change headingDirection according to the last snakeBody
+		if (currentSnakeBody->prev != nullptr) {
+			currentSnakeBody->headingDirection = prevHeadingDirection;
+		}
+		prevHeadingDirection = currentHeadingDirection;
+
+		// Move to next SnakeBody
+		currentSnakeBody = currentSnakeBody->next;
 	}
 }
 
 void Snake::set_speed(int speed) {
-    if (speed < 0)
+	if (speed < 0 || speed > MAX_SPEED)
         return;
 
     SnakeBody* currentSnakeBody = this;
@@ -135,6 +153,11 @@ int Snake::calculate_level_speed() const {
     int newSpeed;
     // TODO: Change an appropriate value (/ 10?)
     newSpeed = fruits_eaten / 10 + INIT_SPEED;
+
+	// New speed should not exceed the maximum allowed speed
+	if (newSpeed > MAX_SPEED)
+		newSpeed = MAX_SPEED;
+
     return newSpeed;
 }
 
@@ -224,28 +247,4 @@ void Snake::usePU() {
     pu_inventory.pop_front();
 	pu->activate(this);
 	// emit signal to wait for deactivate (time out)
-}
-
-void Snake::move_forward_one_unit() {
-	SnakeBody* currentSnakeBody = this;
-	Direction currentHeadingDirection, prevHeadingDirection;
-	while (currentSnakeBody != nullptr) {
-		// As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate
-		switch(currentSnakeBody->headingDirection) {
-			case Direction::NORTH:	currentSnakeBody->set_relative_coordinate(-1, 0);	break;
-			case Direction::EAST:	currentSnakeBody->set_relative_coordinate(0, 1);	break;
-			case Direction::SOUTH:	currentSnakeBody->set_relative_coordinate(1, 0);	break;
-			case Direction::WEST:	currentSnakeBody->set_relative_coordinate(0, -1);	break;
-		}
-		
-		currentHeadingDirection = currentSnakeBody->headingDirection;
-		// Change headingDirection according to the last snakeBody
-		if (currentSnakeBody->prev != nullptr) {
-			currentSnakeBody->headingDirection = prevHeadingDirection;
-		}
-		prevHeadingDirection = currentHeadingDirection;
-		
-		// Move to next SnakeBody
-		currentSnakeBody = currentSnakeBody->next;
-	}
 }

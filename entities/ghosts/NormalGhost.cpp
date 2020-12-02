@@ -11,16 +11,6 @@ NormalGhost::NormalGhost(int row, int col, int speed, Direction headingDirection
 NormalGhost::~NormalGhost() {}
 
 void NormalGhost::move_forward() {
-	for (int i = 0; i < speed; i++)
-		move_forward_one_unit();
-}
-
-void NormalGhost::set_random_stepUntilDirctionChange(int lower, int upper) {
-	srand(time(NULL));
-	stepUntilDirctionChange = (rand() % (upper - lower + 1)) + lower;
-}
-
-void NormalGhost::move_forward_one_unit() {
 	switch(headingDirection) {
 		case Direction::NORTH:	set_relative_coordinate(-1, 0);	break;
 		case Direction::EAST:	set_relative_coordinate(0, 1);	break;
@@ -33,4 +23,9 @@ void NormalGhost::move_forward_one_unit() {
 		set_random_stepUntilDirctionChange();
 		set_random_headingDirection();
 	}
+}
+
+void NormalGhost::set_random_stepUntilDirctionChange(int lower, int upper) {
+	srand(time(NULL));
+	stepUntilDirctionChange = (rand() % (upper - lower + 1)) + lower;
 }

@@ -54,8 +54,6 @@ protected:
     virtual QPixmap get_pixmap() override;
 
 private:
-	void move_forward_one_unit();
-	
     int max_health {INIT_HEALTH};
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};

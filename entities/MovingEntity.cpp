@@ -13,7 +13,7 @@ MovingEntity::Direction MovingEntity::get_headingDirection() const {
 }
 
 void MovingEntity::set_speed(int speed) {
-    if (speed < 0)
+	if (speed < 0 || speed > MAX_SPEED)
         return;
 
     this->speed = speed;
@@ -40,9 +40,9 @@ MovingEntity::MovingEntity(int row, int col, int speed, Direction headingDirecti
 void MovingEntity::set_random_headingDirection() {
     srand(time(NULL));
     switch (rand() % 4) {
-	case 0: headingDirection = Direction::NORTH;    break;
-	case 1: headingDirection = Direction::EAST;	break;
-	case 2: headingDirection = Direction::SOUTH;    break;
-	case 3: headingDirection = Direction::WEST;	break;
+	case 0: headingDirection = Direction::NORTH;	break;
+	case 1: headingDirection = Direction::EAST;		break;
+	case 2: headingDirection = Direction::SOUTH;	break;
+	case 3: headingDirection = Direction::WEST;		break;
     }
 }

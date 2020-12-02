@@ -7,6 +7,7 @@
 
 class MovingEntity : public Entity {
 public:
+	static const int MAX_SPEED = 10;
     enum class Direction {NORTH, EAST, SOUTH, WEST};
 
     virtual ~MovingEntity();
