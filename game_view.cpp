@@ -47,8 +47,6 @@ void game_view::render_game_map(){
     }
     terrain_pixmaps.clear();
     for(int r=0;r<game_map->get_num_rows();r++){
-		for(int c=0;c<game_map->get_num_cols();c++){
-            //render
         for(int c=0;c<game_map->get_num_cols();c++){
             std::string path;
             switch(game_map->get_terrainState(r,c)){
@@ -134,7 +132,7 @@ void game_view::on_pushButton_clicked()
     //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
     timer->start(1000);
     // TODO: 54D: possible memory leak? since old game_map is not removed?
-    GameMap *game_map = new GameMap();
+    game_map = new GameMap();
     game_map->load_terrian_map(":/GameMap/GameMap.txt");
     //render_game_map();
     //ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
@@ -177,10 +175,6 @@ void game_view::game_timer(){
 }
 
 void game_view::collisionEmitter(){
-	QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake);
-    if(!collisions.empty()){
-        emit snake_collided(collisions);
-	}
     QList<QGraphicsItem*> empty;
     emit snake_collided(empty);
     /*
