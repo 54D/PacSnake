@@ -8,7 +8,7 @@ class Snake;
 
 class PowerUp : public Entity {
 public:
-    enum class PowerUpType {NONE, DASH, SHIELD, INVISIBLE};
+	enum class PowerUpType {NONE, DASH, SHIELD};
     virtual ~PowerUp();
     
 	virtual PowerUp::PowerUpType get_type() const;

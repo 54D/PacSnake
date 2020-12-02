@@ -8,7 +8,7 @@ public:
     // Display image on GUI, no speical use
     enum class FruitType {APPLE, ORANGE, BANBNA};
 
-    Fruit();
+	Fruit(int row, int col);
     virtual ~Fruit();
 };
 
