@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QMediaPlayer>
+
 
 #include "GameMap.h"
 
@@ -45,6 +47,7 @@ private:
 
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
+	QMediaPlayer* selectSound;
 };
 
 #endif // GAME_VIEW_H

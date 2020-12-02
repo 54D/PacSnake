@@ -1,3 +1,15 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+
+#include <QGraphicsRectItem>
+#include <QKeyEvent>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QTimer>
+#include <QDebug>
+#include <QMediaPlayer>
+
 #include "game_view.h"
 #include "ui_game_view.h"
 #include "main_container.h"
@@ -9,15 +21,6 @@
 #include "credits_view.h"
 #include "ui_achievements_container.h"
 #include "GameMap.h"
-#include <QGraphicsRectItem>
-#include <QKeyEvent>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QTimer>
-#include <QDebug>
-#include <iostream>
-#include <sstream>
-#include <string>
 
 Snake snakeobj {25, 25, 10};
 Snake* s = &snakeobj;
@@ -42,11 +45,15 @@ game_view::game_view(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
+
+	selectSound = new QMediaPlayer();
+	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
 }
 
 game_view::~game_view()
 {
-    delete ui;
+	delete selectSound;
+	delete ui;
     timer->stop();
     delete timer;
 }
@@ -126,6 +133,9 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
+	selectSound->play();
+
+	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
         qDebug() << temp->get_col() << temp->get_row();

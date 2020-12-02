@@ -17,5 +17,16 @@
         <file>game_map/GameMap.txt</file>
         <file>assets/mountain.png</file>
         <file>assets/plains.png</file>
+        <file>assets/sound/death.wav</file>
+        <file>assets/sound/eat.wav</file>
+        <file>assets/sound/hurt.wav</file>
+        <file>assets/sound/powerup.wav</file>
+        <file>assets/sound/select.wav</file>
+        <file>assets/big-ghost-base.psd</file>
+        <file>assets/ghost-base.psd</file>
+        <file>assets/snake-body.psd</file>
+        <file>assets/snake-corner.psd</file>
+        <file>assets/snake-head.psd</file>
+        <file>assets/snake-tail.psd</file>
     </qresource>
 </RCC>

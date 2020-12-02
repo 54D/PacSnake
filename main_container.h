@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QMediaPlayer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class main_container; }
@@ -25,5 +26,6 @@ private slots:
 
 private:
     Ui::main_container *ui;
+	QMediaPlayer* selectSound;
 };
 #endif // WIDGET_H

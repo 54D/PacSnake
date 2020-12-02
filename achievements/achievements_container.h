@@ -2,6 +2,7 @@
 #define ACHIEVEMENTS_CONTAINER_H
 
 #include <QWidget>
+#include <QMediaPlayer>
 
 namespace Ui {
 class achievements_container;
@@ -23,6 +24,7 @@ signals:
 
 private:
     Ui::achievements_container *ui;
+	QMediaPlayer* selectSound;
 };
 
 #endif // ACHIEVEMENTS_CONTAINER_H

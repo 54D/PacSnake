@@ -91,7 +91,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
             }
         }
         input.skipWhiteSpace();
-    }
+	}
 
     // Close File
     terrain_map_file.close();

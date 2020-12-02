@@ -1,3 +1,5 @@
+#include <QMediaPlayer>
+
 #include "achievements_container.h"
 #include "ui_achievements_container.h"
 
@@ -8,14 +10,19 @@ achievements_container::achievements_container(QWidget *parent) :
     ui->setupUi(this);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableView->setSelectionMode(QAbstractItemView::NoSelection);
+
+	selectSound = new QMediaPlayer();
+	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
 }
 
 achievements_container::~achievements_container()
 {
+	delete selectSound;
     delete ui;
 }
 
 void achievements_container::on_back_button_clicked()
 {
+	selectSound->play();
     emit previous_menu();
 }

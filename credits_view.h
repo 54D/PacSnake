@@ -2,6 +2,7 @@
 #define CREDITS_VIEW_H
 
 #include <QWidget>
+#include <QMediaPlayer>
 
 namespace Ui {
 class credits_view;
@@ -17,6 +18,7 @@ public:
 
 private:
     Ui::credits_view *ui;
+	QMediaPlayer* selectSound;
 };
 
 #endif // CREDITS_VIEW_H
