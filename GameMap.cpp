@@ -3,6 +3,7 @@
 #include <fstream>
 #include <QDebug>
 
+#include <Qt>
 #include <QString>
 #include <QFile>
 #include <QTextStream>
@@ -62,7 +63,8 @@ void GameMap::load_terrian_map(const std::string& filename) {
 
 	QTextStream input(&terrain_map_file);
 	input >> num_rows >> num_cols;
-    input >> Qt::ws;
+    input.skipWhiteSpace();
+    //input >> Qt::ws;
 
 	// Create map
 	terrain_map = new TerrainState* [num_rows];
@@ -89,7 +91,8 @@ void GameMap::load_terrian_map(const std::string& filename) {
 					break;
 			}
 		}
-        input >> Qt::ws;
+        //input >> Qt::ws;
+        input.skipWhiteSpace();
 	}
 
     // Close File

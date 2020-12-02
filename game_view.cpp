@@ -19,7 +19,7 @@
 #include <sstream>
 #include <string>
 
-Snake snakeobj {100, 100, 10};
+Snake snakeobj {25, 25, 10};
 Snake* s = &snakeobj;
 
 const QString game_view::image_lookup[1][4] {
@@ -146,9 +146,9 @@ void game_view::on_pushButton_clicked()
         QPixmap pic(image_lookup[0][pic_ref]);
         QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
         temp->register_view(snake_pic);
-        snake_pic->setOffset(temp->get_col(),temp->get_row());
+        snake_pic->setZValue(999);
+        snake_pic->setOffset(temp->get_col()*32,temp->get_row()*32);
         temp = temp->get_next();
-
         // TODO: 54D: lines 62 and 63 error: you're adding a SnakeBody *, but addItem only accepts QGraphicsItem *. These lines are commented for build
         //scene.addPixmap(temp->pixmap);
         //temp = temp->get_next();
@@ -205,7 +205,7 @@ void game_view::game_timer(){
     s->move_forward();
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
-        temp->get_pixmap()->setOffset(temp->get_col(),temp->get_row());
+        temp->get_pixmap()->setOffset(temp->get_col()*32,temp->get_row()*32);
         temp->refresh_pixmap();
         temp = temp->get_next();
     }
