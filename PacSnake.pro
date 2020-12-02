@@ -18,6 +18,7 @@ SOURCES += \
     credits_view.cpp \
     entities/Entity.cpp \
     entities/MovingEntity.cpp \
+    entities/fruits_and_powerUps/Fruit.cpp \
     entities/fruits_and_powerUps/PU_Dash.cpp \
     entities/fruits_and_powerUps/PU_Shield.cpp \
     entities/fruits_and_powerUps/PowerUp.cpp \
