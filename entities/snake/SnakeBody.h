@@ -8,8 +8,8 @@ public:
 	friend class Snake;
 	virtual ~SnakeBody();
     
-    const SnakeBody* get_prev() const;
-    const SnakeBody* get_next() const;
+    SnakeBody* get_prev() const;
+    SnakeBody* get_next() const;
 
 protected:
     // Remove all the SnakeBody after this SnakeBody
@@ -17,7 +17,6 @@ protected:
 	
 	virtual void move_forward() override;
 	void remove_tail();
-    virtual QPixmap get_pixmap() override;
     
     SnakeBody* prev {nullptr};
     SnakeBody* next {nullptr};

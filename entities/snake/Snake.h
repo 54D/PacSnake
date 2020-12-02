@@ -51,7 +51,7 @@ public:
     void usePU();
 
 protected:
-    virtual QPixmap get_pixmap() override;
+    //virtual QPixmap get_pixmap() override;
 
 private:
     int max_health {INIT_HEALTH};

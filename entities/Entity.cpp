@@ -28,8 +28,18 @@ void Entity::set_relative_coordinate(int delta_row, int delta_col) {
     col = col + delta_col;
 }
 
-QPixmap Entity::get_pixmap(){
-    return QPixmap(":/assets/mike_wazowski.png");
+void Entity::register_view(QGraphicsPixmapItem *pixmap){
+    this->pixmap = pixmap;
+}
+
+void Entity::refresh_pixmap(){
+    //todo
+    //pixmap->setPixmap()
+    return;
+}
+
+QGraphicsPixmapItem* Entity::get_pixmap() {
+    return this->pixmap;
 }
 
 Entity::Entity() {}
