@@ -5,8 +5,9 @@
 #include <QGraphicsScene>
 #include <QMediaPlayer>
 
-#include <entities/ghosts/GhostBody.h>
 #include <entities/snake/Snake.h>
+#include <entities/ghosts/NormalGhost.h>
+#include <entities/ghosts/BigGhost.h>
 #include <entities/fruits_and_powerUps/Fruit.h>
 #include <entities/fruits_and_powerUps/PowerUp.h>
 #include "GameMap.h"
@@ -24,7 +25,7 @@ public:
 	~game_view();
     void Game_start();
     static const QString image_lookup[1][4];
-	static const int GAME_TICK_UPDATE_TIME = 500;
+	static const int GAME_TICK_UPDATE_TIME = 100;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -45,10 +46,12 @@ private:
     void reset_view();
     void render_game_map();
     bool eventFilter(QObject*, QEvent*) override;
+	bool next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection);
 
 	GameMap* game_map {nullptr};
 	Snake* snake {nullptr};
-	QList<GhostBody*> ghosts;
+	QList<NormalGhost*> normalGhosts;
+	QList<BigGhost*> bigGhosts;	//TODO
 	QList<Fruit*> fruits;
 	QList<PowerUp*> powerups;
 

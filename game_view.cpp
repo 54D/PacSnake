@@ -9,6 +9,7 @@
 #include <QGraphicsView>
 #include <QDebug>
 #include <QMediaPlayer>
+#include <QList>
 
 #include "game_view.h"
 #include "ui_game_view.h"
@@ -17,6 +18,8 @@
 #include "entities/MovingEntity.h"
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
+#include "entities/ghosts/NormalGhost.h"
+#include "entities/ghosts/BigGhost.h"
 #include "achievements/achievements_container.h"
 #include "credits_container.h"
 #include "credits_view.h"
@@ -57,10 +60,10 @@ game_view::~game_view()
 	delete ui;
 	delete game_map;
 	delete snake;
-	for (auto it = ghosts.begin(); it != ghosts.end(); it++) {
+	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
 		delete (*it);
 	}
-	ghosts.clear();
+	normalGhosts.clear();
 
 	for (auto it = fruits.begin(); it != fruits.end(); it++) {
 		delete (*it);
@@ -160,12 +163,16 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
+	// TODO: Remove previous content?
+
 	// Play sound effect
 	selectSound->play();
 
 	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
-	snake = new Snake {25, 25, 10};
 
+	/* SNAKE */
+	// Init Snake
+	snake = new Snake {25, 25, 1};
 	// Render snake on scene
 	SnakeBody* temp = snake;
 	for (int i = 0; i <= snake->get_length(); i++){
@@ -185,14 +192,37 @@ void game_view::on_pushButton_clicked()
         snake_pic->setOffset(temp->get_col()*32,temp->get_row()*32);
         temp = temp->get_next();
     }
+
+	/* NORMAL GHOSTS */
+	// Generate two noraml ghosts
+	// TODO : Generate two instead of one and set random coord
+	for (int i = 0; i < 1; i++) {
+		NormalGhost* currentGhost = new NormalGhost {20, 20, 2};
+		normalGhosts.push_back(currentGhost);
+		// TODO: UI
+
+	}
+
+	/* BIG GHOSTS */
+	// TODO
+
+	/* FRUITS */
+	// TODO
+
+	/* POWER UPS */
+	// TODO
+
+	/* START TIMER */
 	// Start gameTickTimer update every 0.1
 	gameTickTimer->start(GAME_TICK_UPDATE_TIME);
 	// Start timer to update every 1 seconds
     timer->start(1000);
-	// load and render map
+
+	/* GAME MAP */
 	// TODO:	54D: possible memory leak? since old game_map is not removed?
 	//			ED: Possible, delete game_map is added
 	delete game_map;
+	// load and render map
 	game_map = new GameMap();
     game_map->load_terrian_map(":/game_map/GameMap.txt");
     render_game_map();
@@ -249,20 +279,60 @@ void game_view::gameTickUpdate() {
 	// TODO: Game Over Condition Checking
 
 
-	// Update snake movement
+	// Update movement & UI
+	// gameTickCount % 1 --> Move and update every game tick
+
+	/* SNAKE */
+	// Movement
 	if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
 		snake->move_forward();
 		qDebug() << snake->get_row() << snake->get_col();
 	}
-
-	/* Collision checking */
-
-	/* UI Update  */
-	// Update snake UI
+	// UI
 	SnakeBody* currentSnakeBody = snake;
 	while (currentSnakeBody != nullptr){
 		currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
 		currentSnakeBody->refresh_pixmap();
 		currentSnakeBody = currentSnakeBody->get_next();
 	}
+
+	/* NORMAL GHOSTS*/
+	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+		// Movement
+		if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			// Avoid wall collison checking
+			MovingEntity::Direction currentHeadingDirection = (*it)->get_headingDirection();
+			while (next_move_wall_collision((*it)->get_row(), (*it)->get_col(), currentHeadingDirection)) {
+				// Rotate heading direction of Normal ghost
+				switch (currentHeadingDirection) {
+					case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
+					case MovingEntity::Direction::EAST:	currentHeadingDirection	= MovingEntity::Direction::SOUTH;break;
+					case MovingEntity::Direction::SOUTH:currentHeadingDirection	= MovingEntity::Direction::WEST; break;
+					case MovingEntity::Direction::WEST:	currentHeadingDirection = MovingEntity::Direction::NORTH;break;
+				}
+				(*it)->set_headingDirection(currentHeadingDirection);
+			}
+			(*it)->move_forward();
+		}
+		// UI
+		// TODO
+	}
+
+	/* BIG GHOST*/
+	// TODO
+
+	/* Collision checking */
+	// TODO
+}
+
+bool game_view::next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) {
+	switch(headingDirection) {
+		case MovingEntity::Direction::NORTH:row -= 1;	break;
+		case MovingEntity::Direction::EAST:	col += 1;	break;
+		case MovingEntity::Direction::SOUTH:row += 1;	break;
+		case MovingEntity::Direction::WEST:	col -= 1;	break;
+	}
+	if (game_map->get_terrainState(row, col) == GameMap::TerrainState::BLOCKED)
+		return true;
+	return false;
 }
