@@ -41,7 +41,7 @@ game_view::~game_view()
 }
 
 void game_view::render_game_map(){
-    QGraphicsRectItem *rect_item = scene.addRect(16,16,16,16);
+    QGraphicsRectItem *rect_item = new QGraphicsRectItem;
     for(int i=0;i<terrain_pixmaps.size();i++){
         scene.removeItem(terrain_pixmaps.at(i));
         delete terrain_pixmaps.at(i);
@@ -72,6 +72,9 @@ void game_view::render_game_map(){
             }
             QByteArray */
             QGraphicsPixmapItem *img = scene.addPixmap(QPixmap(path));
+            QGraphicsRectItem *rect_item = new QGraphicsRectItem();
+            rect_item->setRect(0,0,20,100);
+            scene.addItem(rect_item);
             img->setOffset(c*32,r*32);
             img->setZValue(5);
             terrain_pixmaps.append(img);
@@ -143,7 +146,9 @@ void game_view::on_pushButton_clicked()
     game_map = new GameMap();
     game_map->load_terrian_map(":/game_map/GameMap.txt");
     render_game_map();
+    ui->graphicsView->setScene(&scene);
     ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
+    ui->graphicsView->show();
     ui->pushButton->setVisible(false);
 }
 
