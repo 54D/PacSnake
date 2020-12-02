@@ -41,6 +41,7 @@ game_view::~game_view()
 }
 
 void game_view::render_game_map(){
+    QGraphicsRectItem *rect_item = scene.addRect(16,16,16,16);
     for(int i=0;i<terrain_pixmaps.size();i++){
         scene.removeItem(terrain_pixmaps.at(i));
         delete terrain_pixmaps.at(i);
@@ -48,25 +49,34 @@ void game_view::render_game_map(){
     terrain_pixmaps.clear();
     for(int r=0;r<game_map->get_num_rows();r++){
         for(int c=0;c<game_map->get_num_cols();c++){
-            std::string path;
+            QString path;
             switch(game_map->get_terrainState(r,c)){
             case GameMap::TerrainState::EMPTY:
+                qDebug() << "render_game_map | TerrainState::EMPTY";
                 path = ":/assets/plains.png";
                 break;
             case GameMap::TerrainState::BLOCKED:
+                qDebug() << "render_game_map | TerrainState::BLOCKED";
                 path = ":/assets/mountain.png";
                 break;
             default:
-                qDebug() << "Invalid TerrainState read";
+                qDebug() << "render_game_map | Invalid TerrainState read";
                 path = ":/assets/mike_wazowski.png";
                 break;
             }
-            QGraphicsPixmapItem *img = scene.addPixmap(QPixmap(QString::fromStdString(path)));
+            /*
+            QFile img_file(QString::fromStdString(path));
+            if(!img_file.open(QIODevice::ReadOnly)){
+                qDebug() << "render_game_map | img_file cannot be opened";
+                return;
+            }
+            QByteArray */
+            QGraphicsPixmapItem *img = scene.addPixmap(QPixmap(path));
             img->setOffset(c*32,r*32);
-            img->setZValue(0);
+            img->setZValue(5);
             terrain_pixmaps.append(img);
         }
-	}
+    }
 }
 
 void game_view::keyPressEvent(QKeyEvent *event) {

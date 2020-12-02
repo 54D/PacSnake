@@ -91,4 +91,7 @@ void GameMap::load_terrian_map(const std::string& filename) {
 		}
 		input >> Qt::ws;
 	}
+
+    // Close File
+    terrain_map_file.close();
 }
