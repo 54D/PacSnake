@@ -40,6 +40,7 @@ private:
 
     GameMap *game_map;
     QTimer *timer;
+    long timeCount = 0;
 
     QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;

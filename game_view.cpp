@@ -137,21 +137,29 @@ void game_view::on_pushButton_clicked()
     ui->pushButton->setVisible(false);
 }
 
+void game_view::reset_view(){
+    timer->stop();
+    timeCount = 0;
+    ui->pushButton->setVisible(true);
+}
+
 void game_view::on_main_container_currentChanged(int index){
     if(index==1){
         reset_view();
     }
 }
 
-long timeCount = 0;
-
 static QString parseTime(long seconds){
     long hh = (long)( (seconds / (60*60)) % 24 );
     int mm = (int)( (seconds / (60)) % 60 );
     int ss = (int)( seconds%60 );
     std::ostringstream builder;
-    builder << hh << ":" << mm << ":" << ss;
-    // TODO: 54D: if number less than 10, won't display leading 0. Haven't fixed this sorry
+    if(hh<10)builder << "0";
+    builder << hh << ":";
+    if(mm<10)builder << "0";
+    builder << mm << ":";
+    if(ss<10)builder << "0";
+    builder << ss;
     return QString::fromStdString(builder.str());
 }
 
