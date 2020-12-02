@@ -52,7 +52,6 @@ game_view::~game_view()
 }
 
 void game_view::render_game_map(){
-    QGraphicsRectItem *rect_item = new QGraphicsRectItem;
     for(int i=0;i<terrain_pixmaps.size();i++){
         scene.removeItem(terrain_pixmaps.at(i));
         delete terrain_pixmaps.at(i);
@@ -75,13 +74,6 @@ void game_view::render_game_map(){
                 path = ":/assets/mike_wazowski.png";
                 break;
             }
-            /*
-            QFile img_file(QString::fromStdString(path));
-            if(!img_file.open(QIODevice::ReadOnly)){
-                qDebug() << "render_game_map | img_file cannot be opened";
-                return;
-            }
-            QByteArray */
             QGraphicsPixmapItem *img = scene.addPixmap(QPixmap(path));
             QGraphicsRectItem *rect_item = new QGraphicsRectItem();
             rect_item->setRect(0,0,20,100);
@@ -134,7 +126,6 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
-	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
         qDebug() << temp->get_col() << temp->get_row();
@@ -152,21 +143,7 @@ void game_view::on_pushButton_clicked()
         snake_pic->setZValue(999);
         snake_pic->setOffset(temp->get_col()*32,temp->get_row()*32);
         temp = temp->get_next();
-        // TODO: 54D: lines 62 and 63 error: you're adding a SnakeBody *, but addItem only accepts QGraphicsItem *. These lines are commented for build
-        //scene.addPixmap(temp->pixmap);
-        //temp = temp->get_next();
     }
-    //ui->graphicsView->setScene(scene);
-    //start_game();
-    //QGraphicsView *view = new QGraphicsView(scene);
-    //ui->graphicsView->show();
-    /*for (int i = 0; i < 100; i++){
-        for (int j = 0; j < 100; j++){
-            QGraphicsRectItem *map_bg = new QGraphicsRectItem(j*16,i*16,16,16);
-            scene->addItem(map_bg);
-        }
-    }*/
-    //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
     timer->start(1000);
     // TODO: 54D: possible memory leak? since old game_map is not removed?
     game_map = new GameMap();

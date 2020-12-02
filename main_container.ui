@@ -93,35 +93,36 @@
        <string>Leave</string>
       </property>
      </widget>
-     <widget class="QLabel" name="titleLabel">
+     <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>130</y>
-        <width>301</width>
-        <height>101</height>
+        <x>-1</x>
+        <y>129</y>
+        <width>801</width>
+        <height>81</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>30</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>PacSnake</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="titleLabel">
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>30</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>PacSnake</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-     <zorder>titleLabel</zorder>
-     <zorder>startButton</zorder>
-     <zorder>achButton</zorder>
-     <zorder>creditsButton</zorder>
-     <zorder>leaveButton</zorder>
     </widget>
    </widget>
   </widget>
