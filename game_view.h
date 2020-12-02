@@ -27,7 +27,7 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
-    void on_stackedWidget_currentChanged(int index);
+    void stackedWidgetChanged(int index);
     void game_timer();
     void collisionEmitter();
 
@@ -37,6 +37,7 @@ signals:
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
+    void setup_view();
     void reset_view();
     void render_game_map();
     bool eventFilter(QObject*, QEvent*) override;

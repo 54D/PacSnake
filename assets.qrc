@@ -10,9 +10,7 @@
         <file>assets/sprite/big2.png</file>
         <file>assets/sprite/big3.png</file>
         <file>assets/sprite/big4.png</file>
-        <file>assets/sprite/big-ghost-base.psd</file>
         <file>assets/sprite/blue.png</file>
-        <file>assets/sprite/ghost-base.psd</file>
         <file>assets/sprite/green.png</file>
         <file>assets/sprite/mike_wazowski.png</file>
         <file>assets/sprite/mountain.png</file>
@@ -21,32 +19,19 @@
         <file>assets/sprite/plains.png</file>
         <file>assets/sprite/red.png</file>
         <file>assets/sprite/snake-body-horizontal.png</file>
-        <file>assets/sprite/snake-body-horizontal.psd</file>
         <file>assets/sprite/snake-body-vertical.png</file>
-        <file>assets/sprite/snake-body-vertical.psd</file>
         <file>assets/sprite/snake-corner-down-left.png</file>
-        <file>assets/sprite/snake-corner-down-left.psd</file>
         <file>assets/sprite/snake-corner-down-right.png</file>
-        <file>assets/sprite/snake-corner-down-right.psd</file>
         <file>assets/sprite/snake-corner-up-left.png</file>
-        <file>assets/sprite/snake-corner-up-left.psd</file>
         <file>assets/sprite/snake-corner-up-right.png</file>
-        <file>assets/sprite/snake-corner-up-right.psd</file>
         <file>assets/sprite/snake-head-down.png</file>
-        <file>assets/sprite/snake-head-down.psd</file>
         <file>assets/sprite/snake-head-left.png</file>
-        <file>assets/sprite/snake-head-left.psd</file>
         <file>assets/sprite/snake-head-right.png</file>
-        <file>assets/sprite/snake-head-right.psd</file>
         <file>assets/sprite/snake-head-up.png</file>
-        <file>assets/sprite/snake-head-up.psd</file>
         <file>assets/sprite/snake-tail-down.png</file>
-        <file>assets/sprite/snake-tail-down.psd</file>
         <file>assets/sprite/snake-tail-left.png</file>
-        <file>assets/sprite/snake-tail-left.psd</file>
         <file>assets/sprite/snake-tail-right.png</file>
-        <file>assets/sprite/snake-tail-right.psd</file>
         <file>assets/sprite/snake-tail-up.png</file>
-        <file>assets/sprite/snake-tail-up.psd</file>
+        <file>assets/font/8-BIT WONDER.TTF</file>
     </qresource>
 </RCC>

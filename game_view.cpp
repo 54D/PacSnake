@@ -38,16 +38,11 @@ game_view::game_view(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::game_view)
 {
-    ui->setupUi(this);
-    ui->graphicsView->installEventFilter(this);
-    ui->graphicsView->setScene(&scene);
-    ui->graphicsView->show();
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
-
-	selectSound = new QMediaPlayer();
-	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+    ui->setupUi(this);
+    setup_view();
+    selectSound = new QMediaPlayer();
+    selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
 }
 
 game_view::~game_view()
@@ -165,15 +160,28 @@ void game_view::on_pushButton_clicked()
     ui->pushButton->setVisible(false);
 }
 
+void game_view::setup_view(){
+    ui->pushButton->setVisible(true);
+    ui->graphicsView->installEventFilter(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
+}
+
 void game_view::reset_view(){
     timer->stop();
     timeCount = 0;
-    ui->pushButton->setVisible(true);
+    // TODO: 54D: remove all moving snake
+    ui->graphicsView->removeEventFilter(this);
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
+
 }
 
-void game_view::on_stackedWidget_currentChanged(int index){
-    if(index==1){
+void game_view::stackedWidgetChanged(int index){
+    if(index!=1){
         reset_view();
+    }else{
+        setup_view();
     }
 }
 
@@ -209,7 +217,7 @@ void game_view::game_timer(){
 void game_view::collisionEmitter(){
     QList<QGraphicsItem*> empty;
     emit snake_collided(empty);
-    /*
+    /* TODO: 54D: wait for snake_pixmap to be readded into game_view (@bonzi)
     QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake_pixmap);
     if(!collisions.empty()){
         emit snake_collided(collisions);
