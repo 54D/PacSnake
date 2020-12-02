@@ -27,12 +27,14 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
+    void on_back_button_clicked();
     void stackedWidgetChanged(int index);
     void game_timer();
     void collisionEmitter();
 
 signals:
     void snake_collided(QList<QGraphicsItem*> collisions);
+    void previous_menu();
 
 private:
     QGraphicsScene scene;
@@ -45,6 +47,7 @@ private:
     GameMap *game_map;
     QTimer *timer;
     long timeCount = 0;
+    bool backButtonPressed = false;
 
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;

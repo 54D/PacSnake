@@ -64,15 +64,12 @@ void game_view::render_game_map(){
             QString path;
             switch(game_map->get_terrainState(r,c)){
             case GameMap::TerrainState::EMPTY:
-                qDebug() << "render_game_map | TerrainState::EMPTY";
                 path = ":/assets/sprite/plains.png";
                 break;
             case GameMap::TerrainState::BLOCKED:
-                qDebug() << "render_game_map | TerrainState::BLOCKED";
                 path = ":/assets/sprite/mountain.png";
                 break;
             default:
-                qDebug() << "render_game_map | Invalid TerrainState read";
                 path = ":/assets/sprite/mike_wazowski.png";
                 break;
             }
@@ -130,7 +127,6 @@ void game_view::on_pushButton_clicked()
 {
 	selectSound->play();
 
-	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
     SnakeBody* temp = &snakeobj;
     for (int i = 0; i <= s->get_length(); i++){
         qDebug() << temp->get_col() << temp->get_row();
@@ -150,7 +146,7 @@ void game_view::on_pushButton_clicked()
         temp = temp->get_next();
     }
     timer->start(1000);
-    // TODO: 54D: possible memory leak? since old game_map is not removed?
+    //delete game_map;
     game_map = new GameMap();
     game_map->load_terrian_map(":/game_map/GameMap.txt");
     render_game_map();
@@ -158,6 +154,13 @@ void game_view::on_pushButton_clicked()
     ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
     ui->graphicsView->show();
     ui->pushButton->setVisible(false);
+}
+
+void game_view::on_back_button_clicked()
+{
+    selectSound->play();
+    backButtonPressed = true;
+    emit previous_menu();
 }
 
 void game_view::setup_view(){
@@ -171,6 +174,7 @@ void game_view::reset_view(){
     timer->stop();
     timeCount = 0;
     // TODO: 54D: remove all moving snake
+    // scene.clear(); // TODO: this causes issues when reopening the widget.
     ui->graphicsView->removeEventFilter(this);
     disconnect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     disconnect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
@@ -178,7 +182,8 @@ void game_view::reset_view(){
 }
 
 void game_view::stackedWidgetChanged(int index){
-    if(index!=1){
+    if(index!=1&&backButtonPressed){
+        backButtonPressed = false;
         reset_view();
     }else{
         setup_view();
