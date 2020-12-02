@@ -14,6 +14,7 @@ public:
 
     int get_num_rows() const;
     int get_num_cols() const;
+    TerrainState get_terrainState(int row,int col) const;
 
 	void load_terrian_map(const std::string& filename);
 

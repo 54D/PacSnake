@@ -24,7 +24,9 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
+    void on_main_container_currentChanged(int index);
     void game_timer();
+    void collisionEmitter();
 
 signals:
     void snake_collided(QList<QGraphicsItem*> collisions);
@@ -32,9 +34,12 @@ signals:
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
-    void render_game_map(GameMap *game_map);
+    void reset_view();
+    void render_game_map();
     bool eventFilter(QObject*, QEvent*) override;
-    void collisionEmitter();
+
+    GameMap *game_map;
+    QTimer *timer;
 
     QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
