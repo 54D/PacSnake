@@ -1,5 +1,6 @@
 #include "PowerUp.h"
 #include "PU_Dash.h"
+#include <entities/MovingEntity.h>
 
 #include <QGraphicsPixmapItem>
 
@@ -16,11 +17,11 @@ PowerUp::PowerUpType PU_Dash::get_type() const {
 
 void PU_Dash::activate(Snake* snake) {
     // Only one power up can be activated at the same time 
-    if (snake->get_pu_activate() != nullptr)
-        return;
-
-    // TODO
-    int newSpeed= snake->get_speed() * 2;
+	if (snake->get_pu_activate() != nullptr) {
+		return;
+	}
+	// TODO
+	int newSpeed = MovingEntity::MAX_SPEED;
     snake->set_speed(newSpeed);
 
 	// Set activated power up

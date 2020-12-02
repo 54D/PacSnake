@@ -13,8 +13,10 @@ MovingEntity::Direction MovingEntity::get_headingDirection() const {
 }
 
 void MovingEntity::set_speed(int speed) {
-	if (speed < 0 || speed > MAX_SPEED)
-        return;
+	if (speed < 0)
+		speed = 0;
+	else if (speed > MAX_SPEED)
+		speed = MAX_SPEED;
 
     this->speed = speed;
 }
