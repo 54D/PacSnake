@@ -15,5 +15,7 @@
         <file>assets/snake-head.png</file>
         <file>assets/snake-tail.png</file>
         <file>GameMap/GameMap.txt</file>
+        <file>assets/mountain.png</file>
+        <file>assets/plains.png</file>
     </qresource>
 </RCC>
