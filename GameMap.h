@@ -12,6 +12,9 @@ public:
 	static const char TERRAIN_EMPTY_CHAR {' '};
 	static const char TERRAIN_BLOCKED_CHAR {'#'};
 
+    int get_num_rows() const;
+    int get_num_cols() const;
+
 	void load_terrian_map(const std::string& filename);
 
 	GameMap();

@@ -8,6 +8,7 @@
 #include "credits_container.h"
 #include "credits_view.h"
 #include "ui_achievements_container.h"
+#include "GameMap.h"
 #include <QGraphicsRectItem>
 #include <QKeyEvent>
 #include <QGraphicsScene>
@@ -32,6 +33,19 @@ game_view::game_view(QWidget *parent) :
 game_view::~game_view()
 {
     delete ui;
+}
+
+void game_view::render_game_map(GameMap *game_map){
+    for(int i=0;i<terrain_pixmaps.size();i++){
+        scene.removeItem(terrain_pixmaps.at(i));
+        delete terrain_pixmaps.at(i);
+    }
+    terrain_pixmaps.clear();
+    for(int r=0;r<game_map->get_num_rows();r++){
+        for(int c=0;c<game_map->>get_num_cols();c++){
+            //render
+        }
+    }
 }
 
 void game_view::keyPressEvent(QKeyEvent *event) {

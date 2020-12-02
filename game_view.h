@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QGraphicsScene>
 
+#include "GameMap.h"
+
 namespace Ui {
 class game_view;
 }
@@ -30,11 +32,12 @@ signals:
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
+    void render_game_map(GameMap *game_map);
     bool eventFilter(QObject*, QEvent*) override;
     void collisionEmitter();
 
-    QGraphicsPixmapItem *snake;
-    QList<QGraphicsPixmapItem> *terrain;
+    QGraphicsPixmapItem *snake_pixmap;
+    QList<QGraphicsPixmapItem*> terrain_pixmaps;
 };
 
 #endif // GAME_VIEW_H

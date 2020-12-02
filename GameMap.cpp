@@ -21,6 +21,13 @@ GameMap::~GameMap() {
 	obstacle.clear();
 }
 
+int GameMap::get_num_rows() const {
+    return num_rows;
+}
+int GameMap::get_num_cols() const {
+    return num_cols;
+}
+
 void GameMap::load_terrian_map(const std::string& filename) {
 	// Remove previous content
 	for (int i = 0; i < num_rows; i++)
