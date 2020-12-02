@@ -39,28 +39,36 @@ void GameMap::load_terrian_map(const std::string& filename) {
 	for (int i = 0; i < num_rows; i++)
 		delete [] terrain_map[i];
 	delete [] terrain_map;
-	terrain_map = nullptr;
+    terrain_map = nullptr;
+    qDebug() << "load_terrain_map | Remove previous content";
 
 	// Delete elements in obstacle
-	for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
-		delete (*it);
-	}
-	obstacle.clear();
+    if (obstacle.size() > 0) {
+        for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
+            delete (*it);
+        }
+        obstacle.clear();
+    }
+    qDebug() << "load_terrain_map | Delete elements in obstacle";
 
 	// File Input
 	std::ifstream terrain_map_file(filename);
-	if (!terrain_map_file)
-			return;
+    if (!terrain_map_file){
+        qDebug() << "load_terrain_map | File not found";
+        return;
+    }
 
 	terrain_map_file >> num_rows >> num_cols;
 	terrain_map_file >> std::ws;
 	terrain_map_file >> std::noskipws;
+    qDebug() << "load_terrain_map | File input";
 
 	// Create map
 	terrain_map = new TerrainState* [num_rows];
 	for (int row = 0; row < num_rows; row++) {
 		terrain_map[row] = new TerrainState [num_cols];
 	}
+    qDebug() << "load_terrain_map | Create map";
 
 	// Input map and create obstacle object
 	for (int row = 0; row < num_rows; row++) {
@@ -78,8 +86,8 @@ void GameMap::load_terrian_map(const std::string& filename) {
 					Entity* temp_obstacle = new Entity(row, col);
 					obstacle.push_back(temp_obstacle);
 					break;
-			}
-		}
+            }
+        }
 		terrain_map_file >> std::ws;
 	}
 }

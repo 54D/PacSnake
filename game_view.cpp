@@ -28,11 +28,16 @@ game_view::game_view(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->graphicsView->installEventFilter(this);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
 }
 
 game_view::~game_view()
 {
     delete ui;
+    timer->stop();
+    delete timer;
 }
 
 void game_view::render_game_map(){
@@ -123,16 +128,19 @@ void game_view::on_pushButton_clicked()
         }
     }*/
     //ui->graphicsView->setFocusPolicy(Qt::StrongFocus);
-    QTimer *timer = new QTimer(this);
-    // TODO: 54D: this connects multiple times
-    connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
     timer->start(1000);
     // TODO: 54D: possible memory leak? since old game_map is not removed?
     GameMap *game_map = new GameMap();
-    //game_map->load_terrian_map(":/maps/map1.txt");
+    game_map->load_terrian_map(":/GameMap/GameMap.txt");
     //render_game_map();
     //ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
+    ui->pushButton->setVisible(false);
+}
+
+void game_view::on_main_container_currentChanged(int index){
+    if(index==1){
+        reset_view();
+    }
 }
 
 long timeCount = 0;
