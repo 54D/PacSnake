@@ -9,7 +9,7 @@
 class GameMap {
 public:
 	// Note that TerrainState::OCCUPIED only used for Entity generation to avoid colliding
-	enum class TerrainState { EMPTY, BLOCKED, OCCUPIED };
+	enum class TerrainState { EMPTY, BLOCKED, SNAKE_OCCUPIED, GHOST_OCCUPIED };
 	static const char TERRAIN_EMPTY_CHAR {' '};
 	static const char TERRAIN_BLOCKED_CHAR {'#'};
 

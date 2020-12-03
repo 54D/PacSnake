@@ -49,7 +49,7 @@ private:
     bool eventFilter(QObject*, QEvent*) override;
 
 	// Detect will the Entity collide with the wall in it's next movement
-	bool next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
+	bool next_move_ghost_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
 
 	bool is_game_over() const;
 	void remove_game_content();
@@ -70,6 +70,7 @@ private:
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
 	QMediaPlayer* selectSoundEffect;
+	QMediaPlayer* hurtSoundEffect;
 	QMediaPlayer* deathSoundEffect;
 	QMediaPlayer* gameOverSoundEffect;
 };

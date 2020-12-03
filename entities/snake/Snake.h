@@ -13,6 +13,7 @@ public:
     static const int INIT_LENGTH = 3;
     static const int INIT_SPEED = 1;
     static const int MAX_PU = 3;
+	static const int MAX_LENGTH = 20;
 
     Snake(int row, int col, int speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
     virtual ~Snake();

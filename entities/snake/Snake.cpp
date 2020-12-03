@@ -164,8 +164,13 @@ int Snake::calculate_level_speed() const {
 }
 
 void Snake::increase_length(int len) {
-    if (len <= 0)
-        return;
+	if (len <= 0) {
+		return;
+	}
+
+	if ((length + len) > MAX_LENGTH) {
+		return;
+	}
 
     // Search for end of  SnakeBody (index = length - 1)
     SnakeBody* endSnakeBody = this;

@@ -59,6 +59,8 @@ game_view::game_view(QWidget *parent) :
 	// Init select sound
 	selectSoundEffect = new QMediaPlayer();
 	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+	hurtSoundEffect = new QMediaPlayer();
+	hurtSoundEffect->setMedia(QUrl("qrc:/assets/sound/hurt.wav"));
 	deathSoundEffect = new QMediaPlayer();
 	deathSoundEffect->setMedia(QUrl("qrc:/assets/sound/death.wav"));
 	gameOverSoundEffect = new QMediaPlayer();
@@ -83,6 +85,7 @@ game_view::~game_view()
 	terrain_pixmaps.clear();
 
 	delete selectSoundEffect;
+	delete hurtSoundEffect;
 	delete deathSoundEffect;
 	delete gameOverSoundEffect;
 }
@@ -179,8 +182,8 @@ void game_view::on_pushButton_clicked()
 
 	/* SNAKE */
 	// Init Snake
-	// TODO: Spawn position
-	snake = new Snake {20, 25, 1};
+	// TODO: Stat
+	snake = new Snake {20, 25, 10, MovingEntity::Direction::NORTH, 3, 10};
 	// UI
 	SnakeBody* currentSnakeBody = snake;
 	for (int i = 0; i <= snake->get_length(); i++){
@@ -198,7 +201,7 @@ void game_view::on_pushButton_clicked()
 		snake_pic->setOffset(currentSnakeBody->get_col()*32,currentSnakeBody->get_row()*32);
 
 		// Record the OCCUPIED state on game_map
-		game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::OCCUPIED);
+		game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
 		currentSnakeBody = currentSnakeBody->get_next();
     }
 
@@ -218,7 +221,7 @@ void game_view::on_pushButton_clicked()
 		normalGhosts.push_back(currentGhost);
 
 		// Record the OCCUPIED state on game_map
-		game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::OCCUPIED);
+		game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
 
 		// UI
 		QPixmap pic(NormalGhost::image_lookup[i % 5]);
@@ -245,10 +248,10 @@ void game_view::on_pushButton_clicked()
 		bigGhosts.push_back(currentGhost);
 
 		// Record the OCCUPIED state on game_map
-		game_map->set_terrainState(currentGhost->get_row()		, currentGhost->get_col()	,  GameMap::TerrainState::OCCUPIED);
-		game_map->set_terrainState(currentGhost->get_row()		, currentGhost->get_col() + 1, GameMap::TerrainState::OCCUPIED);
-		game_map->set_terrainState(currentGhost->get_row() + 1	, currentGhost->get_col() + 1, GameMap::TerrainState::OCCUPIED);
-		game_map->set_terrainState(currentGhost->get_row() + 1	, currentGhost->get_col()	,  GameMap::TerrainState::OCCUPIED);
+		game_map->set_terrainState(currentGhost->get_row()		, currentGhost->get_col()	,  GameMap::TerrainState::GHOST_OCCUPIED);
+		game_map->set_terrainState(currentGhost->get_row()		, currentGhost->get_col() + 1, GameMap::TerrainState::GHOST_OCCUPIED);
+		game_map->set_terrainState(currentGhost->get_row() + 1	, currentGhost->get_col() + 1, GameMap::TerrainState::GHOST_OCCUPIED);
+		game_map->set_terrainState(currentGhost->get_row() + 1	, currentGhost->get_col()	,  GameMap::TerrainState::GHOST_OCCUPIED);
 
 		// UI
 		int ghostBody_count = 0;
@@ -270,14 +273,6 @@ void game_view::on_pushButton_clicked()
 
 	/* POWER UPS */
 	// TODO
-
-	/* GAMEMAP CLEAR OCCUIPIED STATE */
-	// Allow ghosts to collide with Snake but not other ghosts
-	currentSnakeBody = snake;
-	while (currentSnakeBody != nullptr) {
-		game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
-		currentSnakeBody = currentSnakeBody->get_next();
-	}
 
 	/* START TIMER */
 	// Start gameTickTimer update every 0.1
@@ -338,13 +333,15 @@ void game_view::gameTickUpdate() {
 
 	/* Game Over Condition Checking */
 	if(is_game_over()){
+		// Stop timer and game update
+		gameTickTimer->stop();
+		timer->stop();
+
+		qDebug() << "GAME OVER!";
 		// Play sound effect
 		deathSoundEffect->play();
 		gameOverSoundEffect->play();
 
-		// Stop timer and game update
-		gameTickTimer->stop();
-		timer->stop();
 		emit game_over_signal();
 	}
 
@@ -361,7 +358,23 @@ void game_view::gameTickUpdate() {
 	/* SNAKE */
 	// Movement update
 	if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+		// game_map clear occupied state
+		SnakeBody* currentSnakeBody = snake;
+		while (currentSnakeBody != nullptr) {
+			game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+			currentSnakeBody = currentSnakeBody->get_next();
+		}
+
 		snake->move_forward();
+
+		// game_map update occupied state
+		currentSnakeBody = snake;
+		while (currentSnakeBody != nullptr) {
+			if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::EMPTY) {
+				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
+			}
+			currentSnakeBody = currentSnakeBody->get_next();
+		}
 	}
 	// UI update
 	// TODO
@@ -381,7 +394,7 @@ void game_view::gameTickUpdate() {
 
 			// Avoid wall collison checking
 			MovingEntity::Direction currentHeadingDirection = (*it)->get_headingDirection();
-			while (next_move_wall_collision((*it)->get_row(), (*it)->get_col(), currentHeadingDirection)) {
+			while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), currentHeadingDirection)) {
 				// Rotate heading direction of Normal ghost
 				switch (currentHeadingDirection) {
 					case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
@@ -393,7 +406,7 @@ void game_view::gameTickUpdate() {
 			}
 			(*it)->move_forward();
 			// Update game_map state
-			game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::OCCUPIED);
+			game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
 		}
 		// UI
 		(*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
@@ -413,7 +426,7 @@ void game_view::gameTickUpdate() {
 			GhostBody* currentGhostBody = *it;
 			do {
 				MovingEntity::Direction currentHeadingDirection = currentGhostBody->get_headingDirection();
-				while (next_move_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
+				while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
 					// Rotate heading direction of whole Big ghost
 					switch (currentHeadingDirection) {
 						case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
@@ -428,10 +441,10 @@ void game_view::gameTickUpdate() {
 			(*it)->move_forward();
 
 			// Update game_map state
-			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::OCCUPIED);
-			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::OCCUPIED);
-			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::OCCUPIED);
-			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::OCCUPIED);
+			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
+			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
+			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
+			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
 
 		}
 		// UI
@@ -451,11 +464,42 @@ void game_view::gameTickUpdate() {
 		return;
 	}
 
-	// Check if snake collide with ghosts
-	if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::OCCUPIED) {
+	// Check if snake collide with itself
+	for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+		if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
+			snake->set_health(0);
+			qDebug() << "Snake hits itslef";
+			return;
+		}
+	}
+
+	// Check if snake (head) collide with ghosts
+	if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
 		snake->set_health(0);
 		qDebug() << "Snake (head) hits a ghost!";
 		return;
+	}
+
+	// Check if snake (body) collide with ghosts
+	for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+		if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+			// Play sound effecct
+			if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
+				hurtSoundEffect->setPosition(0);
+			}
+			else if (hurtSoundEffect->state() == QMediaPlayer::StoppedState) {
+				hurtSoundEffect->play();
+			}
+			qDebug() << "Ouch! That's hurt!";
+			qDebug() << "Health" << snake->get_health() << snake->get_max_health();
+			snake->set_relative_health(-1);
+			for (SnakeBody* removeSnakeBody = currentSnakeBody; removeSnakeBody != nullptr; removeSnakeBody = removeSnakeBody->get_next()) {
+				game_map->set_terrainState(removeSnakeBody->get_row(), removeSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+				scene.removeItem(removeSnakeBody->get_pixmap());
+			}
+			snake->remove_tail(currentSnakeBody->get_prev());
+			return;
+		}
 	}
 	// More stuff TODO on collision checking :^ )
 }
@@ -466,14 +510,15 @@ bool game_view::is_game_over() const {
 	return false;
 }
 
-bool game_view::next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const {
+bool game_view::next_move_ghost_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const {
 	switch(headingDirection) {
 		case MovingEntity::Direction::NORTH:row -= 1;	break;
 		case MovingEntity::Direction::EAST:	col += 1;	break;
 		case MovingEntity::Direction::SOUTH:row += 1;	break;
 		case MovingEntity::Direction::WEST:	col -= 1;	break;
 	}
-	if (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY)
+	if (game_map->get_terrainState(row, col) == GameMap::TerrainState::BLOCKED ||
+		game_map->get_terrainState(row, col) == GameMap::TerrainState::GHOST_OCCUPIED )
 		return true;
 	return false;
 }
