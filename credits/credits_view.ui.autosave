@@ -32,7 +32,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-202</y>
+        <y>0</y>
         <width>666</width>
         <height>718</height>
        </rect>
@@ -52,8 +52,13 @@
            <height>700</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>Arial</family>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Graphics //&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OpenGameArt.org -- open source game art platform&lt;/span&gt;&lt;/p&gt;&lt;p&gt;website: https://opengameart.org/&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Adobe Photoshop&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Sounds //&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;sfxr -- sound effects creator&lt;/span&gt;&lt;/p&gt;&lt;p&gt;author: DrPetter&lt;/p&gt;&lt;p&gt;download: http://www.drpetter.se/project_sfxr.html&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bosca Ceoil -- background music creator&lt;/span&gt;&lt;/p&gt;&lt;p&gt;author: Terry Cavanagh&lt;/p&gt;&lt;p&gt;download: https://boscaceoil.net/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Graphics //&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;OpenGameArt.org -- open source game art platform&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;website: https://opengameart.org/&lt;br/&gt;&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Adobe Photoshop&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Sounds //&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;sfxr -- sound effects creator&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;author: DrPetter&lt;br/&gt;download: http://www.drpetter.se/project_sfxr.html&lt;br/&gt;&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Bosca Ceoil -- background music creator&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;author: Terry Cavanagh&lt;br/&gt;download: https://boscaceoil.net/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
