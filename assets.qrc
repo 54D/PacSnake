@@ -44,5 +44,7 @@
         <file>assets/sprite/pear.png</file>
         <file>assets/sprite/strawberry.png</file>
         <file>assets/sprite/tangerine.png</file>
+        <file>assets/sprite/empty-health.png</file>
+        <file>assets/sprite/full-health.png</file>
     </qresource>
 </RCC>

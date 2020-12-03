@@ -38,6 +38,7 @@ private slots:
     void stackedWidgetChanged(int index);
     void refresh_powerUp_list();
 	void update_timer();
+    void update_health();
     //void collisionEmitter();
 	void gameTickUpdate();
 

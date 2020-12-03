@@ -348,6 +348,7 @@ void game_view::setup_view(){
     ui->pauseButton->setVisible(false);
     ui->resetButton->setVisible(false);
     ui->graphicsView->installEventFilter(this);
+    update_health();
     connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
 }
 
@@ -417,6 +418,24 @@ void game_view::update_timer(){
     ui->Timer_label->setText(parseTime(timeCount));
 }
 
+void game_view::update_health(){
+    if(snake!=nullptr&&snake->get_health()>0){
+        ui->heart1Label->setStyleSheet("QLabel { background-image: url(:/assets/sprite/full-health.png); }");
+    }else{
+        ui->heart1Label->setStyleSheet("QLabel { background-image: url(:/assets/sprite/empty-health.png); }");
+    }
+    if(snake!=nullptr&&snake->get_health()>1){
+        ui->heart2Label->setStyleSheet("QLabel { background-image: url(:/assets/sprite/full-health.png); }");
+    }else{
+        ui->heart2Label->setStyleSheet("QLabel { background-image: url(:/assets/sprite/empty-health.png); }");
+    }
+    if(snake!=nullptr&&snake->get_health()>2){
+        ui->heart3Label->setStyleSheet("QLabel { background-image: url(:/assets/sprite/full-health.png); }");
+    }else{
+        ui->heart3Label->setStyleSheet("QLabel { background-image: url(:/assets/sprite/empty-health.png); }");
+    }
+}
+
 void game_view::gameTickUpdate() {
 	gameTickCount++;
 	// Overflow prevention
@@ -476,6 +495,8 @@ void game_view::gameTickUpdate() {
 			currentSnakeBody->refresh_pixmap();
 			currentSnakeBody = currentSnakeBody->get_next();
 		}
+        // HEALTH UPDATE
+        update_health();
 
 		/* NORMAL GHOSTS */
 		for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
