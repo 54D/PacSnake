@@ -281,6 +281,8 @@ void game_view::on_back_button_clicked()
     selectSoundEffect->play();
     backButtonPressed = true;
     emit previous_menu();
+
+	// Clear game content
 }
 
 void game_view::setup_view(){
@@ -384,7 +386,7 @@ void game_view::gameTickUpdate() {
 		gameTickCount = 0;
 
 	/* Game Over Condition Checking */
-	if(is_game_over()){
+	if(is_game_over()) {
 		// Stop timer and game update
 		gameTickTimer->stop();
 		timer->stop();
@@ -396,90 +398,58 @@ void game_view::gameTickUpdate() {
 
 		emit game_over_signal();
 	}
+	else {
+		/* Update movemnt & UI */
+		/* Movement will update according to the Entity's speed
+		 * As a reference,
+		 * If get_speed() == MAX_SPEED,		the Entity will move in every single game tick
+		 * If get_speed() == MAX_SPEED / 2, the Entity will move in every 2 game ticks
+		 * If get_speed() == 1,				the Entity will move in every MAX_SPEED game ticks (MAX_SPEED * GAME_TICK_UPDATE_TIME ms in real time)
+		 *
+		 * However, UI will update in every game tick regardless of the Entity's speed
+		 */
 
-	/* Update movemnt & UI */
-	/* Movement will update according to the Entity's speed
-	 * As a reference,
-	 * If get_speed() == MAX_SPEED,		the Entity will move in every single game tick
-	 * If get_speed() == MAX_SPEED / 2, the Entity will move in every 2 game ticks
-	 * If get_speed() == 1,				the Entity will move in every MAX_SPEED game ticks (MAX_SPEED * GAME_TICK_UPDATE_TIME ms in real time)
-	 *
-	 * However, UI will update in every game tick regardless of the Entity's speed
-	 */
-
-	/* SNAKE */
-	// Movement update
-	if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-		// game_map clear occupied state
-		SnakeBody* currentSnakeBody = snake;
-		while (currentSnakeBody != nullptr) {
-			game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
-			currentSnakeBody = currentSnakeBody->get_next();
-		}
-
-		snake->move_forward();
-
-		// game_map update occupied state
-		currentSnakeBody = snake;
-		while (currentSnakeBody != nullptr) {
-			if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::EMPTY) {
-				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
-			}
-			currentSnakeBody = currentSnakeBody->get_next();
-		}
-	}
-	// UI update
-	// TODO
-	SnakeBody* currentSnakeBody = snake;
-	while (currentSnakeBody != nullptr){
-		currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
-		currentSnakeBody->refresh_pixmap();
-		currentSnakeBody = currentSnakeBody->get_next();
-	}
-
-	/* NORMAL GHOSTS */
-	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+		/* SNAKE */
 		// Movement update
-		if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-			// Update game_map state
-			game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
+		if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			// game_map clear occupied state
+			SnakeBody* currentSnakeBody = snake;
+			while (currentSnakeBody != nullptr) {
+				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+				currentSnakeBody = currentSnakeBody->get_next();
+			}
 
-			// Avoid wall collison checking
-			MovingEntity::Direction currentHeadingDirection = (*it)->get_headingDirection();
-			while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), currentHeadingDirection)) {
-				// Rotate heading direction of Normal ghost
-				switch (currentHeadingDirection) {
-					case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
-					case MovingEntity::Direction::EAST:	currentHeadingDirection	= MovingEntity::Direction::SOUTH;break;
-					case MovingEntity::Direction::SOUTH:currentHeadingDirection	= MovingEntity::Direction::WEST; break;
-					case MovingEntity::Direction::WEST:	currentHeadingDirection = MovingEntity::Direction::NORTH;break;
+			snake->move_forward();
+
+			// game_map update occupied state
+			currentSnakeBody = snake;
+			while (currentSnakeBody != nullptr) {
+				if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::EMPTY) {
+					game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
 				}
-				(*it)->set_headingDirection(currentHeadingDirection);
+				currentSnakeBody = currentSnakeBody->get_next();
 			}
-			(*it)->move_forward();
-			// Update game_map state
-			game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
 		}
-		// UI
-		(*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
-	}
+		// UI update
+		// TODO
+		SnakeBody* currentSnakeBody = snake;
+		while (currentSnakeBody != nullptr){
+			currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
+			currentSnakeBody->refresh_pixmap();
+			currentSnakeBody = currentSnakeBody->get_next();
+		}
 
-	/* BIG GHOST*/
-	for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
-		// Movement update
-		if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-			// Update game_map state
-			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::EMPTY);
-			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::EMPTY);
-			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::EMPTY);
-			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::EMPTY);
+		/* NORMAL GHOSTS */
+		for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+			// Movement update
+			if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+				// Update game_map state
+				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
 
-			// Avoid wall collison checking
-			GhostBody* currentGhostBody = *it;
-			do {
-				MovingEntity::Direction currentHeadingDirection = currentGhostBody->get_headingDirection();
-				while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
-					// Rotate heading direction of whole Big ghost
+				// Avoid wall collison checking
+				MovingEntity::Direction currentHeadingDirection = (*it)->get_headingDirection();
+				while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), currentHeadingDirection)) {
+					// Rotate heading direction of Normal ghost
 					switch (currentHeadingDirection) {
 						case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
 						case MovingEntity::Direction::EAST:	currentHeadingDirection	= MovingEntity::Direction::SOUTH;break;
@@ -488,72 +458,105 @@ void game_view::gameTickUpdate() {
 					}
 					(*it)->set_headingDirection(currentHeadingDirection);
 				}
+				(*it)->move_forward();
+				// Update game_map state
+				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+			}
+			// UI
+			(*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
+		}
+
+		/* BIG GHOST*/
+		for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+			// Movement update
+			if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+				// Update game_map state
+				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::EMPTY);
+				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::EMPTY);
+				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::EMPTY);
+				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::EMPTY);
+
+				// Avoid wall collison checking
+				GhostBody* currentGhostBody = *it;
+				do {
+					MovingEntity::Direction currentHeadingDirection = currentGhostBody->get_headingDirection();
+					while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
+						// Rotate heading direction of whole Big ghost
+						switch (currentHeadingDirection) {
+							case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
+							case MovingEntity::Direction::EAST:	currentHeadingDirection	= MovingEntity::Direction::SOUTH;break;
+							case MovingEntity::Direction::SOUTH:currentHeadingDirection	= MovingEntity::Direction::WEST; break;
+							case MovingEntity::Direction::WEST:	currentHeadingDirection = MovingEntity::Direction::NORTH;break;
+						}
+						(*it)->set_headingDirection(currentHeadingDirection);
+					}
+					currentGhostBody = currentGhostBody->get_next();
+				} while (currentGhostBody != (*it));
+				(*it)->move_forward();
+
+				// Update game_map state
+				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
+				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
+				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
+				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
+
+			}
+			// UI
+			GhostBody* currentGhostBody = (*it);
+			do {
+				currentGhostBody->get_pixmap()->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
+
 				currentGhostBody = currentGhostBody->get_next();
 			} while (currentGhostBody != (*it));
-			(*it)->move_forward();
-
-			// Update game_map state
-			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
-			game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
-			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
-			game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
-
 		}
-		// UI
-		GhostBody* currentGhostBody = (*it);
-		do {
-			currentGhostBody->get_pixmap()->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
 
-			currentGhostBody = currentGhostBody->get_next();
-		} while (currentGhostBody != (*it));
-	}
-
-	/* Collision checking */
-	// Check if snake collide with wall
-	if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
-		snake->set_health(0);
-		qDebug() << "Snake hits the wall!";
-		return;
-	}
-
-	// Check if snake collide with itself
-	for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-		if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
+		/* Collision checking */
+		// Check if snake collide with wall
+		if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
 			snake->set_health(0);
-			qDebug() << "Snake hits itslef";
+			qDebug() << "Snake hits the wall!";
 			return;
 		}
-	}
 
-	// Check if snake (head) collide with ghosts
-	if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
-		snake->set_health(0);
-		qDebug() << "Snake (head) hits a ghost!";
-		return;
-	}
+		// Check if snake collide with itself
+		for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+			if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
+				snake->set_health(0);
+				qDebug() << "Snake hits itslef";
+				return;
+			}
+		}
 
-	// Check if snake (body) collide with ghosts
-	for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-		if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
-			// Play sound effecct
-			if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
-				hurtSoundEffect->setPosition(0);
-			}
-			else if (hurtSoundEffect->state() == QMediaPlayer::StoppedState) {
-				hurtSoundEffect->play();
-			}
-			qDebug() << "Ouch! That's hurt!";
-			snake->set_relative_health(-1);
-			qDebug() << "Health" << snake->get_health() << snake->get_max_health();
-			for (SnakeBody* removeSnakeBody = currentSnakeBody; removeSnakeBody != nullptr; removeSnakeBody = removeSnakeBody->get_next()) {
-				game_map->set_terrainState(removeSnakeBody->get_row(), removeSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
-				scene.removeItem(removeSnakeBody->get_pixmap());
-			}
-			snake->remove_tail(currentSnakeBody->get_prev());
+		// Check if snake (head) collide with ghosts
+		if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+			snake->set_health(0);
+			qDebug() << "Snake (head) hits a ghost!";
 			return;
 		}
+
+		// Check if snake (body) collide with ghosts
+		for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+			if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+				// Play sound effecct
+				if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
+					hurtSoundEffect->setPosition(0);
+				}
+				else if (hurtSoundEffect->state() == QMediaPlayer::StoppedState) {
+					hurtSoundEffect->play();
+				}
+				qDebug() << "Ouch! That's hurt!";
+				snake->set_relative_health(-1);
+				qDebug() << "Health" << snake->get_health() << snake->get_max_health();
+				for (SnakeBody* removeSnakeBody = currentSnakeBody; removeSnakeBody != nullptr; removeSnakeBody = removeSnakeBody->get_next()) {
+					game_map->set_terrainState(removeSnakeBody->get_row(), removeSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+					scene.removeItem(removeSnakeBody->get_pixmap());
+				}
+				snake->remove_tail(currentSnakeBody->get_prev());
+				return;
+			}
+		}
+		// More stuff TODO on collision checking :^ )
 	}
-	// More stuff TODO on collision checking :^ )
 }
 
 bool game_view::is_game_over() const {
@@ -576,28 +579,50 @@ bool game_view::next_move_ghost_wall_collision(int row, int col, MovingEntity::D
 }
 
 void game_view::remove_game_content() {
+	timer->stop();
+	timeCount = 0;
+	gameTickTimer->stop();
+	gameTickCount = 0;
+
+	for(int i=0;i<terrain_pixmaps.size();i++){
+		scene.removeItem(terrain_pixmaps.at(i));
+		delete terrain_pixmaps.at(i);
+	}
+	terrain_pixmaps.clear();
+
 	delete game_map;
 	game_map = nullptr;
 
+	for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+		scene.removeItem(currentSnakeBody->get_pixmap());
+	}
 	delete snake;
 	snake = nullptr;
 
 	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+		scene.removeItem((*it)->get_pixmap());
 		delete (*it);
 	}
 	normalGhosts.clear();
 
 	for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+		GhostBody* currentGhostBody = *it;
+		do {
+			scene.removeItem(currentGhostBody->get_pixmap());
+			currentGhostBody = currentGhostBody->get_next();
+		} while (currentGhostBody != *it);
 		delete (*it);
 	}
 	bigGhosts.clear();
 
 	for (auto it = fruits.begin(); it != fruits.end(); it++) {
+		scene.removeItem((*it)->get_pixmap());
 		delete (*it);
 	}
 	fruits.clear();
 
 	for (auto it = powerups.begin(); it != powerups.end(); it++) {
+		scene.removeItem((*it)->get_pixmap());
 		delete (*it);
 	}
 	powerups.clear();
