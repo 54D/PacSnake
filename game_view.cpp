@@ -42,7 +42,6 @@ game_view::game_view(QWidget *parent) :
 {
     timer = new QTimer(this);
     ui->setupUi(this);
-    setup_view();
     selectSound = new QMediaPlayer();
     selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
 }
@@ -169,7 +168,7 @@ void game_view::setup_view(){
     ui->pushButton->setVisible(true);
     ui->graphicsView->installEventFilter(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter())); // TODO: remove
     connect(s, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 

@@ -51,6 +51,9 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
    <property name="styleSheet">
     <string notr="true">font: 8pt &quot;8BIT WONDER&quot;;
 color: rgb(255, 255, 255);
