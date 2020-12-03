@@ -16,6 +16,8 @@ BigGhost::BigGhost(int row, int col, int speed, Direction headingDirection) :
 	currentGhostBody->next = new GhostBody(row + 1, col, speed, headingDirection);
 	currentGhostBody = currentGhostBody->next;
 
+	currentGhostBody->next = this;
+
 	set_random_stepUntilDirctionChange();
 }
 

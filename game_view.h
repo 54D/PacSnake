@@ -25,7 +25,7 @@ public:
 	~game_view();
     void Game_start();
     static const QString image_lookup[1][4];
-	static const int GAME_TICK_UPDATE_TIME = 100;
+	static const int GAME_TICK_UPDATE_TIME = 50;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -46,12 +46,16 @@ private:
     void reset_view();
     void render_game_map();
     bool eventFilter(QObject*, QEvent*) override;
-	bool next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection);
 
+	// Detect will the Entity collide with the wall in it's next movement
+	bool next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
+	void remove_game_content();
+
+	/* GAME CONTENT */
 	GameMap* game_map {nullptr};
 	Snake* snake {nullptr};
 	QList<NormalGhost*> normalGhosts;
-	QList<BigGhost*> bigGhosts;	//TODO
+	QList<BigGhost*> bigGhosts;
 	QList<Fruit*> fruits;
 	QList<PowerUp*> powerups;
 

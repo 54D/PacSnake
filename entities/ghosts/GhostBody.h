@@ -7,11 +7,10 @@ class GhostBody : public MovingEntity {
 public:
 	friend class BigGhost;
 	virtual ~GhostBody();
+	GhostBody* get_next() const;
 	
 protected:
 	GhostBody(int row, int col, int speed, Direction headingDirection = Direction::NORTH, GhostBody* next = nullptr);
-
-	GhostBody* get_next() const;
 
 	virtual void move_forward();
 	

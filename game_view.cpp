@@ -1,15 +1,18 @@
+#include <climits>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <sstream>
 #include <string>
 
+#include <QDebug>
 #include <QGraphicsRectItem>
-#include <QTimer>
-#include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QDebug>
-#include <QMediaPlayer>
+#include <QKeyEvent>
 #include <QList>
+#include <QMediaPlayer>
+#include <QTimer>
 
 #include "game_view.h"
 #include "ui_game_view.h"
@@ -57,23 +60,9 @@ game_view::game_view(QWidget *parent) :
 
 game_view::~game_view()
 {
+	remove_game_content();
+
 	delete ui;
-	delete game_map;
-	delete snake;
-	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
-		delete (*it);
-	}
-	normalGhosts.clear();
-
-	for (auto it = fruits.begin(); it != fruits.end(); it++) {
-		delete (*it);
-	}
-	fruits.clear();
-
-	for (auto it = powerups.begin(); it != powerups.end(); it++) {
-		delete (*it);
-	}
-	powerups.clear();
 
 	timer->stop();
     delete timer;
@@ -163,15 +152,26 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::on_pushButton_clicked()
 {
-	// TODO: Remove previous content?
-
-	// Play sound effect
+	/* Play sound effect */
 	selectSound->play();
 
-	//QGraphicsScene * scene = new QGraphicsScene(0,0,1600,1600,this);
+	/* Remove previous contents */
+	remove_game_content();
+
+	/* GAME MAP */
+	// load and render map
+	game_map = new GameMap();
+	game_map->load_terrian_map(":/game_map/GameMap.txt");
+	render_game_map();
+	ui->graphicsView->setScene(&scene);
+	ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
+	ui->graphicsView->show();
+	ui->pushButton->setVisible(false);
+
 
 	/* SNAKE */
 	// Init Snake
+	// TODO: Spawn position
 	snake = new Snake {25, 25, 1};
 	// Render snake on scene
 	SnakeBody* temp = snake;
@@ -195,16 +195,41 @@ void game_view::on_pushButton_clicked()
 
 	/* NORMAL GHOSTS */
 	// Generate two noraml ghosts
-	// TODO : Generate two instead of one and set random coord
+	// TODO : Generate two or more instead of one and set random coord
 	for (int i = 0; i < 1; i++) {
-		NormalGhost* currentGhost = new NormalGhost {20, 20, 2};
+		srand(time(NULL));
+		int row, col;
+		do {
+			row	= rand() % game_map->get_num_rows();
+			col = rand() % game_map->get_num_cols();
+		} while (game_map->get_terrainState(row, col) == GameMap::TerrainState::BLOCKED);
+		int upperNGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 5 / 6);
+		int lowerNGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4);
+		int speed = rand() % (upperNGSpeed - lowerNGSpeed + 1) + lowerNGSpeed;
+		NormalGhost* currentGhost = new NormalGhost {row, col, speed};
 		normalGhosts.push_back(currentGhost);
 		// TODO: UI
-
 	}
 
 	/* BIG GHOSTS */
-	// TODO
+	for (int i = 0; i < 1; i++) {
+		srand(time(NULL));
+		int row, col;
+		do {
+			row	= rand() % game_map->get_num_rows();
+			col = rand() % game_map->get_num_cols();
+		} while ((game_map->get_terrainState(row	, col)		== GameMap::TerrainState::BLOCKED) ||
+				 (game_map->get_terrainState(row	, col + 1)	== GameMap::TerrainState::BLOCKED) ||
+				 (game_map->get_terrainState(row + 1, col + 1)	== GameMap::TerrainState::BLOCKED) ||
+				 (game_map->get_terrainState(row + 1, col)		== GameMap::TerrainState::BLOCKED));
+		int upperNGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2);
+		int lowerNGSpeed = static_cast<int>(1);
+		int speed = rand() % (upperNGSpeed - lowerNGSpeed + 1) + lowerNGSpeed;
+		BigGhost* currentGhost = new BigGhost {row, col, speed};
+		bigGhosts.push_back(currentGhost);
+		// TODO: UI
+
+	}
 
 	/* FRUITS */
 	// TODO
@@ -217,19 +242,6 @@ void game_view::on_pushButton_clicked()
 	gameTickTimer->start(GAME_TICK_UPDATE_TIME);
 	// Start timer to update every 1 seconds
     timer->start(1000);
-
-	/* GAME MAP */
-	// TODO:	54D: possible memory leak? since old game_map is not removed?
-	//			ED: Possible, delete game_map is added
-	delete game_map;
-	// load and render map
-	game_map = new GameMap();
-    game_map->load_terrian_map(":/game_map/GameMap.txt");
-    render_game_map();
-    ui->graphicsView->setScene(&scene);
-    ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
-    ui->graphicsView->show();
-    ui->pushButton->setVisible(false);
 }
 
 void game_view::reset_view(){
@@ -276,19 +288,27 @@ void game_view::collisionEmitter(){
 
 void game_view::gameTickUpdate() {
 	gameTickCount++;
-	// TODO: Game Over Condition Checking
+	// Overflow prevention
+	if (gameTickCount >= LLONG_MAX)
+		gameTickCount = 0;
 
-
-	// Update movement & UI
-	// gameTickCount % 1 --> Move and update every game tick
+	/* Update movemnt & UI */
+	/* Movement will update according to the Entity's speed
+	 * As a reference,
+	 * If get_speed() == MAX_SPEED,		the Entity will move in every single game tick
+	 * If get_speed() == MAX_SPEED / 2, the Entity will move in every 2 game ticks
+	 * If get_speed() == 1,				the Entity will move in every MAX_SPEED game ticks (MAX_SPEED * GAME_TICK_UPDATE_TIME ms in real time)
+	 *
+	 * However, UI will update in every game tick regardless of the Entity's speed
+	 */
 
 	/* SNAKE */
-	// Movement
+	// Movement update
 	if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
 		snake->move_forward();
 		qDebug() << snake->get_row() << snake->get_col();
 	}
-	// UI
+	// UI update
 	SnakeBody* currentSnakeBody = snake;
 	while (currentSnakeBody != nullptr){
 		currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
@@ -296,9 +316,9 @@ void game_view::gameTickUpdate() {
 		currentSnakeBody = currentSnakeBody->get_next();
 	}
 
-	/* NORMAL GHOSTS*/
+	/* NORMAL GHOSTS */
 	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
-		// Movement
+		// Movement update
 		if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
 			// Avoid wall collison checking
 			MovingEntity::Direction currentHeadingDirection = (*it)->get_headingDirection();
@@ -319,13 +339,42 @@ void game_view::gameTickUpdate() {
 	}
 
 	/* BIG GHOST*/
-	// TODO
+	for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+		// Movement update
+		if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			// Avoid wall collison checking
+			GhostBody* currentGhostBody = *it;
+			qDebug() << "asd";
+			qDebug() << static_cast<int>(currentGhostBody->get_headingDirection());
+			qDebug() << "EDDD";
+			do {
+				MovingEntity::Direction currentHeadingDirection = currentGhostBody->get_headingDirection();
+				while (next_move_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
+					// Rotate heading direction of whole Big ghost
+					switch (currentHeadingDirection) {
+						case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
+						case MovingEntity::Direction::EAST:	currentHeadingDirection	= MovingEntity::Direction::SOUTH;break;
+						case MovingEntity::Direction::SOUTH:currentHeadingDirection	= MovingEntity::Direction::WEST; break;
+						case MovingEntity::Direction::WEST:	currentHeadingDirection = MovingEntity::Direction::NORTH;break;
+					}
+					(*it)->set_headingDirection(currentHeadingDirection);
+				}
+				currentGhostBody = currentGhostBody->get_next();
+			} while (currentGhostBody != (*it));
+			(*it)->move_forward();
+		}
+		// UI
+		// TODO
+	}
 
 	/* Collision checking */
 	// TODO
+
+	/* Game Over Condition Checking */
+	// TODO
 }
 
-bool game_view::next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) {
+bool game_view::next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const {
 	switch(headingDirection) {
 		case MovingEntity::Direction::NORTH:row -= 1;	break;
 		case MovingEntity::Direction::EAST:	col += 1;	break;
@@ -335,4 +384,32 @@ bool game_view::next_move_wall_collision(int row, int col, MovingEntity::Directi
 	if (game_map->get_terrainState(row, col) == GameMap::TerrainState::BLOCKED)
 		return true;
 	return false;
+}
+
+void game_view::remove_game_content() {
+	delete game_map;
+	game_map = nullptr;
+
+	delete snake;
+	snake = nullptr;
+
+	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+		delete (*it);
+	}
+	normalGhosts.clear();
+
+	for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+		delete (*it);
+	}
+	bigGhosts.clear();
+
+	for (auto it = fruits.begin(); it != fruits.end(); it++) {
+		delete (*it);
+	}
+	fruits.clear();
+
+	for (auto it = powerups.begin(); it != powerups.end(); it++) {
+		delete (*it);
+	}
+	powerups.clear();
 }
