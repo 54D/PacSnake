@@ -491,8 +491,8 @@ void game_view::gameTickUpdate() {
 				hurtSoundEffect->play();
 			}
 			qDebug() << "Ouch! That's hurt!";
-			qDebug() << "Health" << snake->get_health() << snake->get_max_health();
 			snake->set_relative_health(-1);
+			qDebug() << "Health" << snake->get_health() << snake->get_max_health();
 			for (SnakeBody* removeSnakeBody = currentSnakeBody; removeSnakeBody != nullptr; removeSnakeBody = removeSnakeBody->get_next()) {
 				game_map->set_terrainState(removeSnakeBody->get_row(), removeSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
 				scene.removeItem(removeSnakeBody->get_pixmap());
