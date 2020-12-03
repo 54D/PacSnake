@@ -347,11 +347,16 @@ void game_view::on_pushButton_clicked()
 void game_view::on_pauseButton_clicked(){
     if(isPlaying){
         ui->pauseButton->setText("Resume");
+        timer->stop();
+        gameTickTimer->stop();
+
     }else{
         ui->pauseButton->setText("Pause");
+        timer->start(1000);
+        gameTickTimer->start(GAME_TICK_UPDATE_TIME);
     }
     isPlaying = !isPlaying;
-    // TODO: 54D: pausing functionality is not implemented
+    // set keyboard input boolean
 }
 
 void game_view::on_resetButton_clicked(){
@@ -365,6 +370,7 @@ void game_view::on_resetButton_clicked(){
     ui->pauseButton->setVisible(false);
     ui->resetButton->setVisible(false);
     ui->Timer_label->setText(parseTime(timeCount));
+    remove_game_content();
 }
 
 void game_view::on_back_button_clicked()
@@ -397,6 +403,7 @@ void game_view::reset_view(){
     if(snake!=nullptr){
         disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
     }
+    remove_game_content();
 }
 
 void game_view::stackedWidgetChanged(int index){
