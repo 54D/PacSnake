@@ -39,5 +39,10 @@
         <file>assets/sprite/dash.png</file>
         <file>assets/sprite/heal.png</file>
         <file>assets/sprite/shield.png</file>
+        <file>assets/sprite/apple.png</file>
+        <file>assets/sprite/grape.png</file>
+        <file>assets/sprite/pear.png</file>
+        <file>assets/sprite/strawberry.png</file>
+        <file>assets/sprite/tangerine.png</file>
     </qresource>
 </RCC>

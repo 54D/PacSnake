@@ -283,6 +283,7 @@ void game_view::on_pushButton_clicked()
 
 	/* POWER UPS */
 	// TODO
+    connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 
 	/* START TIMER */
 	// Start gameTickTimer update every 0.1
@@ -334,7 +335,6 @@ void game_view::setup_view(){
     ui->resetButton->setVisible(false);
     ui->graphicsView->installEventFilter(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
-    connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
 void game_view::reset_view(){
@@ -347,7 +347,9 @@ void game_view::reset_view(){
     // scene.clear(); // TODO: this causes issues when reopening the widget.
     ui->graphicsView->removeEventFilter(this);
 	disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
-    disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+    if(snake!=nullptr){
+        disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+    }
 }
 
 void game_view::stackedWidgetChanged(int index){
