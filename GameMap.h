@@ -12,6 +12,11 @@ public:
 	enum class TerrainState { EMPTY, BLOCKED, SNAKE_OCCUPIED, GHOST_OCCUPIED, FRUIT_OCCUPIED, POWERUP_OCCUPIED};
 	static const char TERRAIN_EMPTY_CHAR {' '};
 	static const char TERRAIN_BLOCKED_CHAR {'#'};
+	struct terrain_info {
+		int row;
+		int col;
+		GameMap::TerrainState state;
+	};
 
     int get_num_rows() const;
     int get_num_cols() const;
@@ -20,6 +25,7 @@ public:
 	void set_terrainState(int row, int col, TerrainState state);
 
 	void load_terrian_map(const std::string& filename);
+	void update_terrain_map(std::vector<GameMap::terrain_info>& game_map_info);
 
 	GameMap();
 	~GameMap();

@@ -484,6 +484,7 @@ void game_view::gameTickUpdate() {
      * The function does the following procedure :
      * - Game over condition
      * - Move the Entity according to their speed
+	 * - Update game_map state
      * - Update Entity's UI
      * - Collision checking
      */
@@ -522,21 +523,9 @@ void game_view::gameTickUpdate() {
         /* SNAKE */
         // Movement update
         if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-            // game_map clear occupied state
-            for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-                game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
-            }
-
             snake->move_forward();
 			if (!allowKeyboardInput)
 				allowKeyboardInput = true;
-
-            // game_map update occupied state
-            for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-                if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::EMPTY) {
-                    game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
-                }
-            }
         }
         // UI update
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
@@ -548,9 +537,9 @@ void game_view::gameTickUpdate() {
 
         /* NORMAL GHOSTS */
         for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
-            // Movement update
+			// Movement update
             if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-                // Update game_map state
+				// Update game_map state for collision avoiding
                 game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
 
                 // Avoid wall collison checking
@@ -559,27 +548,11 @@ void game_view::gameTickUpdate() {
                     (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
                 }
 
-                // Show Fruits on game_map again if the Ghost was stepped on it
-                int prev_row, prev_col;
-                bool isFruitCoord = false;
-                for (auto f_it = fruits.begin(); f_it != fruits.end() && !isFruitCoord; f_it++) {
-                    if ((*f_it)->get_row() == (*it)->get_row() && (*f_it)->get_col() == (*it)->get_col()) {
-                        isFruitCoord = true;
-                        prev_row = (*f_it)->get_row();
-                        prev_col = (*f_it)->get_col();
-                    }
-                }
-
-                // Move forward
+				// Move forward
                 (*it)->move_forward();
 
-                // Show Fruits
-                if (isFruitCoord) {
-                    game_map->set_terrainState(prev_row, prev_col, GameMap::TerrainState::FRUIT_OCCUPIED);
-                }
-
-                // Update game_map state
-                game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+				// Update game_map state for collision avoiding
+				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
             }
             // UI update
             (*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
@@ -590,14 +563,14 @@ void game_view::gameTickUpdate() {
         for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
             // Movement update
             if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-                // Update game_map state
-                for (int i = 0; i < 2; i++) {
-                    for (int j = 0; j < 2; j++) {
-                        game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::EMPTY);
-                    }
-                }
+				// Update game_map state for collision avoiding
+				for (int i = 0; i < 2; i++) {
+					for (int j = 0; j < 2; j++) {
+						game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::EMPTY);
+					}
+				}
 
-                // Avoid wall collison checking
+				// Avoid wall collison checking
                 // Check each part of BigGhost's GhostBody
                 GhostBody* currentGhostBody = *it;
                 do {
@@ -608,35 +581,15 @@ void game_view::gameTickUpdate() {
                     currentGhostBody = currentGhostBody->get_next();
                 } while (currentGhostBody != (*it));
 
-                // Show Fruits on game_map again if the Ghost was stepped on it
-                int prev_row, prev_col;
-                bool isFruitCoord = false;
-                for (auto f_it = fruits.begin(); f_it != fruits.end() && !isFruitCoord; f_it++) {
-                    for (int i = 0; i < 2; i++) {
-                        for (int j = 0; j < 2; j++) {
-                            if ((*f_it)->get_row() == ((*it)->get_row() + i) && (*f_it)->get_col() == ((*it)->get_col() + j)) {
-                                isFruitCoord = true;
-                                prev_row = (*f_it)->get_row();
-                                prev_col = (*f_it)->get_col();
-                            }
-                        }
-                    }
-                }
-
-                // Move forward
+				// Move forward
                 (*it)->move_forward();
 
-                // Show Fruits
-                if (isFruitCoord) {
-                    game_map->set_terrainState(prev_row, prev_col, GameMap::TerrainState::FRUIT_OCCUPIED);
-                }
-
-                // Update game_map state
-                for (int i = 0; i < 2; i++) {
-                    for (int j = 0; j < 2; j++) {
-                        game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
-                    }
-                }
+				// Update game_map state for collision avoiding
+				for (int i = 0; i < 2; i++) {
+					for (int j = 0; j < 2; j++) {
+						game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+				   }
+			   }
             }
             // UI Update
             GhostBody* currentGhostBody = (*it);
@@ -645,6 +598,43 @@ void game_view::gameTickUpdate() {
                 currentGhostBody = currentGhostBody->get_next();
             } while (currentGhostBody != (*it));
         }
+
+		/* Update game_map state */
+		/* Order of importance
+		*  BLOCKED > GHOST > FRUIT / POWERUP > SNAKE
+		*/
+		std::vector<GameMap::terrain_info> game_map_info;
+		// Snake
+		for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+			GameMap::terrain_info info = { currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED };
+			game_map_info.push_back(info);
+		}
+		// Fruits
+		for (auto it = fruits.begin(); it != fruits.end(); it++) {
+			GameMap::terrain_info info = { (*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::FRUIT_OCCUPIED };
+			game_map_info.push_back(info);
+		}
+		// Power Up
+		for (auto it = powerups.begin(); it != powerups.end(); it++) {
+			GameMap::terrain_info info = { (*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::POWERUP_OCCUPIED };
+			game_map_info.push_back(info);
+		}
+		// NormalGhost
+		for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+			GameMap::terrain_info info = { (*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED };
+			game_map_info.push_back(info);
+		}
+		// BigGhost
+		for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+			for (int i = 0; i < 2; i++) {
+				for (int j = 0; j < 2; j++) {
+					GameMap::terrain_info info = { ((*it)->get_row() + i), ((*it)->get_col() + j), GameMap::TerrainState::GHOST_OCCUPIED };
+					game_map_info.push_back(info);
+				}
+			}
+		}
+		game_map->update_terrain_map(game_map_info);
+		game_map_info.clear();
 
 
         /* Collision checking */
@@ -756,7 +746,10 @@ void game_view::gameTickUpdate() {
                 for (auto it = normalGhosts.begin(); it != normalGhosts.end() && collidedGhostBody == nullptr; it++) {
                     if ((*it)->get_row() == currentSnakeBody->get_row() && (*it)->get_col() == currentSnakeBody->get_col()) {
                         collidedGhostBody = *it;
-                        (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+						// Moves in opposite direction
+						for (int i = 0; i < 2; i++) {
+							(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+						}
                     }
                 }
                 for (auto it = bigGhosts.begin(); it != bigGhosts.end() && collidedGhostBody == nullptr; it++) {
@@ -764,7 +757,10 @@ void game_view::gameTickUpdate() {
                     do {
                         if (currentGhostsBody->get_row() == currentSnakeBody->get_row() && currentGhostsBody->get_col() == currentSnakeBody->get_col()) {
                             collidedGhostBody = *it;
-                            (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+							// Moves in opposite direction
+							for (int i = 0; i < 2; i++) {
+								(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+							}
                         }
                     } while (currentGhostsBody != (*it) && collidedGhostBody == nullptr);
                 }

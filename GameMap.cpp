@@ -100,3 +100,18 @@ void GameMap::load_terrian_map(const std::string& filename) {
     // Close File
     terrain_map_file.close();
 }
+
+void GameMap::update_terrain_map(std::vector<GameMap::terrain_info>& game_map_info) {
+	for (int row = 0; row < num_rows; row++) {
+		for (int col = 0; col < num_cols; col++) {
+			if(terrain_map[row][col] != TerrainState::BLOCKED)
+				terrain_map[row][col] = TerrainState::EMPTY;
+		}
+	}
+	for (auto it = game_map_info.begin(); it != game_map_info.end(); it++) {
+		terrain_map[(*it).row][(*it).col] = (*it).state;
+	}
+	for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
+		terrain_map[(*it)->get_row()][(*it)->get_col()] = TerrainState::BLOCKED;
+	}
+}
