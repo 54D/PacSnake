@@ -101,12 +101,86 @@ background-color: rgb(48, 48, 48);</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="powerUp1Label">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>40</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUpFrameLabel">
+   <property name="geometry">
+    <rect>
+     <x>686</x>
+     <y>40</y>
+     <width>40</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>8BIT WONDER</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(170, 255, 127);
+color: rgb(0, 0, 0);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUp1Label_2">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>70</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUp1Label_3">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>100</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>imageLabel</zorder>
   <zorder>Timer_label</zorder>
   <zorder>pushButton</zorder>
   <zorder>graphicsView</zorder>
   <zorder>timer_text</zorder>
   <zorder>back_button</zorder>
+  <zorder>powerUpFrameLabel</zorder>
+  <zorder>powerUp1Label</zorder>
+  <zorder>powerUp1Label_2</zorder>
+  <zorder>powerUp1Label_3</zorder>
  </widget>
  <resources/>
  <connections/>
