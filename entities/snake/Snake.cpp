@@ -6,10 +6,17 @@
 
 Snake::Snake(int row, int col, int speed, Direction headingDirection, int max_health, int length) :
         SnakeBody(row, col, speed, headingDirection),
-        max_health(max_health), health(max_health), length(length), fruits_eaten(0),
+		max_health(max_health), health(max_health), num_fruits_eaten(0),
 		pu_activate(nullptr)
 {
-    // Initialise SnakeBody by creating a linked list
+	if (length < 0)
+		this->length = INIT_LENGTH;
+	else if (length > MAX_LENGTH)
+		this->length = MAX_LENGTH;
+	else
+		this->length = length;
+
+	// Initialise SnakeBody by creating a linked list
     int temp_row = row;
     int temp_col = col;
     SnakeBody* prevSnakeBody = this;
@@ -53,6 +60,10 @@ int Snake::get_health() const {
 
 int Snake::get_length() const {
     return length;
+}
+
+int Snake::get_num_fruits_eaten() const {
+	return num_fruits_eaten;
 }
 
 std::deque<PowerUp*> Snake::get_pu_inventory() const {
@@ -154,7 +165,7 @@ int Snake::calculate_level_speed() const {
 
     int newSpeed;
     // TODO: Change an appropriate value (/ 10?)
-    newSpeed = fruits_eaten / 10 + INIT_SPEED;
+	newSpeed = num_fruits_eaten / 5 + INIT_SPEED;
 
 	// New speed should not exceed the maximum allowed speed
 	if (newSpeed > MAX_SPEED)
@@ -196,6 +207,10 @@ void Snake::increase_length(int len) {
 
     // Increase length to Snake
     this->length += len;
+}
+
+void Snake::increase_num_fruits_eaten(int num) {
+	num_fruits_eaten += num;
 }
 
 void Snake::remove_tail(int index) {

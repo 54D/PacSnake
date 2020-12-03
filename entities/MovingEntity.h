@@ -17,7 +17,10 @@ public:
 
     virtual void set_speed(int speed);
 	virtual void set_headingDirection(MovingEntity::Direction headingDirection);
- 
+
+	// This function only return the rotated headingDirection, will not change the data member
+	MovingEntity::Direction get_rotated_headingDirection();
+
 protected:
     MovingEntity();
     MovingEntity(int row, int col, int speed, Direction headingDirection = Direction::NORTH);

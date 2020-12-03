@@ -24,8 +24,12 @@ public:
     game_view(QWidget *parent = nullptr);
 	~game_view();
     void Game_start();
-    static const QString image_lookup[1][4];
+	static const QString image_lookup[1][4]; //TODO: move to Snake
 	static const int GAME_TICK_UPDATE_TIME = 50;
+
+	static const int NUM_OF_NORMAL_GHOST = 4;
+	static const int NUM_OF_BIG_GHOST = 2;
+	static const int MAX_MUN_OF_FRUIT = 15;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -48,7 +52,9 @@ private:
     void render_game_map();
     bool eventFilter(QObject*, QEvent*) override;
 
-	// Detect will the Entity collide with the wall in it's next movement
+	void fruit_instantiation();
+
+	// Detect will the Entity collide with the wall or ghost in it's next movement
 	bool next_move_ghost_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
 
 	bool is_game_over() const;

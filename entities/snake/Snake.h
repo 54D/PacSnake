@@ -13,7 +13,7 @@ public:
     static const int INIT_LENGTH = 3;
     static const int INIT_SPEED = 1;
     static const int MAX_PU = 3;
-	static const int MAX_LENGTH = 20;
+	static const int MAX_LENGTH = 50;
 
     Snake(int row, int col, int speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
     virtual ~Snake();
@@ -21,6 +21,7 @@ public:
     int get_max_health() const;
     int get_health() const;
     int get_length() const;
+	int get_num_fruits_eaten() const;
     std::deque<PowerUp*> get_pu_inventory() const;
     const PowerUp* get_pu_activate() const;
 
@@ -41,6 +42,8 @@ public:
     // Increase the length of Snake by length at the end of Snake
     void increase_length(int len);
 
+	void increase_num_fruits_eaten(int num);
+
     // Remove the tail of Snake after the index
     // index = 0 is Snake ("head / brain" of the snake)
     // index = 1 is the first snakeBody after Snake
@@ -58,7 +61,7 @@ private:
     int max_health {INIT_HEALTH};
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};
-    int fruits_eaten {0};
+	int num_fruits_eaten {0};
 
 	bool ghost_immunity {false};
 

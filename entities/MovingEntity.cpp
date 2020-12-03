@@ -34,6 +34,15 @@ void MovingEntity::move_forward() {
     }
 }
 
+MovingEntity::Direction MovingEntity::get_rotated_headingDirection() {
+	switch (headingDirection) {
+		case MovingEntity::Direction::NORTH:	return MovingEntity::Direction::EAST;	break;
+		case MovingEntity::Direction::EAST:		return MovingEntity::Direction::SOUTH;	break;
+		case MovingEntity::Direction::SOUTH:	return MovingEntity::Direction::WEST;	break;
+		case MovingEntity::Direction::WEST:		return MovingEntity::Direction::NORTH;	break;
+	}
+}
+
 MovingEntity::MovingEntity() {}
 
 MovingEntity::MovingEntity(int row, int col, int speed, Direction headingDirection) :
