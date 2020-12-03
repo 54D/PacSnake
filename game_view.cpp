@@ -72,62 +72,62 @@ const QString game_view::image_lookup[4][4] {
 };
 
 game_view::game_view(QWidget *parent) :
-	QWidget(parent),
-	ui(new Ui::game_view)
+    QWidget(parent),
+    ui(new Ui::game_view)
 {
     timer = new QTimer(this);
     ui->setupUi(this);
 
-	// Generate ramdom seed
-	srand(time(NULL));
+    // Generate ramdom seed
+    srand(time(NULL));
 
-	// Gametick for game update
-	gameTickTimer = new QTimer(this);
-	connect(gameTickTimer, SIGNAL(timeout()), this, SLOT(gameTickUpdate()));
+    // Gametick for game update
+    gameTickTimer = new QTimer(this);
+    connect(gameTickTimer, SIGNAL(timeout()), this, SLOT(gameTickUpdate()));
 
-	// Init select sound
-	selectSoundEffect = new QMediaPlayer();
-	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
-	hurtSoundEffect = new QMediaPlayer();
-	hurtSoundEffect->setMedia(QUrl("qrc:/assets/sound/hurt.wav"));
-	deathSoundEffect = new QMediaPlayer();
-	deathSoundEffect->setMedia(QUrl("qrc:/assets/sound/death.wav"));
-	gameOverSoundEffect = new QMediaPlayer();
-	gameOverSoundEffect->setMedia(QUrl("qrc:/assets/sound/gameOver.mp3"));
+    // Init select sound
+    selectSoundEffect = new QMediaPlayer();
+    selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+    hurtSoundEffect = new QMediaPlayer();
+    hurtSoundEffect->setMedia(QUrl("qrc:/assets/sound/hurt.wav"));
+    deathSoundEffect = new QMediaPlayer();
+    deathSoundEffect->setMedia(QUrl("qrc:/assets/sound/death.wav"));
+    gameOverSoundEffect = new QMediaPlayer();
+    gameOverSoundEffect->setMedia(QUrl("qrc:/assets/sound/gameOver.mp3"));
 }
 
 game_view::~game_view()
 {
-	remove_game_content();
+    remove_game_content();
 
-	delete ui;
+    delete ui;
 
-	timer->stop();
-	delete timer;
-	gameTickTimer->stop();
-	delete gameTickTimer;
+    timer->stop();
+    delete timer;
+    gameTickTimer->stop();
+    delete gameTickTimer;
 
-	for(int i=0;i<terrain_pixmaps.size();i++){
-		scene.removeItem(terrain_pixmaps.at(i));
-		delete terrain_pixmaps.at(i);
-	}
-	terrain_pixmaps.clear();
+    for(int i=0;i<terrain_pixmaps.size();i++){
+        scene.removeItem(terrain_pixmaps.at(i));
+        delete terrain_pixmaps.at(i);
+    }
+    terrain_pixmaps.clear();
 
-	delete selectSoundEffect;
-	delete hurtSoundEffect;
-	delete deathSoundEffect;
-	delete gameOverSoundEffect;
+    delete selectSoundEffect;
+    delete hurtSoundEffect;
+    delete deathSoundEffect;
+    delete gameOverSoundEffect;
 }
 
 void game_view::render_game_map(){
-	// Clear previous content
-	for(int i=0;i<terrain_pixmaps.size();i++){
-		scene.removeItem(terrain_pixmaps.at(i));
-		delete terrain_pixmaps.at(i);
-	}
-	terrain_pixmaps.clear();
+    // Clear previous content
+    for(int i=0;i<terrain_pixmaps.size();i++){
+        scene.removeItem(terrain_pixmaps.at(i));
+        delete terrain_pixmaps.at(i);
+    }
+    terrain_pixmaps.clear();
 
-	// Render game map
+    // Render game map
     for(int r=0;r<game_map->get_num_rows();r++){
         for(int c=0;c<game_map->get_num_cols();c++){
             QString path;
@@ -154,178 +154,178 @@ void game_view::render_game_map(){
 }
 
 void game_view::keyPressEvent(QKeyEvent *event) {
-	if (event->key() == Qt::Key_A || event->key() == Qt::Key_Left){
-		snake->set_headingDirection(MovingEntity::Direction::WEST);
-	}
-	else if (event->key() == Qt::Key_D || event->key() == Qt::Key_Right){
-		snake->set_headingDirection(MovingEntity::Direction::EAST);
-	}
-	else if (event->key() == Qt::Key_W || event->key() == Qt::Key_Up){
-		snake->set_headingDirection(MovingEntity::Direction::NORTH);
-	}
-	else if (event->key() == Qt::Key_S || event->key() == Qt::Key_Down){
-		snake->set_headingDirection(MovingEntity::Direction::SOUTH);
-	}
+    if (event->key() == Qt::Key_A || event->key() == Qt::Key_Left){
+        snake->set_headingDirection(MovingEntity::Direction::WEST);
+    }
+    else if (event->key() == Qt::Key_D || event->key() == Qt::Key_Right){
+        snake->set_headingDirection(MovingEntity::Direction::EAST);
+    }
+    else if (event->key() == Qt::Key_W || event->key() == Qt::Key_Up){
+        snake->set_headingDirection(MovingEntity::Direction::NORTH);
+    }
+    else if (event->key() == Qt::Key_S || event->key() == Qt::Key_Down){
+        snake->set_headingDirection(MovingEntity::Direction::SOUTH);
+    }
 }
 
 bool game_view::eventFilter(QObject *obj, QEvent *event)
 {
-	QKeyEvent *keyEvent = NULL;     // event data, if this is a keystroke event
-	bool result = false;            // return true to consume the keystroke
+    QKeyEvent *keyEvent = NULL;     // event data, if this is a keystroke event
+    bool result = false;            // return true to consume the keystroke
 
-	if(event->type() == QEvent::KeyPress){
-		 keyEvent = dynamic_cast<QKeyEvent*>(event);
-		 this->keyPressEvent(keyEvent);
-		 result = true;
-	}else if(event->type() == QEvent::KeyRelease){
-		keyEvent = dynamic_cast<QKeyEvent*>(event);
-		this->keyReleaseEvent(keyEvent);
-		result = true;
-	}else{                           // standard event processing
-		result = QObject::eventFilter(obj,event);
-	}
-	return result;
+    if(event->type() == QEvent::KeyPress){
+         keyEvent = dynamic_cast<QKeyEvent*>(event);
+         this->keyPressEvent(keyEvent);
+         result = true;
+    }else if(event->type() == QEvent::KeyRelease){
+        keyEvent = dynamic_cast<QKeyEvent*>(event);
+        this->keyReleaseEvent(keyEvent);
+        result = true;
+    }else{                           // standard event processing
+        result = QObject::eventFilter(obj,event);
+    }
+    return result;
 }
 
 void game_view::fruit_instantiation() {
-	int row, col;
-	do {
-		row	= rand() % game_map->get_num_rows();
-		col = rand() % game_map->get_num_cols();
-	} while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
-	Fruit* fruit_temp = new Fruit {row, col};
-	game_map->set_terrainState(fruit_temp->get_row(), fruit_temp->get_col(), GameMap::TerrainState::FRUIT_OCCUPIED);
-	fruits.push_back(fruit_temp);
+    int row, col;
+    do {
+        row	= rand() % game_map->get_num_rows();
+        col = rand() % game_map->get_num_cols();
+    } while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
+    Fruit* fruit_temp = new Fruit {row, col};
+    game_map->set_terrainState(fruit_temp->get_row(), fruit_temp->get_col(), GameMap::TerrainState::FRUIT_OCCUPIED);
+    fruits.push_back(fruit_temp);
 
-	// Init UI
-	QPixmap pic(Fruit::image_lookup[rand() % 5]);
-	QGraphicsPixmapItem* fruit_pic = scene.addPixmap(pic);
-	fruit_temp->register_view(fruit_pic);
-	fruit_pic->setZValue(998);
-	fruit_pic->setOffset(fruit_temp->get_col() * 32, fruit_temp->get_row() * 32);
+    // Init UI
+    QPixmap pic(Fruit::image_lookup[rand() % 5]);
+    QGraphicsPixmapItem* fruit_pic = scene.addPixmap(pic);
+    fruit_temp->register_view(fruit_pic);
+    fruit_pic->setZValue(998);
+    fruit_pic->setOffset(fruit_temp->get_col() * 32, fruit_temp->get_row() * 32);
 }
 
 void game_view::on_pushButton_clicked()
 {
-	/* Play sound effect */
-	selectSoundEffect->play();
+    /* Play sound effect */
+    selectSoundEffect->play();
 
-	/* Remove previous contents */
-	remove_game_content();
+    /* Remove previous contents */
+    remove_game_content();
 
-	/* GAME MAP */
-	// load and render map
-	game_map = new GameMap();
-	game_map->load_terrian_map(":/game_map/GameMap.txt");
-	render_game_map();
-	ui->graphicsView->setScene(&scene);
-	ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
-	ui->graphicsView->show();
-	ui->pushButton->setVisible(false);
+    /* GAME MAP */
+    // load and render map
+    game_map = new GameMap();
+    game_map->load_terrian_map(":/game_map/GameMap.txt");
+    render_game_map();
+    ui->graphicsView->setScene(&scene);
+    ui->graphicsView->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
+    ui->graphicsView->show();
+    ui->pushButton->setVisible(false);
 
 
-	/* SNAKE */
-	// Init Snake
-	// TODO: Stat
-	snake = new Snake {20, 25};
-	// Init UI
-	SnakeBody* currentSnakeBody = snake;
-	for (int i = 0; i <= snake->get_length(); i++){
-		int pic_ref = -1;
-		if (currentSnakeBody->get_prev() == nullptr) pic_ref = 0;
-		if (currentSnakeBody->get_next() == nullptr) pic_ref = 3;
-		if (currentSnakeBody->get_prev() != nullptr && currentSnakeBody->get_next() != nullptr){
-			if (currentSnakeBody->get_prev()->get_headingDirection()!= currentSnakeBody->get_next()->get_headingDirection()) pic_ref = 2;
-		}
-		if (pic_ref == -1) pic_ref = 1;
-		QPixmap pic(image_lookup[0][pic_ref]);
-		QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
-		currentSnakeBody->register_view(snake_pic);
-		snake_pic->setZValue(999);
-		snake_pic->setOffset(currentSnakeBody->get_col()*32,currentSnakeBody->get_row()*32);
+    /* SNAKE */
+    // Init Snake
+    // TODO: Stat
+    snake = new Snake {20, 25};
+    // Init UI
+    SnakeBody* currentSnakeBody = snake;
+    for (int i = 0; i <= snake->get_length(); i++){
+        int pic_ref = -1;
+        if (currentSnakeBody->get_prev() == nullptr) pic_ref = 0;
+        if (currentSnakeBody->get_next() == nullptr) pic_ref = 3;
+        if (currentSnakeBody->get_prev() != nullptr && currentSnakeBody->get_next() != nullptr){
+            if (currentSnakeBody->get_prev()->get_headingDirection()!= currentSnakeBody->get_next()->get_headingDirection()) pic_ref = 2;
+        }
+        if (pic_ref == -1) pic_ref = 1;
+        QPixmap pic(image_lookup[0][pic_ref]);
+        QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
+        currentSnakeBody->register_view(snake_pic);
+        snake_pic->setZValue(999);
+        snake_pic->setOffset(currentSnakeBody->get_col()*32,currentSnakeBody->get_row()*32);
 
-		// Record the OCCUPIED state on game_map
-		game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
-		currentSnakeBody = currentSnakeBody->get_next();
-	}
+        // Record the OCCUPIED state on game_map
+        game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
+        currentSnakeBody = currentSnakeBody->get_next();
+    }
 
-	/* NORMAL GHOSTS */
-	// Generate two noraml ghosts
-	// TODO : Generate two or more instead of one and set random coord
-	for (int i = 0; i < NUM_OF_NORMAL_GHOST; i++) {
-		int row, col;
-		do {
-			row	= rand() % game_map->get_num_rows();
-			col = rand() % game_map->get_num_cols();
-		} while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
-		int upperNGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2);
-		int lowerNGSpeed = static_cast<int>(1);
-		int speed = rand() % (upperNGSpeed - lowerNGSpeed + 1) + lowerNGSpeed;
-		NormalGhost* currentGhost = new NormalGhost {row, col, speed};
-		normalGhosts.push_back(currentGhost);
+    /* NORMAL GHOSTS */
+    // Generate two noraml ghosts
+    // TODO : Generate two or more instead of one and set random coord
+    for (int i = 0; i < NUM_OF_NORMAL_GHOST; i++) {
+        int row, col;
+        do {
+            row	= rand() % game_map->get_num_rows();
+            col = rand() % game_map->get_num_cols();
+        } while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
+        int upperNGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2);
+        int lowerNGSpeed = static_cast<int>(1);
+        int speed = rand() % (upperNGSpeed - lowerNGSpeed + 1) + lowerNGSpeed;
+        NormalGhost* currentGhost = new NormalGhost {row, col, speed};
+        normalGhosts.push_back(currentGhost);
 
-		// Record the OCCUPIED state on game_map
-		game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+        // Record the OCCUPIED state on game_map
+        game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
 
-		// Init UI
-		QPixmap pic(NormalGhost::image_lookup[rand() % 5]);
-		QGraphicsPixmapItem* ghost_pic = scene.addPixmap(pic);
-		currentGhost->register_view(ghost_pic);
-		ghost_pic->setZValue(999);
-		ghost_pic->setOffset(currentGhost->get_col() * 32, currentGhost->get_row() * 32);
-	}
+        // Init UI
+        QPixmap pic(NormalGhost::image_lookup[rand() % 5]);
+        QGraphicsPixmapItem* ghost_pic = scene.addPixmap(pic);
+        currentGhost->register_view(ghost_pic);
+        ghost_pic->setZValue(999);
+        ghost_pic->setOffset(currentGhost->get_col() * 32, currentGhost->get_row() * 32);
+    }
 
-	/* BIG GHOSTS */
-	for (int i = 0; i < NUM_OF_BIG_GHOST; i++) {
-		int row, col;
-		do {
-			row	= rand() % game_map->get_num_rows();
-			col = rand() % game_map->get_num_cols();
-		} while ((game_map->get_terrainState(row	, col)		!= GameMap::TerrainState::EMPTY) ||
-				 (game_map->get_terrainState(row	, col + 1)	!= GameMap::TerrainState::EMPTY) ||
-				 (game_map->get_terrainState(row + 1, col + 1)	!= GameMap::TerrainState::EMPTY) ||
-				 (game_map->get_terrainState(row + 1, col)		!= GameMap::TerrainState::EMPTY));
-		int upperBGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4);
-		int lowerBGSpeed = static_cast<int>(1);
-		int speed = rand() % (upperBGSpeed - lowerBGSpeed + 1) + lowerBGSpeed;
-		BigGhost* currentGhost = new BigGhost {row, col, speed};
-		bigGhosts.push_back(currentGhost);
+    /* BIG GHOSTS */
+    for (int i = 0; i < NUM_OF_BIG_GHOST; i++) {
+        int row, col;
+        do {
+            row	= rand() % game_map->get_num_rows();
+            col = rand() % game_map->get_num_cols();
+        } while ((game_map->get_terrainState(row	, col)		!= GameMap::TerrainState::EMPTY) ||
+                 (game_map->get_terrainState(row	, col + 1)	!= GameMap::TerrainState::EMPTY) ||
+                 (game_map->get_terrainState(row + 1, col + 1)	!= GameMap::TerrainState::EMPTY) ||
+                 (game_map->get_terrainState(row + 1, col)		!= GameMap::TerrainState::EMPTY));
+        int upperBGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4);
+        int lowerBGSpeed = static_cast<int>(1);
+        int speed = rand() % (upperBGSpeed - lowerBGSpeed + 1) + lowerBGSpeed;
+        BigGhost* currentGhost = new BigGhost {row, col, speed};
+        bigGhosts.push_back(currentGhost);
 
-		// Record the OCCUPIED state on game_map
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 2; j++) {
-				game_map->set_terrainState(currentGhost->get_row() + i, currentGhost->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
-			}
-		}
+        // Record the OCCUPIED state on game_map
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                game_map->set_terrainState(currentGhost->get_row() + i, currentGhost->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+            }
+        }
 
-		// Init UI
-		int ghostBody_count = 0;
-		GhostBody* currentGhostBody = currentGhost;
-		do {
-			QPixmap pic(BigGhost::image_lookup[ghostBody_count]);
-			QGraphicsPixmapItem* ghostBody_pic = scene.addPixmap(pic);
-			currentGhostBody->register_view(ghostBody_pic);
-			ghostBody_pic->setZValue(999);
-			ghostBody_pic->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
+        // Init UI
+        int ghostBody_count = 0;
+        GhostBody* currentGhostBody = currentGhost;
+        do {
+            QPixmap pic(BigGhost::image_lookup[ghostBody_count]);
+            QGraphicsPixmapItem* ghostBody_pic = scene.addPixmap(pic);
+            currentGhostBody->register_view(ghostBody_pic);
+            ghostBody_pic->setZValue(999);
+            ghostBody_pic->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
 
-			currentGhostBody = currentGhostBody->get_next();
-			ghostBody_count++;
-		} while (currentGhostBody != currentGhost);
-	}
+            currentGhostBody = currentGhostBody->get_next();
+            ghostBody_count++;
+        } while (currentGhostBody != currentGhost);
+    }
 
-	/* FRUITS */
-	for (int i = 0; i < MAX_MUN_OF_FRUIT; i++) {
-		fruit_instantiation();
-	}
+    /* FRUITS */
+    for (int i = 0; i < MAX_MUN_OF_FRUIT; i++) {
+        fruit_instantiation();
+    }
 
-	/* POWER UPS */
-	// TODO
+    /* POWER UPS */
+    // TODO
     connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 
-	/* START TIMER */
-	// Start gameTickTimer update every GAME_TICK_UPDATE_TIME ms
-	gameTickTimer->start(GAME_TICK_UPDATE_TIME);
-	// Start timer to update every 1 seconds
+    /* START TIMER */
+    // Start gameTickTimer update every GAME_TICK_UPDATE_TIME ms
+    gameTickTimer->start(GAME_TICK_UPDATE_TIME);
+    // Start timer to update every 1 seconds
     timer->start(1000);
     isPlaying = true;
     ui->pushButton->setVisible(false);
@@ -375,14 +375,14 @@ void game_view::setup_view(){
 
 void game_view::reset_view(){
     isPlaying = false;
-	gameTickTimer->stop();
-	gameTickCount = 0;
-	timer->stop();
+    gameTickTimer->stop();
+    gameTickCount = 0;
+    timer->stop();
     timeCount = 0;
     // TODO: 54D: remove all moving snake
     // scene.clear(); // TODO: this causes issues when reopening the widget.
     ui->graphicsView->removeEventFilter(this);
-	disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
     if(snake!=nullptr){
         disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
     }
@@ -435,8 +435,8 @@ void game_view::refresh_powerUp_list(){
 }
 
 void game_view::update_timer(){
-	++timeCount;
-	ui->Timer_label->setText(parseTime(timeCount));
+    ++timeCount;
+    ui->Timer_label->setText(parseTime(timeCount));
 }
 
 void game_view::update_health(){
@@ -458,326 +458,370 @@ void game_view::update_health(){
 }
 
 void game_view::gameTickUpdate() {
-	/*
-	 * This function is called everyime game tick
-	 * The function does the following procedure :
-	 * - Game over condition
-	 * - Move the Entity according to their speed
-	 * - Update Entity's UI
-	 * - Collision checking
-	 */
-	gameTickCount++;
-	// Overflow prevention
-	if (gameTickCount >= LLONG_MAX)
-		gameTickCount = 0;
+    /*
+     * This function is called everyime game tick
+     * The function does the following procedure :
+     * - Game over condition
+     * - Move the Entity according to their speed
+     * - Update Entity's UI
+     * - Collision checking
+     */
+    gameTickCount++;
+    // Overflow prevention
+    if (gameTickCount >= LLONG_MAX)
+        gameTickCount = 0;
 
-	/* Game Over Condition Checking */
-	if(is_game_over()) {
-		// Stop timer and game update
-		gameTickTimer->stop();
-		timer->stop();
+    /* Game Over Condition Checking */
+    if(is_game_over()){
+        // Stop timer and game update
+        gameTickTimer->stop();
+        timer->stop();
 
-		qDebug() << "GAME OVER!";
-		// Play sound effect
-		deathSoundEffect->play();
-		gameOverSoundEffect->play();
+        qDebug() << "GAME OVER!";
+        // Play sound effect
+        deathSoundEffect->play();
+        gameOverSoundEffect->play();
 
-		emit game_over_signal();
-	}
-	else {
-		/* Update movemnt & UI */
-		/* Movement will update according to the Entity's speed
-		 * As a reference,
-		 * If get_speed() == MAX_SPEED,		the Entity will move in every single game tick
-		 * If get_speed() == MAX_SPEED / 2, the Entity will move in every 2 game ticks
-		 * If get_speed() == 1,				the Entity will move in every MAX_SPEED game ticks (MAX_SPEED * GAME_TICK_UPDATE_TIME ms in real time)
-		 *
-		 * However, UI will update in every game tick regardless of the Entity's speed
-		 */
+        emit game_over_signal();
+    }
+    else {
+        /* Update movemnt & UI */
+        /* Movement will update according to the Entity's speed
+         * As a reference,
+         * If get_speed() == MAX_SPEED,		the Entity will move in every single game tick
+         * If get_speed() == MAX_SPEED / 2, the Entity will move in every 2 game ticks
+         * If get_speed() == 1,				the Entity will move in every MAX_SPEED game ticks (MAX_SPEED * GAME_TICK_UPDATE_TIME ms in real time)
+         *
+         * However, UI will update in every game tick regardless of the Entity's speed
+         */
 
-		/* SNAKE */
-		// Movement update
-		if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-			// game_map clear occupied state
-			for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
-			}
+        /* SNAKE */
+        // Movement update
+        if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+            // game_map clear occupied state
+            for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+                game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+            }
 
-			snake->move_forward();
+            snake->move_forward();
 
-			// game_map update occupied state
-			for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-				if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::EMPTY) {
-					game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
-				}
-			}
-		}
-		// UI update
-		// TODO
-		for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-			currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
-			currentSnakeBody->refresh_pixmap();
-		}
+            // game_map update occupied state
+            for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+                if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::EMPTY) {
+                    game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
+                }
+            }
+        }
+        // UI update
+        // TODO
+        for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+            currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
+            currentSnakeBody->refresh_pixmap();
+        }
+        update_health();
+
+        /* NORMAL GHOSTS */
+        for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+            // Movement update
+            if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+                // Update game_map state
+                game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
+
+                // Avoid wall collison checking
+                while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection())) {
+                    // Rotate heading direction of Normal ghost
+                    (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+                }
+
+                // Show Fruits on game_map again if the Ghost was stepped on it
+                int prev_row, prev_col;
+                bool isFruitCoord = false;
+                for (auto f_it = fruits.begin(); f_it != fruits.end() && !isFruitCoord; f_it++) {
+                    if ((*f_it)->get_row() == (*it)->get_row() && (*f_it)->get_col() == (*it)->get_col()) {
+                        isFruitCoord = true;
+                        prev_row = (*f_it)->get_row();
+                        prev_col = (*f_it)->get_col();
+                    }
+                }
+
+                // Move forward
+                (*it)->move_forward();
+
+                // Show Fruits
+                if (isFruitCoord) {
+                    game_map->set_terrainState(prev_row, prev_col, GameMap::TerrainState::FRUIT_OCCUPIED);
+                }
+
+                // Update game_map state
+                game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+            }
+            // UI update
+            (*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
+        }
 
 
-		/* NORMAL GHOSTS */
-		for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
-			// Movement update
-			if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-				// Update game_map state
-				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
+        /* BIG GHOST*/
+        for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+            // Movement update
+            if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+                // Update game_map state
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::EMPTY);
+                    }
+                }
 
-				// Avoid wall collison checking
-				while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection())) {
-					// Rotate heading direction of Normal ghost
-					(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
-				}
+                // Avoid wall collison checking
+                // Check each part of BigGhost's GhostBody
+                GhostBody* currentGhostBody = *it;
+                do {
+                    while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), (*it)->get_headingDirection()))	{
+                        // Rotate heading direction of whole Big ghost
+                        (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+                    }
+                    currentGhostBody = currentGhostBody->get_next();
+                } while (currentGhostBody != (*it));
 
-				// Show Fruits on game_map again if the Ghost was stepped on it
-				int prev_row, prev_col;
-				bool isFruitCoord = false;
-				for (auto f_it = fruits.begin(); f_it != fruits.end() && !isFruitCoord; f_it++) {
-					if ((*f_it)->get_row() == (*it)->get_row() && (*f_it)->get_col() == (*it)->get_col()) {
-						isFruitCoord = true;
-						prev_row = (*f_it)->get_row();
-						prev_col = (*f_it)->get_col();
-					}
-				}
+                // Show Fruits on game_map again if the Ghost was stepped on it
+                int prev_row, prev_col;
+                bool isFruitCoord = false;
+                for (auto f_it = fruits.begin(); f_it != fruits.end() && !isFruitCoord; f_it++) {
+                    for (int i = 0; i < 2; i++) {
+                        for (int j = 0; j < 2; j++) {
+                            if ((*f_it)->get_row() == ((*it)->get_row() + i) && (*f_it)->get_col() == ((*it)->get_col() + j)) {
+                                isFruitCoord = true;
+                                prev_row = (*f_it)->get_row();
+                                prev_col = (*f_it)->get_col();
+                            }
+                        }
+                    }
+                }
 
-				// Move forward
-				(*it)->move_forward();
+                // Move forward
+                (*it)->move_forward();
 
-				// Show Fruits
-				if (isFruitCoord) {
-					game_map->set_terrainState(prev_row, prev_col, GameMap::TerrainState::FRUIT_OCCUPIED);
-				}
+                // Show Fruits
+                if (isFruitCoord) {
+                    game_map->set_terrainState(prev_row, prev_col, GameMap::TerrainState::FRUIT_OCCUPIED);
+                }
 
-				// Update game_map state
-				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
-			}
-			// UI update
-			(*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
-		}
+                // Update game_map state
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+                    }
+                }
+            }
+            // UI Update
+            GhostBody* currentGhostBody = (*it);
+            do {
+                currentGhostBody->get_pixmap()->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
+                currentGhostBody = currentGhostBody->get_next();
+            } while (currentGhostBody != (*it));
+        }
 
 
-		/* BIG GHOST*/
-		for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
-			// Movement update
-			if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-				// Update game_map state
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0; j < 2; j++) {
-						game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::EMPTY);
-					}
-				}
+        /* Collision checking */
+        // Check if snake (head) collide with fruit
+        if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::FRUIT_OCCUPIED) {
+            int collideFruitIndex = -1;
+            Fruit* fruit_temp = nullptr;
+            // Search for the Fruit being collided
+            for (int i = 0; i < fruits.size() && collideFruitIndex == -1; i++) {
+                if (fruits.at(i)->get_row() == snake->get_row() && fruits.at(i)->get_col() == snake->get_col()) {
+                    collideFruitIndex = i;
+                    fruit_temp = fruits.at(i);
+                }
+            }
+            // If the snake collide with the fruit
+            if (collideFruitIndex != -1) {
+                // Remove fruit from map
+                game_map->set_terrainState(fruit_temp->get_row(), fruit_temp->get_col(), GameMap::TerrainState::EMPTY);
+                scene.removeItem(fruit_temp->get_pixmap());
+                delete fruit_temp;
+                fruits.removeAt(collideFruitIndex);
 
-				// Avoid wall collison checking
-				// Check each part of BigGhost's GhostBody
-				GhostBody* currentGhostBody = *it;
-				do {
-					while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), (*it)->get_headingDirection()))	{
-						// Rotate heading direction of whole Big ghost
-						(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
-					}
-					currentGhostBody = currentGhostBody->get_next();
-				} while (currentGhostBody != (*it));
 
-				// Show Fruits on game_map again if the Ghost was stepped on it
-				int prev_row, prev_col;
-				bool isFruitCoord = false;
-				for (auto f_it = fruits.begin(); f_it != fruits.end() && !isFruitCoord; f_it++) {
-					for (int i = 0; i < 2; i++) {
-						for (int j = 0; j < 2; j++) {
-							if ((*f_it)->get_row() == ((*it)->get_row() + i) && (*f_it)->get_col() == ((*it)->get_col() + j)) {
-								isFruitCoord = true;
-								prev_row = (*f_it)->get_row();
-								prev_col = (*f_it)->get_col();
-							}
-						}
-					}
-				}
+                snake->increase_num_fruits_eaten(1);
+                snake->increase_length(1);
+                // Update UI
+                SnakeBody* lastSnakeBody = snake;
+                while (lastSnakeBody->get_next() != nullptr) {
+                    lastSnakeBody = lastSnakeBody->get_next();
+                }
+                QPixmap pic(image_lookup[0][3]);
+                QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
+                lastSnakeBody->register_view(snake_pic);
+                snake_pic->setZValue(999);
+                snake_pic->setOffset(lastSnakeBody->get_col()*32, lastSnakeBody->get_row()*32);
+                // Refresh UI
+                // TODO
+                for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+                    currentSnakeBody->refresh_pixmap();
+                }
 
-				// Move forward
-				(*it)->move_forward();
 
-				// Show Fruits
-				if (isFruitCoord) {
-					game_map->set_terrainState(prev_row, prev_col, GameMap::TerrainState::FRUIT_OCCUPIED);
-				}
+                // Update snake speed
+                snake->set_speed(snake->calculate_level_speed());
+                qDebug() << "Fruit eaten: " << snake->get_num_fruits_eaten();
 
-				// Update game_map state
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0; j < 2; j++) {
-						game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
-					}
-				}
-				(*it)->move_forward();
-				// Update game_map state
-				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
-			}
-			// UI
-			(*it)->get_pixmap()->setOffset((*it)->get_col() * 32, (*it)->get_row() * 32);
-		}
+                // Generate a new fruit on map
+                fruit_instantiation();
+            }
+            else {
+                qDebug() << "[ERROR] Collided fruit not found!";
+            }
+        }
 
-		/* BIG GHOST*/
-		for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
-			// Movement update
-			if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-				// Update game_map state
-				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::EMPTY);
-				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::EMPTY);
-				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::EMPTY);
-				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::EMPTY);
+        // Check if snake collide with PowerUp
+        // TODO
 
-				// Avoid wall collison checking
-				GhostBody* currentGhostBody = *it;
-				do {
-					MovingEntity::Direction currentHeadingDirection = currentGhostBody->get_headingDirection();
-					while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
-						// Rotate heading direction of whole Big ghost
-						switch (currentHeadingDirection) {
-							case MovingEntity::Direction::NORTH:currentHeadingDirection	= MovingEntity::Direction::EAST; break;
-							case MovingEntity::Direction::EAST:	currentHeadingDirection	= MovingEntity::Direction::SOUTH;break;
-							case MovingEntity::Direction::SOUTH:currentHeadingDirection	= MovingEntity::Direction::WEST; break;
-							case MovingEntity::Direction::WEST:	currentHeadingDirection = MovingEntity::Direction::NORTH;break;
-						}
-						(*it)->set_headingDirection(currentHeadingDirection);
-					}
-					currentGhostBody = currentGhostBody->get_next();
-				} while (currentGhostBody != (*it));
-				(*it)->move_forward();
+        // Check if snake collide with wall
+        if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
+            // Instant death
+            snake->set_health(0);
+            qDebug() << "Snake hits the wall!";
+            return;
+        }
 
-				// Update game_map state
-				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
-				game_map->set_terrainState((*it)->get_row()		, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
-				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col() + 1	, GameMap::TerrainState::GHOST_OCCUPIED);
-				game_map->set_terrainState((*it)->get_row() + 1	, (*it)->get_col()		, GameMap::TerrainState::GHOST_OCCUPIED);
+        // Check if snake collide with itself
+        for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+            if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
+                // Instant death
+                snake->set_health(0);
+                qDebug() << "Snake hits itslef";
+                return;
+            }
+        }
 
-			}
-			// UI
-			GhostBody* currentGhostBody = (*it);
-			do {
-				currentGhostBody->get_pixmap()->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
+        // Check if snake (head) collide with ghosts
+        if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+            // Instant death
+            snake->set_health(0);
+            qDebug() << "Snake (head) hits a ghost!";
+            return;
+        }
 
-				currentGhostBody = currentGhostBody->get_next();
-			} while (currentGhostBody != (*it));
-		}
+        // Check if snake (body) collide with ghosts
+        for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+            if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+                // Play sound effecct
+                if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
+                    hurtSoundEffect->setPosition(0);
+                }
+                else if (hurtSoundEffect->state() == QMediaPlayer::StoppedState) {
+                    hurtSoundEffect->play();
+                }
 
-		/* Collision checking */
-		// Check if snake collide with wall
-		if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
-			snake->set_health(0);
-			qDebug() << "Snake hits the wall!";
-			return;
-		}
+                qDebug() << "Snake (body) hits a ghost!";
+                snake->set_relative_health(-1);
+                qDebug() << "Health" << snake->get_health() << snake->get_max_health();
 
-		// Check if snake collide with itself
-		for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-			if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
-				snake->set_health(0);
-				qDebug() << "Snake hits itslef";
-				return;
-			}
-		}
+                // Search for the Ghost and change its headingDirection to avoid multiple hits
+                GhostBody* collidedGhostBody = nullptr;
+                for (auto it = normalGhosts.begin(); it != normalGhosts.end() && collidedGhostBody == nullptr; it++) {
+                    if ((*it)->get_row() == currentSnakeBody->get_row() && (*it)->get_col() == currentSnakeBody->get_col()) {
+                        collidedGhostBody = *it;
+                        (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+                        qDebug() << "DIRECTION CHANGED!";
+                    }
+                }
+                for (auto it = bigGhosts.begin(); it != bigGhosts.end() && collidedGhostBody == nullptr; it++) {
+                    GhostBody* currentGhostsBody = (*it);
+                    do {
+                        if (currentGhostsBody->get_row() == currentSnakeBody->get_row() && currentGhostsBody->get_col() == currentSnakeBody->get_col()) {
+                            collidedGhostBody = *it;
+                            (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+                            qDebug() << "DIRECTION CHANGED!";
+                        }
+                    } while (currentGhostsBody != (*it) && collidedGhostBody == nullptr);
+                }
+                if (collidedGhostBody == nullptr) {
+                    qDebug() << "[ERROR] Collided GhostBody not found!";
+                }
 
-		// Check if snake (head) collide with ghosts
-		if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
-			snake->set_health(0);
-			qDebug() << "Snake (head) hits a ghost!";
-			return;
-		}
 
-		// Check if snake (body) collide with ghosts
-		for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-			if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
-				// Play sound effecct
-				if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
-					hurtSoundEffect->setPosition(0);
-				}
-				else if (hurtSoundEffect->state() == QMediaPlayer::StoppedState) {
-					hurtSoundEffect->play();
-				}
-				qDebug() << "Ouch! That's hurt!";
-				snake->set_relative_health(-1);
-				qDebug() << "Health" << snake->get_health() << snake->get_max_health();
-				for (SnakeBody* removeSnakeBody = currentSnakeBody; removeSnakeBody != nullptr; removeSnakeBody = removeSnakeBody->get_next()) {
-					game_map->set_terrainState(removeSnakeBody->get_row(), removeSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
-					scene.removeItem(removeSnakeBody->get_pixmap());
-				}
-				snake->remove_tail(currentSnakeBody->get_prev());
-				return;
-			}
-		}
-		// More stuff TODO on collision checking :^ )
-	}
+                // Update game_map state, the SnakeBody being cut is reset to TrrrainState::EMPTY
+                // Note that the collided part is not updated as the GhostBody is occupying the game_map already
+                scene.removeItem(currentSnakeBody->get_pixmap());
+                for (SnakeBody* removeSnakeBody = currentSnakeBody->get_next(); removeSnakeBody != nullptr; removeSnakeBody = removeSnakeBody->get_next()) {
+                    // Update the game_map state of the remaining SnakeBody
+                    game_map->set_terrainState(removeSnakeBody->get_row(), removeSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+                    scene.removeItem(removeSnakeBody->get_pixmap());
+                }
+                snake->remove_tail(currentSnakeBody->get_prev());
+                return;
+            }
+        }
+    }
 }
 
 bool game_view::is_game_over() const {
-	if (snake->get_health() <= 0)
-		return true;
-	return false;
+    if (snake->get_health() <= 0)
+        return true;
+    return false;
 }
 
 bool game_view::next_move_ghost_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const {
-	switch(headingDirection) {
-		case MovingEntity::Direction::NORTH:row -= 1;	break;
-		case MovingEntity::Direction::EAST:	col += 1;	break;
-		case MovingEntity::Direction::SOUTH:row += 1;	break;
-		case MovingEntity::Direction::WEST:	col -= 1;	break;
-	}
-	if (game_map->get_terrainState(row, col) == GameMap::TerrainState::BLOCKED ||
-		game_map->get_terrainState(row, col) == GameMap::TerrainState::GHOST_OCCUPIED)
-		return true;
-	return false;
+    switch(headingDirection) {
+        case MovingEntity::Direction::NORTH:row -= 1;	break;
+        case MovingEntity::Direction::EAST:	col += 1;	break;
+        case MovingEntity::Direction::SOUTH:row += 1;	break;
+        case MovingEntity::Direction::WEST:	col -= 1;	break;
+    }
+    if (game_map->get_terrainState(row, col) == GameMap::TerrainState::BLOCKED ||
+        game_map->get_terrainState(row, col) == GameMap::TerrainState::GHOST_OCCUPIED)
+        return true;
+    return false;
 }
 
 // TODO: merge into reset_view
 void game_view::remove_game_content() {
-	timer->stop();
-	timeCount = 0;
-	gameTickTimer->stop();
-	gameTickCount = 0;
+    timer->stop();
+    timeCount = 0;
+    gameTickTimer->stop();
+    gameTickCount = 0;
 
-	for(int i=0;i<terrain_pixmaps.size();i++){
-		scene.removeItem(terrain_pixmaps.at(i));
-		delete terrain_pixmaps.at(i);
-	}
-	terrain_pixmaps.clear();
+    for(int i=0;i<terrain_pixmaps.size();i++){
+        scene.removeItem(terrain_pixmaps.at(i));
+        delete terrain_pixmaps.at(i);
+    }
+    terrain_pixmaps.clear();
 
-	delete game_map;
-	game_map = nullptr;
+    delete game_map;
+    game_map = nullptr;
 
-	for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
-		scene.removeItem(currentSnakeBody->get_pixmap());
-	}
-	delete snake;
-	snake = nullptr;
+    for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+        scene.removeItem(currentSnakeBody->get_pixmap());
+    }
+    delete snake;
+    snake = nullptr;
 
-	for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
-		scene.removeItem((*it)->get_pixmap());
-		delete (*it);
-	}
-	normalGhosts.clear();
+    for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
+        scene.removeItem((*it)->get_pixmap());
+        delete (*it);
+    }
+    normalGhosts.clear();
 
-	for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
-		GhostBody* currentGhostBody = *it;
-		do {
-			scene.removeItem(currentGhostBody->get_pixmap());
-			currentGhostBody = currentGhostBody->get_next();
-		} while (currentGhostBody != *it);
-		delete (*it);
-	}
-	bigGhosts.clear();
+    for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
+        GhostBody* currentGhostBody = *it;
+        do {
+            scene.removeItem(currentGhostBody->get_pixmap());
+            currentGhostBody = currentGhostBody->get_next();
+        } while (currentGhostBody != *it);
+        delete (*it);
+    }
+    bigGhosts.clear();
 
-	for (auto it = fruits.begin(); it != fruits.end(); it++) {
-		scene.removeItem((*it)->get_pixmap());
-		delete (*it);
-	}
-	fruits.clear();
+    for (auto it = fruits.begin(); it != fruits.end(); it++) {
+        scene.removeItem((*it)->get_pixmap());
+        delete (*it);
+    }
+    fruits.clear();
 
-	for (auto it = powerups.begin(); it != powerups.end(); it++) {
-		scene.removeItem((*it)->get_pixmap());
-		delete (*it);
-	}
-	powerups.clear();
+    for (auto it = powerups.begin(); it != powerups.end(); it++) {
+        scene.removeItem((*it)->get_pixmap());
+        delete (*it);
+    }
+    powerups.clear();
 }
