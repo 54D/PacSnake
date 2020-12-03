@@ -1,8 +1,14 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-class Entity {
+#include <QObject>
+#include <QGraphicsPixmapItem>
+
+class Entity : public QObject {
+
 public:
+	Entity();
+	Entity(int row, int col);
     virtual ~Entity();
 
     int get_row() const;
@@ -12,12 +18,12 @@ public:
     void set_col(int col);
     void set_coordinate(int row, int col);
     void set_relative_coordinate(int delta_row, int delta_col);
+    void register_view(QGraphicsPixmapItem *pixmap);
+    QGraphicsPixmapItem* get_pixmap();
 
 protected:
-    Entity();
-    Entity(int row, int col);
-
     int row, col;
+    QGraphicsPixmapItem *pixmap;
 };
 
 

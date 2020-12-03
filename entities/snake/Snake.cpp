@@ -28,6 +28,7 @@ Snake::Snake(int row, int col, int speed, Direction headingDirection, int max_he
 }
 
 Snake::~Snake() {
+	// Delete the whole snake
     SnakeBody* currentSnakeBody = this->next;
     SnakeBody* nextSnakeBody = nullptr;
     while (currentSnakeBody != nullptr) {
@@ -35,6 +36,11 @@ Snake::~Snake() {
         delete currentSnakeBody;
         currentSnakeBody = nextSnakeBody;
     }
+	// Empty pu_inventpry
+	for (auto it = pu_inventory.begin(); it != pu_inventory.end(); it++) {
+		delete (*it);
+	}
+	pu_inventory.clear();
 }
 
 int Snake::get_max_health() const {
@@ -59,10 +65,10 @@ const PowerUp* Snake::get_pu_activate() const {
 
 void Snake::set_headingDirection(Direction headingDirection) {
     // Avoid setting the headingDirection the opposite of the current headingDirection
-    if (this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH ||
-        this->headingDirection == Direction::EAST && headingDirection == Direction::WEST ||
-        this->headingDirection == Direction::SOUTH && headingDirection == Direction::NORTH ||
-        this->headingDirection == Direction::WEST && headingDirection == Direction::EAST)
+	if ((this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH)	||
+		(this->headingDirection == Direction::EAST && headingDirection == Direction::WEST)		||
+		(this->headingDirection == Direction::SOUTH && headingDirection == Direction::NORTH)	||
+		(this->headingDirection == Direction::WEST && headingDirection == Direction::EAST))
         return;
     else
         this->headingDirection = headingDirection;
@@ -98,15 +104,39 @@ void Snake::set_pu_activate(PowerUp* powerUp) {
 	pu_activate = powerUp;
 }
 
+void Snake::set_ghost_immunity(bool state) {
+	ghost_immunity = state;
+}
+
 void Snake::move_forward() {
-	for (int i = 0; i < speed; i++){
-		move_forward_one_unit();
+	SnakeBody* currentSnakeBody = this;
+	Direction currentHeadingDirection, prevHeadingDirection;
+	while (currentSnakeBody != nullptr) {
+		// As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate
+		switch(currentSnakeBody->headingDirection) {
+			case Direction::NORTH:	currentSnakeBody->set_relative_coordinate(-1, 0);	break;
+			case Direction::EAST:	currentSnakeBody->set_relative_coordinate(0, 1);	break;
+			case Direction::SOUTH:	currentSnakeBody->set_relative_coordinate(1, 0);	break;
+			case Direction::WEST:	currentSnakeBody->set_relative_coordinate(0, -1);	break;
+		}
+
+		currentHeadingDirection = currentSnakeBody->headingDirection;
+		// Change headingDirection according to the last snakeBody
+		if (currentSnakeBody->prev != nullptr) {
+			currentSnakeBody->headingDirection = prevHeadingDirection;
+		}
+		prevHeadingDirection = currentHeadingDirection;
+
+		// Move to next SnakeBody
+		currentSnakeBody = currentSnakeBody->next;
 	}
 }
 
 void Snake::set_speed(int speed) {
-    if (speed < 0)
-        return;
+	if (speed < 0)
+		speed = 0;
+	else if (speed > MAX_SPEED)
+		speed = MAX_SPEED;
 
     SnakeBody* currentSnakeBody = this;
     while (currentSnakeBody != nullptr) {
@@ -125,12 +155,22 @@ int Snake::calculate_level_speed() const {
     int newSpeed;
     // TODO: Change an appropriate value (/ 10?)
     newSpeed = fruits_eaten / 10 + INIT_SPEED;
+
+	// New speed should not exceed the maximum allowed speed
+	if (newSpeed > MAX_SPEED)
+		newSpeed = MAX_SPEED;
+
     return newSpeed;
 }
 
 void Snake::increase_length(int len) {
-    if (len <= 0)
-        return;
+	if (len <= 0) {
+		return;
+	}
+
+	if ((length + len) > MAX_LENGTH) {
+		return;
+	}
 
     // Search for end of  SnakeBody (index = length - 1)
     SnakeBody* endSnakeBody = this;
@@ -200,6 +240,7 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
     }
 }
 
+
 // TODO
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
@@ -208,40 +249,6 @@ void Snake::usePU() {
     
     PowerUp* pu = pu_inventory.front();
     pu_inventory.pop_front();
-    
-    // Case switch or use function pointer to call the corresponding power up use function
-    // TODO: Can simplify the code
-    switch (pu->get_type()) {
-    	case PowerUp::PowerUpType::NONE:
-    		std::cerr << "UNEXPECTED ERROR OCCUR" << std::endl;
-    		break;
-    	case PowerUp::PowerUpType::DASH:
-    		pu->activate(this);
-    		// emit signal to wait for deactivate (time out)
-    		break;
-    }
-}
-
-void Snake::move_forward_one_unit() {
-	SnakeBody* currentSnakeBody = this;
-	Direction currentHeadingDirection, prevHeadingDirection;
-	while (currentSnakeBody != nullptr) {
-		// As the speed of the snake might change, so each SnakeBody moves according to its current speed instead of last SnakeBody's coordinate
-		switch(currentSnakeBody->headingDirection) {
-			case Direction::NORTH:	currentSnakeBody->set_relative_coordinate(-1, 0);	break;
-			case Direction::EAST:	currentSnakeBody->set_relative_coordinate(0, 1);	break;
-			case Direction::SOUTH:	currentSnakeBody->set_relative_coordinate(1, 0);	break;
-			case Direction::WEST:	currentSnakeBody->set_relative_coordinate(0, -1);	break;
-		}
-		
-		currentHeadingDirection = currentSnakeBody->headingDirection;
-		// Change headingDirection according to the last snakeBody
-		if (currentSnakeBody->prev != nullptr) {
-			currentSnakeBody->headingDirection = prevHeadingDirection;
-		}
-		prevHeadingDirection = currentHeadingDirection;
-		
-		// Move to next SnakeBody
-		currentSnakeBody = currentSnakeBody->next;
-	}
+	pu->activate(this);
+	// emit signal to wait for deactivate (time out)
 }

@@ -28,6 +28,15 @@ void Entity::set_relative_coordinate(int delta_row, int delta_col) {
     col = col + delta_col;
 }
 
+void Entity::register_view(QGraphicsPixmapItem *pixmap){
+    this->pixmap = pixmap;
+}
+
+
+QGraphicsPixmapItem* Entity::get_pixmap() {
+    return this->pixmap;
+}
+
 Entity::Entity() {}
 
 Entity::Entity(int row, int col) :

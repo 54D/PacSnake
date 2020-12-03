@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QMediaPlayer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class main_container; }
@@ -21,9 +22,14 @@ private slots:
     void on_achButton_clicked();
     void on_creditsButton_clicked();
     void on_leaveButton_clicked();
+    void on_stackedWidget_currentChanged(int index);
     void bring_back();
+
+signals:
+    void stackedWidgetChange(int index);
 
 private:
     Ui::main_container *ui;
+	QMediaPlayer* selectSoundEffect;
 };
 #endif // WIDGET_H

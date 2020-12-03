@@ -16,8 +16,8 @@
   <widget class="QLabel" name="Timer_label">
    <property name="geometry">
     <rect>
-     <x>600</x>
-     <y>60</y>
+     <x>560</x>
+     <y>20</y>
      <width>47</width>
      <height>12</height>
     </rect>
@@ -29,11 +29,19 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>50</y>
-     <width>80</width>
+     <x>300</x>
+     <y>10</y>
+     <width>201</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 127);</string>
    </property>
    <property name="text">
     <string>PushButton</string>
@@ -43,17 +51,21 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>90</y>
+     <y>40</y>
      <width>541</width>
-     <height>441</height>
+     <height>541</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(0, 0, 0);</string>
    </property>
   </widget>
   <widget class="QLabel" name="timer_text">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>50</y>
+     <x>600</x>
+     <y>20</y>
      <width>47</width>
      <height>20</height>
     </rect>
@@ -62,6 +74,205 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="back_button">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>560</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 8pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(48, 48, 48);</string>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imageLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
+     <height>601</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/assets/background.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUp1Label">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>40</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUpFrameLabel">
+   <property name="geometry">
+    <rect>
+     <x>686</x>
+     <y>40</y>
+     <width>40</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>8BIT WONDER</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(170, 255, 127);
+color: rgb(0, 0, 0);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUp2Label">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>70</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="powerUp3Label">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>100</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pauseButton">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>10</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 127);</string>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="resetButton">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>10</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(166, 48, 48);</string>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="volume_control">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>560</y>
+     <width>32</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>assets/volume_control.png</normaloff>assets/volume_control.png</iconset>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QSlider" name="vol_Slider">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>390</y>
+     <width>16</width>
+     <height>160</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>50</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <zorder>imageLabel</zorder>
+  <zorder>Timer_label</zorder>
+  <zorder>pushButton</zorder>
+  <zorder>graphicsView</zorder>
+  <zorder>timer_text</zorder>
+  <zorder>back_button</zorder>
+  <zorder>powerUpFrameLabel</zorder>
+  <zorder>powerUp1Label</zorder>
+  <zorder>powerUp2Label</zorder>
+  <zorder>powerUp3Label</zorder>
+  <zorder>pauseButton</zorder>
+  <zorder>resetButton</zorder>
+  <zorder>volume_control</zorder>
+  <zorder>vol_Slider</zorder>
  </widget>
  <resources/>
  <connections/>

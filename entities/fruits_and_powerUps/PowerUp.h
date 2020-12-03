@@ -2,13 +2,14 @@
 #define POWERUP_H_
 
 #include <entities/Entity.h>
+#include <QMediaPlayer>
 
 // Forward declarations
 class Snake;
 
 class PowerUp : public Entity {
 public:
-    enum class PowerUpType {NONE, DASH, SHIELD, INVISIBLE};
+	enum class PowerUpType {NONE, DASH, SHIELD};
     virtual ~PowerUp();
     
 	virtual PowerUp::PowerUpType get_type() const;
@@ -19,6 +20,8 @@ public:
 protected:
     PowerUp(int row, int col, PowerUp::PowerUpType type = PowerUp::PowerUpType::NONE);
 	PowerUp::PowerUpType type {PowerUp::PowerUpType::NONE};
+
+	QMediaPlayer* activateSound;
 };
 
 #endif /* POWERUP_H_ */

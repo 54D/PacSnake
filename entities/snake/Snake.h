@@ -8,11 +8,13 @@
 
 // The "head / brain" of the snake, consider as a moving entity of snake as well
 class Snake final : public SnakeBody {
+    Q_OBJECT
 public:
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
     static const int INIT_SPEED = 1;
     static const int MAX_PU = 3;
+	static const int MAX_LENGTH = 20;
 
     Snake(int row, int col, int speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
     virtual ~Snake();
@@ -27,6 +29,7 @@ public:
     void set_health(int health);
     void set_relative_health(int delta_health);
     void set_pu_activate(PowerUp* powerUp);
+	void set_ghost_immunity(bool state);
 
     // The WHOLE snake will move forward base on its speed and each parts' headingDirection
     virtual void move_forward() override;
@@ -43,19 +46,25 @@ public:
     // index = 0 is Snake ("head / brain" of the snake)
     // index = 1 is the first snakeBody after Snake
     // index = length - 1 is the last SnakeBody
-    void remove_tail(int index);
+	void remove_tail(int index);
     void remove_tail(SnakeBody* snakeBody);
 
     void addPUToInventory(PowerUp* powerUp);
     void usePU();
 
+protected:
+    //virtual QPixmap get_pixmap() override;
+
+signals:
+    void powerUp_added();
+
 private:
-	void move_forward_one_unit();
-	
     int max_health {INIT_HEALTH};
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};
     int fruits_eaten {0};
+
+	bool ghost_immunity {false};
 
     // Power Up (PU)
     std::deque<PowerUp*> pu_inventory;
