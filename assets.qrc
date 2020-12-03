@@ -35,5 +35,8 @@
         <file>assets/font/8-BIT WONDER.TTF</file>
         <file>assets/background.png</file>
         <file>assets/background-2.png</file>
+        <file>assets/sprite/dash.png</file>
+        <file>assets/sprite/heal.png</file>
+        <file>assets/sprite/shield.png</file>
     </qresource>
 </RCC>
