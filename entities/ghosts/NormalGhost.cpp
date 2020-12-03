@@ -3,8 +3,19 @@
 
 #include "NormalGhost.h"
 
+const QString NormalGhost::image_lookup[5] {
+	":/assets/sprite/red.png",
+	":/assets/sprite/orange.png",
+	":/assets/sprite/pink.png",
+	":/assets/sprite/green.png",
+	":/assets/sprite/blue.png"
+};
+
 NormalGhost::NormalGhost(int row, int col, int speed, Direction headingDirection) :
 	GhostBody(row, col, speed, headingDirection) {
+	// Set random seed
+	srand(time(NULL));
+
 	set_random_stepUntilDirctionChange();
 }
 	
@@ -26,6 +37,5 @@ void NormalGhost::move_forward() {
 }
 
 void NormalGhost::set_random_stepUntilDirctionChange(int lower, int upper) {
-	srand(time(NULL));
 	stepUntilDirctionChange = (rand() % (upper - lower + 1)) + lower;
 }

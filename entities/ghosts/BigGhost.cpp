@@ -2,8 +2,17 @@
 #include <ctime>
 #include "BigGhost.h"
 
+const QString BigGhost::image_lookup[4] {
+	":/assets/sprite/big1.png",
+	":/assets/sprite/big2.png",
+	":/assets/sprite/big3.png",
+	":/assets/sprite/big4.png"
+};
+
 BigGhost::BigGhost(int row, int col, int speed, Direction headingDirection) :
 	GhostBody(row, col, speed, headingDirection) {
+	// Set random seed
+	srand(time(NULL));
 
 	GhostBody* currentGhostBody = this;
 	// [2]
@@ -77,7 +86,6 @@ void BigGhost::set_random_stepUntilDirctionChange(int lower, int upper) {
 }
 
 void BigGhost::set_random_headingDirection() {
-	srand(time(NULL));
 	switch (rand() % 4) {
 	case 0: set_headingDirection(Direction::NORTH);	break;
 	case 1: set_headingDirection(Direction::EAST);	break;

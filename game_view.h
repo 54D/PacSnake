@@ -49,8 +49,9 @@ private:
     bool eventFilter(QObject*, QEvent*) override;
 
 	// Detect will the Entity collide with the wall in it's next movement
-	bool is_game_over() const;
 	bool next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
+
+	bool is_game_over() const;
 	void remove_game_content();
 
 	/* GAME CONTENT */

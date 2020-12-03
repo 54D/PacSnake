@@ -35,9 +35,13 @@ int GameMap::get_num_cols() const {
     return num_cols;
 }
 
-GameMap::TerrainState GameMap::get_terrainState(int row,int col) const {
+GameMap::TerrainState GameMap::get_terrainState(int row, int col) const {
 	//qDebug() << "get_terrainState | Read " << row << ";" << col << ":" << static_cast<int>(terrain_map[row][col]);
     return terrain_map[row][col];
+}
+
+void GameMap::set_terrainState(int row, int col, TerrainState state) {
+	terrain_map[row][col] = state;
 }
 
 void GameMap::load_terrian_map(const std::string& filename) {
