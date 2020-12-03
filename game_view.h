@@ -32,6 +32,8 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
+    void on_pauseButton_clicked();
+    void on_resetButton_clicked();
     void on_back_button_clicked();
     void stackedWidgetChanged(int index);
     void refresh_powerUp_list();
@@ -66,6 +68,7 @@ private:
 	QList<Fruit*> fruits;
 	QList<PowerUp*> powerups;
 
+    bool isPlaying = false;
 	QTimer* gameTickTimer;
 	long long gameTickCount {0};
 	QTimer* timer;

@@ -35,6 +35,9 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
    <property name="styleSheet">
     <string notr="true">font: 10pt &quot;8BIT WONDER&quot;;
 color: rgb(255, 255, 255);
@@ -75,6 +78,9 @@ background-color: rgb(0, 0, 127);</string>
      <width>91</width>
      <height>21</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">font: 8pt &quot;8BIT WONDER&quot;;
@@ -171,6 +177,48 @@ color: rgb(0, 0, 0);</string>
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="pauseButton">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>10</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 127);</string>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="resetButton">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>10</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(166, 48, 48);</string>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </widget>
   <zorder>imageLabel</zorder>
   <zorder>Timer_label</zorder>
   <zorder>pushButton</zorder>
@@ -181,6 +229,8 @@ color: rgb(0, 0, 0);</string>
   <zorder>powerUp1Label</zorder>
   <zorder>powerUp2Label</zorder>
   <zorder>powerUp3Label</zorder>
+  <zorder>pauseButton</zorder>
+  <zorder>resetButton</zorder>
  </widget>
  <resources/>
  <connections/>

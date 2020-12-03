@@ -31,6 +31,21 @@
 #include "entities/fruits_and_powerUps/PU_Dash.h"
 #include "entities/fruits_and_powerUps/PU_Shield.h"
 
+// util
+static QString parseTime(long seconds){
+    long hh = (long)( (seconds / (60*60)) % 24 );
+    int mm = (int)( (seconds / (60)) % 60 );
+    int ss = (int)( seconds%60 );
+    std::ostringstream builder;
+    if(hh<10)builder << "0";
+    builder << hh << ":";
+    if(mm<10)builder << "0";
+    builder << mm << ":";
+    if(ss<10)builder << "0";
+    builder << ss;
+    return QString::fromStdString(builder.str());
+}
+
 const QString game_view::image_lookup[1][4] {
     {
         ":/assets/sprite/snake-head-up.png",
@@ -274,6 +289,33 @@ void game_view::on_pushButton_clicked()
 	gameTickTimer->start(GAME_TICK_UPDATE_TIME);
 	// Start timer to update every 1 seconds
     timer->start(1000);
+    isPlaying = true;
+    ui->pushButton->setVisible(false);
+    ui->pauseButton->setVisible(true);
+    ui->resetButton->setVisible(true);
+}
+
+void game_view::on_pauseButton_clicked(){
+    if(isPlaying){
+        ui->pauseButton->setText("Resume");
+    }else{
+        ui->pauseButton->setText("Pause");
+    }
+    isPlaying = !isPlaying;
+    // TODO: 54D: pausing functionality is not implemented
+}
+
+void game_view::on_resetButton_clicked(){
+    isPlaying = false;
+    gameTickTimer->stop();
+    gameTickCount = 0;
+    timer->stop();
+    timeCount = 0;
+    ui->pushButton->setVisible(true);
+    ui->pauseButton->setText("Pause");
+    ui->pauseButton->setVisible(false);
+    ui->resetButton->setVisible(false);
+    ui->Timer_label->setText(parseTime(timeCount));
 }
 
 void game_view::on_back_button_clicked()
@@ -286,13 +328,17 @@ void game_view::on_back_button_clicked()
 }
 
 void game_view::setup_view(){
+    ui->pauseButton->setText("Pause");
     ui->pushButton->setVisible(true);
+    ui->pauseButton->setVisible(false);
+    ui->resetButton->setVisible(false);
     ui->graphicsView->installEventFilter(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
     connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
 void game_view::reset_view(){
+    isPlaying = false;
 	gameTickTimer->stop();
 	gameTickCount = 0;
 	timer->stop();
@@ -348,20 +394,6 @@ void game_view::refresh_powerUp_list(){
         }
         ++pos;
     }
-}
-
-static QString parseTime(long seconds){
-    long hh = (long)( (seconds / (60*60)) % 24 );
-    int mm = (int)( (seconds / (60)) % 60 );
-    int ss = (int)( seconds%60 );
-    std::ostringstream builder;
-    if(hh<10)builder << "0";
-    builder << hh << ":";
-    if(mm<10)builder << "0";
-    builder << mm << ":";
-    if(ss<10)builder << "0";
-    builder << ss;
-    return QString::fromStdString(builder.str());
 }
 
 void game_view::update_timer(){
@@ -578,6 +610,7 @@ bool game_view::next_move_ghost_wall_collision(int row, int col, MovingEntity::D
 	return false;
 }
 
+// TODO: merge into reset_view
 void game_view::remove_game_content() {
 	timer->stop();
 	timeCount = 0;
