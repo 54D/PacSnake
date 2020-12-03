@@ -10,9 +10,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    GameEngineSimulation.cpp \
     GameMap.cpp \
-    GameMapSimulation.cpp \
     achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
     credits/credits_container.cpp \
@@ -34,9 +32,7 @@ SOURCES += \
     main_container.cpp
 
 HEADERS += \
-    GameEngineSimulation.h \
     GameMap.h \
-    GameMapSimulation.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
     credits/credits_container.h \

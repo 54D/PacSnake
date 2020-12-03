@@ -324,8 +324,6 @@ void game_view::on_back_button_clicked()
     selectSoundEffect->play();
     backButtonPressed = true;
     emit previous_menu();
-
-	// Clear game content
 }
 
 void game_view::setup_view(){
