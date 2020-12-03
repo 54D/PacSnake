@@ -25,7 +25,7 @@ public:
 	~game_view();
     void Game_start();
     static const QString image_lookup[1][4];
-	static const int GAME_TICK_UPDATE_TIME = 50;
+    static const int GAME_TICK_UPDATE_TIME = 50;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -36,7 +36,7 @@ private slots:
     void stackedWidgetChanged(int index);
     void refresh_powerUp_list();
 	void update_timer();
-    void collisionEmitter();
+    //void collisionEmitter();
 	void gameTickUpdate();
 
 signals:

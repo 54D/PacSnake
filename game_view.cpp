@@ -286,8 +286,7 @@ void game_view::on_back_button_clicked()
 void game_view::setup_view(){
     ui->pushButton->setVisible(true);
     ui->graphicsView->installEventFilter(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter())); // TODO: remove
-	connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
     connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
@@ -299,7 +298,6 @@ void game_view::reset_view(){
     // TODO: 54D: remove all moving snake
     // scene.clear(); // TODO: this causes issues when reopening the widget.
     ui->graphicsView->removeEventFilter(this);
-    disconnect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
 	disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
     disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
@@ -369,15 +367,15 @@ void game_view::update_timer(){
     ui->Timer_label->setText(parseTime(timeCount));
 }
 
+/*
 void game_view::collisionEmitter(){
 	QList<QGraphicsItem*> empty;
-	emit snake_collided(empty);
-	/*
+    emit snake_collided(empty);
 	QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake_pixmap);
 	if(!collisions.empty()){
 		emit snake_collided(collisions);
-	}*/
-}
+    }
+}*/
 
 void game_view::gameTickUpdate() {
 	gameTickCount++;
