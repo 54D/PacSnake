@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMediaPlayer>
+#include "credits_view.h"
 
 namespace Ui {
 class credits_container;
@@ -25,6 +26,7 @@ signals:
 private:
     Ui::credits_container *ui;
 	QMediaPlayer* selectSound;
+    credits_view* credits_view_widget;
 };
 
 #endif // CREDITS_CONTAINER_H
