@@ -24,7 +24,7 @@ public:
     game_view(QWidget *parent = nullptr);
 	~game_view();
     void Game_start();
-    static const QString image_lookup[1][4];
+    static const QString image_lookup[4][4];
     static const int GAME_TICK_UPDATE_TIME = 50;
 
 protected:

@@ -10,6 +10,7 @@ public:
     
     SnakeBody* get_prev() const;
     SnakeBody* get_next() const;
+    void refresh_pixmap();
 
 protected:
     // Remove all the SnakeBody after this SnakeBody
