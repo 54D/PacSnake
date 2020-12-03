@@ -401,16 +401,6 @@ void game_view::update_timer(){
     ui->Timer_label->setText(parseTime(timeCount));
 }
 
-/*
-void game_view::collisionEmitter(){
-	QList<QGraphicsItem*> empty;
-    emit snake_collided(empty);
-	QList<QGraphicsItem*> collisions = ui->graphicsView->scene()->collidingItems(this->snake_pixmap);
-	if(!collisions.empty()){
-		emit snake_collided(collisions);
-    }
-}*/
-
 void game_view::gameTickUpdate() {
 	gameTickCount++;
 	// Overflow prevention

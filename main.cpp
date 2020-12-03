@@ -1,5 +1,7 @@
 // SNADBOX / PLAYGROUND / WHATEVER YOU LIKE TO CALL, JUST USE TO TEST STUFF
 #include <QApplication>
+#include <QFont>
+#include <QFontDatabase>
 #include "main_container.h"
 /*#include "src/entities/Entity.h"
 #include "src/entities/MovingEntity.h"
@@ -40,47 +42,9 @@ int main(int argc, char *argv[]) {
     main_container main_menu;
     main_menu.show();
     return a.exec();
-    /*char operation;
-    do {
-        printMap(s);
-        cout << "Select operation: ";
-        cin >> operation;
-        switch (operation) {
-            case 'm':
-                s->move_forward();
-                break;
-            case 'n':
-                s->set_headingDirection(MovingEntity::Direction::NORTH);
-                s->move_forward();
-                break;
-            case 'e':
-                s->set_headingDirection(MovingEntity::Direction::EAST);
-                s->move_forward();
-                break;
-            case 's':
-                s->set_headingDirection(MovingEntity::Direction::SOUTH);
-                s->move_forward();
-                break;
-            case 'w':
-                s->set_headingDirection(MovingEntity::Direction::WEST);
-                s->move_forward();
-                break;
-            case 'i':
-                s->increase_length(1);
-                break;
-            case 'r':
-                int index;
-                cout << "Enter index:";
-                cin >> index;
-                s->remove_tail(index);
-                break;
-            case 'x':
-                cout << "Exit" << endl;
-                break;
-            default:
-                break;
-        }
-    } while (operation != 'x');
-    system("pause");
-*/
+
+    int response = QFontDatabase::addApplicationFont(":/assets/font/8-BIT-WONDER.TTF");
+    if(response==-1){
+        qDebug() << "main | Could not load one or more fonts!";
+    }
 }

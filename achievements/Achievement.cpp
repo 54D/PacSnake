@@ -1,6 +1,8 @@
+#include <string>
 #include "Achievement.h"
 
-Achievement::Achievement()
+Achievement::Achievement(std::string path)
+    :path(path)
 {
 
 }

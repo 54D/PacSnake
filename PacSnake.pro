@@ -29,7 +29,7 @@ SOURCES += \
     entities/snake/SnakeBody.cpp \
     game_view.cpp \
     main.cpp \
-    main_container.cpp
+    main_container.cpp \
 
 HEADERS += \
     GameMap.h \
@@ -50,7 +50,7 @@ HEADERS += \
     entities/snake/Snake.h \
     entities/snake/SnakeBody.h \
     game_view.h \
-    main_container.h
+    main_container.h \
 
 FORMS += \
     achievements/achievements_container.ui \
@@ -65,7 +65,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES +=
+DISTFILES += \
+    data/stat.yml \
 
 RESOURCES += \
     assets.qrc

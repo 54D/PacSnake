@@ -76,6 +76,5 @@ void main_container::on_stackedWidget_currentChanged(int index){
 
 void main_container::bring_back()
 {
-    qDebug() << "bring_back | RECEIVE";
     ui->stackedWidget->setCurrentIndex(0);
 }
