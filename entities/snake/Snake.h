@@ -12,7 +12,7 @@ class Snake final : public SnakeBody {
 public:
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
-    static const int INIT_SPEED = 1;
+	static const int INIT_SPEED = 2;
     static const int MAX_PU = 3;
 	static const int MAX_LENGTH = 50;
 

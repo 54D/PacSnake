@@ -21,11 +21,11 @@ GameMap::~GameMap() {
     delete [] terrain_map;
     terrain_map = nullptr;
 
-    // Delete elements in obstacle
-    for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
-        delete (*it);
-    }
-    obstacle.clear();
+	// Delete elements in obstacle
+	for (auto it = obstacle.begin(); it != obstacle.end(); it++) {
+		delete (*it);
+	}
+	obstacle.clear();
 }
 
 int GameMap::get_num_rows() const {

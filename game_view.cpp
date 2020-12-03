@@ -89,6 +89,9 @@ game_view::game_view(QWidget *parent) :
     selectSoundEffect = new QMediaPlayer();
     selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
     selectSoundEffect->setVolume(50);
+	eatSoundEffect = new QMediaPlayer();
+	eatSoundEffect->setMedia(QUrl("qrc:/assets/sound/eat.wav"));
+	eatSoundEffect->setVolume(50);
     hurtSoundEffect = new QMediaPlayer();
     hurtSoundEffect->setMedia(QUrl("qrc:/assets/sound/hurt.wav"));
     hurtSoundEffect->setVolume(50);
@@ -98,6 +101,7 @@ game_view::game_view(QWidget *parent) :
     gameOverSoundEffect = new QMediaPlayer();
     gameOverSoundEffect->setMedia(QUrl("qrc:/assets/sound/gameOver.mp3"));
     gameOverSoundEffect->setVolume(50);
+
     //ui->volume_control->setVisible(true);
     //ui->volume_control->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     QPixmap pixmap(":/assets/volume_control.png");
@@ -165,17 +169,23 @@ void game_view::render_game_map(){
 }
 
 void game_view::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_A || event->key() == Qt::Key_Left){
+	if (!allowKeyboardInput)
+		return;
+	if (event->key() == Qt::Key_A || event->key() == Qt::Key_Left){
         snake->set_headingDirection(MovingEntity::Direction::WEST);
+		allowKeyboardInput = false;
     }
     else if (event->key() == Qt::Key_D || event->key() == Qt::Key_Right){
         snake->set_headingDirection(MovingEntity::Direction::EAST);
+		allowKeyboardInput = false;
     }
     else if (event->key() == Qt::Key_W || event->key() == Qt::Key_Up){
         snake->set_headingDirection(MovingEntity::Direction::NORTH);
+		allowKeyboardInput = false;
     }
     else if (event->key() == Qt::Key_S || event->key() == Qt::Key_Down){
         snake->set_headingDirection(MovingEntity::Direction::SOUTH);
+		allowKeyboardInput = false;
     }
 }
 
@@ -237,7 +247,6 @@ void game_view::on_pushButton_clicked()
 
     /* SNAKE */
     // Init Snake
-    // TODO: Stat
     snake = new Snake {20, 25};
     // Init UI
     SnakeBody* currentSnakeBody = snake;
@@ -262,7 +271,6 @@ void game_view::on_pushButton_clicked()
 
     /* NORMAL GHOSTS */
     // Generate two noraml ghosts
-    // TODO : Generate two or more instead of one and set random coord
     for (int i = 0; i < NUM_OF_NORMAL_GHOST; i++) {
         int row, col;
         do {
@@ -342,10 +350,12 @@ void game_view::on_pushButton_clicked()
     ui->pushButton->setVisible(false);
     ui->pauseButton->setVisible(true);
     ui->resetButton->setVisible(true);
+	// Enable Keyboard Input
+	allowKeyboardInput = true;
 }
 
 void game_view::on_pauseButton_clicked(){
-    if(isPlaying){
+	if(isPlaying){
         ui->pauseButton->setText("Resume");
     }else{
         ui->pauseButton->setText("Pause");
@@ -488,6 +498,9 @@ void game_view::gameTickUpdate() {
         gameTickTimer->stop();
         timer->stop();
 
+		update_health();
+		allowKeyboardInput = false;
+
         qDebug() << "GAME OVER!";
         // Play sound effect
         deathSoundEffect->play();
@@ -515,6 +528,8 @@ void game_view::gameTickUpdate() {
             }
 
             snake->move_forward();
+			if (!allowKeyboardInput)
+				allowKeyboardInput = true;
 
             // game_map update occupied state
             for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
@@ -524,11 +539,11 @@ void game_view::gameTickUpdate() {
             }
         }
         // UI update
-        // TODO
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
             currentSnakeBody->refresh_pixmap();
         }
+		// Update health UI
         update_health();
 
         /* NORMAL GHOSTS */
@@ -635,7 +650,15 @@ void game_view::gameTickUpdate() {
         /* Collision checking */
         // Check if snake (head) collide with fruit
         if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::FRUIT_OCCUPIED) {
-            int collideFruitIndex = -1;
+			// Play sound effecct
+			if (eatSoundEffect->state() == QMediaPlayer::PlayingState) {
+				eatSoundEffect->setPosition(0);
+			}
+			else if (eatSoundEffect->state() == QMediaPlayer::StoppedState) {
+				eatSoundEffect->play();
+			}
+
+			int collideFruitIndex = -1;
             Fruit* fruit_temp = nullptr;
             // Search for the Fruit being collided
             for (int i = 0; i < fruits.size() && collideFruitIndex == -1; i++) {
@@ -734,7 +757,6 @@ void game_view::gameTickUpdate() {
                     if ((*it)->get_row() == currentSnakeBody->get_row() && (*it)->get_col() == currentSnakeBody->get_col()) {
                         collidedGhostBody = *it;
                         (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
-                        qDebug() << "DIRECTION CHANGED!";
                     }
                 }
                 for (auto it = bigGhosts.begin(); it != bigGhosts.end() && collidedGhostBody == nullptr; it++) {
@@ -743,14 +765,9 @@ void game_view::gameTickUpdate() {
                         if (currentGhostsBody->get_row() == currentSnakeBody->get_row() && currentGhostsBody->get_col() == currentSnakeBody->get_col()) {
                             collidedGhostBody = *it;
                             (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
-                            qDebug() << "DIRECTION CHANGED!";
                         }
                     } while (currentGhostsBody != (*it) && collidedGhostBody == nullptr);
                 }
-                if (collidedGhostBody == nullptr) {
-                    qDebug() << "[ERROR] Collided GhostBody not found!";
-                }
-
 
                 // Update game_map state, the SnakeBody being cut is reset to TrrrainState::EMPTY
                 // Note that the collided part is not updated as the GhostBody is occupying the game_map already

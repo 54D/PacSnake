@@ -76,6 +76,7 @@ private:
 	QList<Fruit*> fruits;
 	QList<PowerUp*> powerups;
 
+	bool allowKeyboardInput {false};
     bool isPlaying = false;
 	QTimer* gameTickTimer;
 	long long gameTickCount {0};
@@ -86,6 +87,7 @@ private:
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
 	QMediaPlayer* selectSoundEffect;
+	QMediaPlayer* eatSoundEffect;
 	QMediaPlayer* hurtSoundEffect;
 	QMediaPlayer* deathSoundEffect;
 	QMediaPlayer* gameOverSoundEffect;
