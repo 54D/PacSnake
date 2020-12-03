@@ -43,8 +43,9 @@ private slots:
     void refresh_powerUp_list();
 	void update_timer();
     void update_health();
-    //void collisionEmitter();
 	void gameTickUpdate();
+    void on_volume_control_clicked();
+    void on_vol_Slider_valueChanged(int value);
 
 signals:
     void snake_collided(QList<QGraphicsItem*> collisions);

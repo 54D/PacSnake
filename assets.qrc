@@ -46,5 +46,6 @@
         <file>assets/sprite/tangerine.png</file>
         <file>assets/sprite/empty-health.png</file>
         <file>assets/sprite/full-health.png</file>
+        <file>assets/volume_control.png</file>
     </qresource>
 </RCC>

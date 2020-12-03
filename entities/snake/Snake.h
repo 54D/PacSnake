@@ -68,7 +68,6 @@ private:
 	int num_fruits_eaten {0};
 
 	bool ghost_immunity {false};
-
     // Power Up (PU)
     std::deque<PowerUp*> pu_inventory;
     PowerUp* pu_activate {nullptr};
