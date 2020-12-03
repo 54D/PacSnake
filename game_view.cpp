@@ -278,7 +278,7 @@ void game_view::on_pushButton_clicked()
 
 void game_view::on_back_button_clicked()
 {
-    selectSound->play();
+    selectSoundEffect->play();
     backButtonPressed = true;
     emit previous_menu();
 }
@@ -288,7 +288,7 @@ void game_view::setup_view(){
     ui->graphicsView->installEventFilter(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter())); // TODO: remove
 	connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
-    connect(s, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+    connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
 void game_view::reset_view(){
@@ -301,7 +301,7 @@ void game_view::reset_view(){
     ui->graphicsView->removeEventFilter(this);
     disconnect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
 	disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
-    disconnect(s, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+    disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
 void game_view::stackedWidgetChanged(int index){
@@ -314,7 +314,7 @@ void game_view::stackedWidgetChanged(int index){
 }
 
 void game_view::refresh_powerUp_list(){
-    std::deque<PowerUp*> inventory = s->get_pu_inventory();
+    std::deque<PowerUp*> inventory = snake->get_pu_inventory();
     int pos = 0;
     QString path;
     ui->powerUp1Label->setStyleSheet("");
