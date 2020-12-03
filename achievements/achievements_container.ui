@@ -22,6 +22,11 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 8pt &quot;8BIT WONDER&quot;;
+color: rgb(255, 255, 255);
+background-color: rgb(48, 48, 48);</string>
+   </property>
    <property name="text">
     <string>Back</string>
    </property>
@@ -37,10 +42,10 @@
    </property>
    <property name="font">
     <font>
-     <family>Arial</family>
-     <pointsize>25</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
+     <family>8BIT WONDER</family>
+     <pointsize>16</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -60,6 +65,23 @@
     </rect>
    </property>
   </widget>
+  <widget class="QLabel" name="imageLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
+     <height>601</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/assets/background-2.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>imageLabel</zorder>
   <zorder>label</zorder>
   <zorder>tableView</zorder>
   <zorder>back_button</zorder>
