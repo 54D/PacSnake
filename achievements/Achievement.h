@@ -8,8 +8,11 @@ class Achievement
 public:
     Achievement(std::string);
 
+
+
 private:
     std::string path;
+
 };
 
 #endif // ACHIEVEMENT_H
