@@ -17,10 +17,12 @@
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
-#include "credits_container.h"
-#include "credits_view.h"
+#include "credits/credits_container.h"
+#include "credits/credits_view.h"
 #include "ui_achievements_container.h"
 #include "GameMap.h"
+#include "entities/fruits_and_powerUps/PU_Dash.h"
+#include "entities/fruits_and_powerUps/PU_Shield.h"
 
 Snake snakeobj {25, 25, 10};
 Snake* s = &snakeobj;
@@ -168,6 +170,7 @@ void game_view::setup_view(){
     ui->graphicsView->installEventFilter(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
+    connect(s, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
 void game_view::reset_view(){
@@ -178,7 +181,7 @@ void game_view::reset_view(){
     ui->graphicsView->removeEventFilter(this);
     disconnect(timer, SIGNAL(timeout()), this, SLOT(game_timer()));
     disconnect(timer, SIGNAL(timeout()), this, SLOT(collisionEmitter()));
-
+    disconnect(s, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
 }
 
 void game_view::stackedWidgetChanged(int index){
@@ -187,6 +190,43 @@ void game_view::stackedWidgetChanged(int index){
         reset_view();
     }else{
         setup_view();
+    }
+}
+
+void game_view::refresh_powerUp_list(){
+    std::deque<PowerUp*> inventory = s->get_pu_inventory();
+    int pos = 0;
+    QString path;
+    ui->powerUp1Label->setStyleSheet("");
+    ui->powerUp2Label->setStyleSheet("");
+    ui->powerUp3Label->setStyleSheet("");
+    for (auto it = inventory.begin(); it != inventory.end(); it++) {
+        switch((*it)->get_type()){
+        case PowerUp::PowerUpType::DASH:
+            path = PU_Dash::get_resourceURI();
+            break;
+        case PowerUp::PowerUpType::SHIELD:
+            path = PU_Shield::get_resourceURI();
+            break;
+        default:
+            qDebug() << "refresh_powerUp_list | Invalid PowerUpType specified";
+            break;
+        }
+        switch(pos){
+        case 0: // TODO: set to correct image
+            ui->powerUp1Label->setStyleSheet("QLabel { background-image: url(" + path + "); }");
+            break;
+        case 1:
+            ui->powerUp2Label->setStyleSheet("QLabel { background-image: url(" + path + "); }");
+            break;
+        case 2:
+            ui->powerUp3Label->setStyleSheet("QLabel { background-image: url(" + path + "); }");
+            break;
+        default:
+            qDebug() << "refresh_powerUp_list | Invalid position reached";
+            break;
+        }
+        ++pos;
     }
 }
 

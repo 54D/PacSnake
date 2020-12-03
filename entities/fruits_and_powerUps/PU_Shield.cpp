@@ -8,6 +8,8 @@ PU_Shield::PU_Shield(int row, int col) :
 
 PU_Shield::~PU_Shield() {}
 
+QString PU_Shield::resourceURI = ":/assets/sprite/shield.png";
+
 PowerUp::PowerUpType PU_Shield::get_type() const {
 	return type;
 }
@@ -28,4 +30,8 @@ void PU_Shield::deactivate(Snake *snake) {
 	// Reset immunity
 	snake->set_pu_activate(nullptr);
 	snake->set_ghost_immunity(false);
+}
+
+QString PU_Shield::get_resourceURI(){
+    return resourceURI;
 }

@@ -15,8 +15,8 @@ SOURCES += \
     GameMapSimulation.cpp \
     achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
-    credits_container.cpp \
-    credits_view.cpp \
+    credits/credits_container.cpp \
+    credits/credits_view.cpp \
     entities/Entity.cpp \
     entities/MovingEntity.cpp \
     entities/fruits_and_powerUps/Fruit.cpp \
@@ -39,8 +39,8 @@ HEADERS += \
     GameMapSimulation.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
-    credits_container.h \
-    credits_view.h \
+    credits/credits_container.h \
+    credits/credits_view.h \
     entities/Entity.h \
     entities/MovingEntity.h \
     entities/fruits_and_powerUps/Fruit.h \
@@ -58,8 +58,8 @@ HEADERS += \
 
 FORMS += \
     achievements/achievements_container.ui \
-    credits_container.ui \
-    credits_view.ui \
+    credits/credits_container.ui \
+    credits/credits_view.ui \
     game_view.ui \
     main_container.ui \
     main_container_old.ui

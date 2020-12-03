@@ -139,7 +139,7 @@ color: rgb(0, 0, 0);</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="powerUp1Label_2">
+  <widget class="QLabel" name="powerUp2Label">
    <property name="geometry">
     <rect>
      <x>690</x>
@@ -155,7 +155,7 @@ color: rgb(0, 0, 0);</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="powerUp1Label_3">
+  <widget class="QLabel" name="powerUp3Label">
    <property name="geometry">
     <rect>
      <x>690</x>
@@ -179,8 +179,8 @@ color: rgb(0, 0, 0);</string>
   <zorder>back_button</zorder>
   <zorder>powerUpFrameLabel</zorder>
   <zorder>powerUp1Label</zorder>
-  <zorder>powerUp1Label_2</zorder>
-  <zorder>powerUp1Label_3</zorder>
+  <zorder>powerUp2Label</zorder>
+  <zorder>powerUp3Label</zorder>
  </widget>
  <resources/>
  <connections/>

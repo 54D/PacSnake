@@ -5,7 +5,6 @@
 #include <QGraphicsPixmapItem>
 
 class Entity : public QObject {
-    Q_OBJECT
 
 public:
 	Entity();

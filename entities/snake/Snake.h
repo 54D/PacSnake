@@ -8,6 +8,7 @@
 
 // The "head / brain" of the snake, consider as a moving entity of snake as well
 class Snake final : public SnakeBody {
+    Q_OBJECT
 public:
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
@@ -52,6 +53,9 @@ public:
 
 protected:
     //virtual QPixmap get_pixmap() override;
+
+signals:
+    void powerUp_added();
 
 private:
     int max_health {INIT_HEALTH};

@@ -11,6 +11,8 @@ PU_Dash::PU_Dash(int row, int col) :
 	
 PU_Dash::~PU_Dash() {}
 
+QString PU_Dash::resourceURI = ":/assets/sprite/dash.png";
+
 PowerUp::PowerUpType PU_Dash::get_type() const {
 	return type;
 }
@@ -35,4 +37,8 @@ void PU_Dash::deactivate(Snake* snake) {
     snake->set_pu_activate(nullptr);
     int newSpeed = snake->calculate_level_speed();
     snake->set_speed(newSpeed);
+}
+
+QString PU_Dash::get_resourceURI(){
+    return resourceURI;
 }

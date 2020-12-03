@@ -29,6 +29,7 @@ private slots:
     void on_pushButton_clicked();
     void on_back_button_clicked();
     void stackedWidgetChanged(int index);
+    void refresh_powerUp_list();
     void game_timer();
     void collisionEmitter();
 
@@ -39,10 +40,10 @@ signals:
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
+    bool eventFilter(QObject*, QEvent*) override;
     void setup_view();
     void reset_view();
     void render_game_map();
-    bool eventFilter(QObject*, QEvent*) override;
 
     GameMap *game_map;
     QTimer *timer;
