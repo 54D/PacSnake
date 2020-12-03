@@ -18,7 +18,7 @@ public:
 
 private:
     Ui::credits_view *ui;
-	QMediaPlayer* selectSound;
+	QMediaPlayer* selectSoundEffect;
 };
 
 #endif // CREDITS_VIEW_H

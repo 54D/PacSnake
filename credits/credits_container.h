@@ -25,7 +25,7 @@ signals:
 
 private:
     Ui::credits_container *ui;
-	QMediaPlayer* selectSound;
+	QMediaPlayer* selectSoundEffect;
     credits_view* credits_view_widget;
 };
 

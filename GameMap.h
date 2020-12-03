@@ -8,13 +8,16 @@
 
 class GameMap {
 public:
-	enum class TerrainState { EMPTY, BLOCKED };
+	// Note that TerrainState::OCCUPIED only used for Entity generation to avoid colliding
+	enum class TerrainState { EMPTY, BLOCKED, SNAKE_OCCUPIED, GHOST_OCCUPIED };
 	static const char TERRAIN_EMPTY_CHAR {' '};
 	static const char TERRAIN_BLOCKED_CHAR {'#'};
 
     int get_num_rows() const;
     int get_num_cols() const;
     TerrainState get_terrainState(int row,int col) const;
+
+	void set_terrainState(int row, int col, TerrainState state);
 
 	void load_terrian_map(const std::string& filename);
 

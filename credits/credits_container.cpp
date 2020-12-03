@@ -10,8 +10,8 @@ credits_container::credits_container(QWidget *parent) :
 {
     ui->setupUi(this);
 
-	selectSound = new QMediaPlayer();
-	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+	selectSoundEffect = new QMediaPlayer();
+	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
     credits_view_widget = new credits_view;
     ui->scrollArea->setWidget(credits_view_widget);
 }
@@ -19,12 +19,12 @@ credits_container::credits_container(QWidget *parent) :
 credits_container::~credits_container()
 {
     delete credits_view_widget;
-	delete selectSound;
+	delete selectSoundEffect;
     delete ui;
 }
 
 void credits_container::on_back_button_clicked()
 {
-	selectSound->play();
+	selectSoundEffect->play();
     emit previous_menu();
 }

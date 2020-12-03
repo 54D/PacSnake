@@ -16,7 +16,7 @@ public:
     Direction get_headingDirection() const;
 
     virtual void set_speed(int speed);
-    virtual void set_headingDirection(MovingEntity::Direction headingDirection);
+	virtual void set_headingDirection(MovingEntity::Direction headingDirection);
  
 protected:
     MovingEntity();

@@ -2,6 +2,7 @@
 #define POWERUP_H_
 
 #include <entities/Entity.h>
+#include <QMediaPlayer>
 
 // Forward declarations
 class Snake;
@@ -19,6 +20,8 @@ public:
 protected:
     PowerUp(int row, int col, PowerUp::PowerUpType type = PowerUp::PowerUpType::NONE);
 	PowerUp::PowerUpType type {PowerUp::PowerUpType::NONE};
+
+	QMediaPlayer* activateSound;
 };
 
 #endif /* POWERUP_H_ */

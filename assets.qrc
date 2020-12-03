@@ -6,6 +6,7 @@
         <file>assets/sound/hurt.wav</file>
         <file>assets/sound/powerup.wav</file>
         <file>assets/sound/select.wav</file>
+        <file>assets/sound/gameOver.mp3</file>
         <file>assets/sprite/big1.png</file>
         <file>assets/sprite/big2.png</file>
         <file>assets/sprite/big3.png</file>

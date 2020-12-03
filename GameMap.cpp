@@ -35,8 +35,15 @@ int GameMap::get_num_cols() const {
     return num_cols;
 }
 
-GameMap::TerrainState GameMap::get_terrainState(int row,int col) const {
+GameMap::TerrainState GameMap::get_terrainState(int row, int col) const {
+	// Out-of-game_map are all BLOCKED
+	if (row < 0 || row >= num_rows || col < 0 || col >= num_cols)
+		return GameMap::TerrainState::BLOCKED;
     return terrain_map[row][col];
+}
+
+void GameMap::set_terrainState(int row, int col, TerrainState state) {
+	terrain_map[row][col] = state;
 }
 
 void GameMap::load_terrian_map(const std::string& filename) {
