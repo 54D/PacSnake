@@ -46,12 +46,28 @@ static QString parseTime(long seconds){
     return QString::fromStdString(builder.str());
 }
 
-const QString game_view::image_lookup[1][4] {
+const QString game_view::image_lookup[4][4] {
     {
         ":/assets/sprite/snake-head-up.png",
+        ":/assets/sprite/snake-head-down.png",
+        ":/assets/sprite/snake-head-left.png",
+        ":/assets/sprite/snake-head-right.png",
+    },
+    {
         ":/assets/sprite/snake-body-vertical.png",
+        ":/assets/sprite/snake-body-horizontal.png",
+    },
+    {
+        ":/assets/sprite/snake-corner-up-left.png",
         ":/assets/sprite/snake-corner-up-right.png",
-        ":/assets/sprite/snake-tail-up.png"
+        ":/assets/sprite/snake-corner-down-left.png",
+        ":/assets/sprite/snake-corner-down-right.png",
+    },
+    {
+        ":/assets/sprite/snake-tail-up.png",
+        ":/assets/sprite/snake-tail-down.png",
+        ":/assets/sprite/snake-tail-left.png",
+        ":/assets/sprite/snake-tail-right.png",
     }
 };
 
@@ -193,7 +209,7 @@ void game_view::on_pushButton_clicked()
 	/* SNAKE */
 	// Init Snake
 	// TODO: Stat
-	snake = new Snake {20, 25, 10, MovingEntity::Direction::NORTH, 3, 10};
+    snake = new Snake {20, 25, 10, MovingEntity::Direction::NORTH, 3, 10};
 	// UI
 	SnakeBody* currentSnakeBody = snake;
 	for (int i = 0; i <= snake->get_length(); i++){
