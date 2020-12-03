@@ -16,14 +16,19 @@
   <widget class="QLabel" name="Timer_label">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>20</y>
-     <width>47</width>
-     <height>12</height>
+     <x>670</x>
+     <y>13</y>
+     <width>80</width>
+     <height>15</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>Time:</string>
+    <string>00:00:00</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton">
@@ -44,7 +49,7 @@ color: rgb(255, 255, 255);
 background-color: rgb(0, 0, 127);</string>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>Start</string>
    </property>
   </widget>
   <widget class="QGraphicsView" name="graphicsView">
@@ -65,13 +70,18 @@ background-color: rgb(0, 0, 0);</string>
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>20</y>
-     <width>47</width>
+     <y>10</y>
+     <width>70</width>
      <height>20</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>Time used:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="back_button">
@@ -184,7 +194,7 @@ color: rgb(0, 0, 0);</string>
   <widget class="QPushButton" name="pauseButton">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>280</x>
      <y>10</y>
      <width>91</width>
      <height>20</height>
@@ -226,8 +236,8 @@ background-color: rgb(166, 48, 48);</string>
   <widget class="QPushButton" name="volume_control">
    <property name="geometry">
     <rect>
-     <x>710</x>
-     <y>560</y>
+     <x>725</x>
+     <y>550</y>
      <width>32</width>
      <height>32</height>
     </rect>
@@ -246,8 +256,8 @@ background-color: rgb(166, 48, 48);</string>
   <widget class="QSlider" name="vol_Slider">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>390</y>
+     <x>730</x>
+     <y>380</y>
      <width>16</width>
      <height>160</height>
     </rect>
