@@ -32,11 +32,6 @@ void Entity::register_view(QGraphicsPixmapItem *pixmap){
     this->pixmap = pixmap;
 }
 
-void Entity::refresh_pixmap(){
-    //todo
-    //pixmap->setPixmap()
-    return;
-}
 
 QGraphicsPixmapItem* Entity::get_pixmap() {
     return this->pixmap;

@@ -15,8 +15,8 @@
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
-#include "credits_container.h"
-#include "credits_view.h"
+#include "credits/credits_container.h"
+#include "credits/credits_view.h"
 #include "game_view.h"
 #include "ui_achievements_container.h"
 #include "ui_main_container.h"
@@ -26,12 +26,15 @@ main_container::main_container(QWidget *parent)
     , ui(new Ui::main_container)
 {
     ui->setupUi(this);
-    ui->stackedWidget->addWidget(new game_view);
+    game_view *gv = {new game_view};
+    ui->stackedWidget->addWidget(gv);
     ui->stackedWidget->addWidget(new achievements_container);
     ui->stackedWidget->addWidget(new credits_container);
 
+    connect(ui->stackedWidget->widget(1), SIGNAL(previous_menu()), this, SLOT(bring_back()));
     connect(ui->stackedWidget->widget(2), SIGNAL(previous_menu()), this, SLOT(bring_back()));
     connect(ui->stackedWidget->widget(3), SIGNAL(previous_menu()), this, SLOT(bring_back()));
+    connect(this, SIGNAL(stackedWidgetChange(int)), gv, SLOT(stackedWidgetChanged(int)));
 
 	selectSoundEffect = new QMediaPlayer();
 	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
@@ -67,8 +70,11 @@ void main_container::on_leaveButton_clicked()
 	QCoreApplication::exit(0);
 }
 
+void main_container::on_stackedWidget_currentChanged(int index){
+    emit stackedWidgetChange(index);
+}
+
 void main_container::bring_back()
 {
-    qDebug() << "bring_back | RECEIVE";
     ui->stackedWidget->setCurrentIndex(0);
 }

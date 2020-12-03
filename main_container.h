@@ -22,7 +22,11 @@ private slots:
     void on_achButton_clicked();
     void on_creditsButton_clicked();
     void on_leaveButton_clicked();
+    void on_stackedWidget_currentChanged(int index);
     void bring_back();
+
+signals:
+    void stackedWidgetChange(int index);
 
 private:
     Ui::main_container *ui;

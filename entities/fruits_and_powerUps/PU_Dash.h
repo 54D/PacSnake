@@ -16,6 +16,10 @@ public:
     
     virtual void activate(Snake* snake) override;
     virtual void deactivate(Snake* snake) override;
-};
 
+    static QString get_resourceURI();
+
+private:
+    static QString resourceURI;
+};
 #endif /* PU_DASH_H_ */

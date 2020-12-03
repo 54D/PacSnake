@@ -6,13 +6,12 @@
         <file>assets/sound/hurt.wav</file>
         <file>assets/sound/powerup.wav</file>
         <file>assets/sound/select.wav</file>
+        <file>assets/sound/gameOver.mp3</file>
         <file>assets/sprite/big1.png</file>
         <file>assets/sprite/big2.png</file>
         <file>assets/sprite/big3.png</file>
         <file>assets/sprite/big4.png</file>
-        <file>assets/sprite/big-ghost-base.psd</file>
         <file>assets/sprite/blue.png</file>
-        <file>assets/sprite/ghost-base.psd</file>
         <file>assets/sprite/green.png</file>
         <file>assets/sprite/mike_wazowski.png</file>
         <file>assets/sprite/mountain.png</file>
@@ -21,33 +20,31 @@
         <file>assets/sprite/plains.png</file>
         <file>assets/sprite/red.png</file>
         <file>assets/sprite/snake-body-horizontal.png</file>
-        <file>assets/sprite/snake-body-horizontal.psd</file>
         <file>assets/sprite/snake-body-vertical.png</file>
-        <file>assets/sprite/snake-body-vertical.psd</file>
         <file>assets/sprite/snake-corner-down-left.png</file>
-        <file>assets/sprite/snake-corner-down-left.psd</file>
         <file>assets/sprite/snake-corner-down-right.png</file>
-        <file>assets/sprite/snake-corner-down-right.psd</file>
         <file>assets/sprite/snake-corner-up-left.png</file>
-        <file>assets/sprite/snake-corner-up-left.psd</file>
         <file>assets/sprite/snake-corner-up-right.png</file>
-        <file>assets/sprite/snake-corner-up-right.psd</file>
         <file>assets/sprite/snake-head-down.png</file>
-        <file>assets/sprite/snake-head-down.psd</file>
         <file>assets/sprite/snake-head-left.png</file>
-        <file>assets/sprite/snake-head-left.psd</file>
         <file>assets/sprite/snake-head-right.png</file>
-        <file>assets/sprite/snake-head-right.psd</file>
         <file>assets/sprite/snake-head-up.png</file>
-        <file>assets/sprite/snake-head-up.psd</file>
         <file>assets/sprite/snake-tail-down.png</file>
-        <file>assets/sprite/snake-tail-down.psd</file>
         <file>assets/sprite/snake-tail-left.png</file>
-        <file>assets/sprite/snake-tail-left.psd</file>
         <file>assets/sprite/snake-tail-right.png</file>
-        <file>assets/sprite/snake-tail-right.psd</file>
         <file>assets/sprite/snake-tail-up.png</file>
-        <file>assets/sprite/snake-tail-up.psd</file>
-        <file>assets/sound/gameOver.mp3</file>
+        <file>assets/font/8-BIT-WONDER.TTF</file>
+        <file>assets/background.png</file>
+        <file>assets/background-2.png</file>
+        <file>assets/sprite/dash.png</file>
+        <file>assets/sprite/heal.png</file>
+        <file>assets/sprite/shield.png</file>
+        <file>assets/sprite/apple.png</file>
+        <file>assets/sprite/grape.png</file>
+        <file>assets/sprite/pear.png</file>
+        <file>assets/sprite/strawberry.png</file>
+        <file>assets/sprite/tangerine.png</file>
+        <file>assets/sprite/empty-health.png</file>
+        <file>assets/sprite/full-health.png</file>
     </qresource>
 </RCC>

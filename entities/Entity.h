@@ -5,7 +5,6 @@
 #include <QGraphicsPixmapItem>
 
 class Entity : public QObject {
-    Q_OBJECT
 
 public:
 	Entity();
@@ -20,7 +19,6 @@ public:
     void set_coordinate(int row, int col);
     void set_relative_coordinate(int delta_row, int delta_col);
     void register_view(QGraphicsPixmapItem *pixmap);
-    void refresh_pixmap();
     QGraphicsPixmapItem* get_pixmap();
 
 protected:

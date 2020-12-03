@@ -24,8 +24,8 @@ public:
     game_view(QWidget *parent = nullptr);
 	~game_view();
     void Game_start();
-	static const QString image_lookup[1][4]; //TODO: move to Snake
-	static const int GAME_TICK_UPDATE_TIME = 50;
+    static const QString image_lookup[4][4];
+    static const int GAME_TICK_UPDATE_TIME = 50;
 
 	static const int NUM_OF_NORMAL_GHOST = 4;
 	static const int NUM_OF_BIG_GHOST = 2;
@@ -36,21 +36,28 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
-    void on_stackedWidget_currentChanged(int index);
+    void on_pauseButton_clicked();
+    void on_resetButton_clicked();
+    void on_back_button_clicked();
+    void stackedWidgetChanged(int index);
+    void refresh_powerUp_list();
 	void update_timer();
-    void collisionEmitter();
+    void update_health();
+    //void collisionEmitter();
 	void gameTickUpdate();
 
 signals:
     void snake_collided(QList<QGraphicsItem*> collisions);
+    void previous_menu();
 	void game_over_signal();
 
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
+    bool eventFilter(QObject*, QEvent*) override;
+    void setup_view();
     void reset_view();
     void render_game_map();
-    bool eventFilter(QObject*, QEvent*) override;
 
 	void fruit_instantiation();
 
@@ -68,10 +75,12 @@ private:
 	QList<Fruit*> fruits;
 	QList<PowerUp*> powerups;
 
+    bool isPlaying = false;
 	QTimer* gameTickTimer;
 	long long gameTickCount {0};
 	QTimer* timer;
     long timeCount = 0;
+    bool backButtonPressed = false;
 
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;

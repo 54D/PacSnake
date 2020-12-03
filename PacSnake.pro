@@ -10,13 +10,11 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    GameEngineSimulation.cpp \
     GameMap.cpp \
-    GameMapSimulation.cpp \
     achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
-    credits_container.cpp \
-    credits_view.cpp \
+    credits/credits_container.cpp \
+    credits/credits_view.cpp \
     entities/Entity.cpp \
     entities/MovingEntity.cpp \
     entities/fruits_and_powerUps/Fruit.cpp \
@@ -31,16 +29,14 @@ SOURCES += \
     entities/snake/SnakeBody.cpp \
     game_view.cpp \
     main.cpp \
-    main_container.cpp
+    main_container.cpp \
 
 HEADERS += \
-    GameEngineSimulation.h \
     GameMap.h \
-    GameMapSimulation.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
-    credits_container.h \
-    credits_view.h \
+    credits/credits_container.h \
+    credits/credits_view.h \
     entities/Entity.h \
     entities/MovingEntity.h \
     entities/fruits_and_powerUps/Fruit.h \
@@ -54,12 +50,12 @@ HEADERS += \
     entities/snake/Snake.h \
     entities/snake/SnakeBody.h \
     game_view.h \
-    main_container.h
+    main_container.h \
 
 FORMS += \
     achievements/achievements_container.ui \
-    credits_container.ui \
-    credits_view.ui \
+    credits/credits_container.ui \
+    credits/credits_view.ui \
     game_view.ui \
     main_container.ui \
     main_container_old.ui
@@ -69,7 +65,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES +=
+DISTFILES += \
+    data/stat.yml \
 
 RESOURCES += \
     assets.qrc

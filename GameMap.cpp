@@ -52,7 +52,6 @@ void GameMap::load_terrian_map(const std::string& filename) {
         delete [] terrain_map[i];
     delete [] terrain_map;
     terrain_map = nullptr;
-    qDebug() << "load_terrain_map | Remove previous content";
 
     // Delete elements in
     if (obstacle.size() > 0) {
@@ -76,7 +75,6 @@ void GameMap::load_terrian_map(const std::string& filename) {
     for (int row = 0; row < num_rows; row++) {
         terrain_map[row] = new TerrainState [num_cols];
     }
-    qDebug() << "load_terrain_map | Create map";
 
     // Input map and create obstacle object
     for (int row = 0; row < num_rows; row++) {
