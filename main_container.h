@@ -26,6 +26,6 @@ private slots:
 
 private:
     Ui::main_container *ui;
-	QMediaPlayer* selectSound;
+	QMediaPlayer* selectSoundEffect;
 };
 #endif // WIDGET_H

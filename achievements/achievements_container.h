@@ -24,7 +24,7 @@ signals:
 
 private:
     Ui::achievements_container *ui;
-	QMediaPlayer* selectSound;
+	QMediaPlayer* selectSoundEffect;
 };
 
 #endif // ACHIEVEMENTS_CONTAINER_H

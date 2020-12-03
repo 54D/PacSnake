@@ -36,7 +36,7 @@ int GameMap::get_num_cols() const {
 }
 
 GameMap::TerrainState GameMap::get_terrainState(int row,int col) const {
-    qDebug() << "get_terrainState | Read " << row << ";" << col << ":" << static_cast<int>(terrain_map[row][col]);
+	//qDebug() << "get_terrainState | Read " << row << ";" << col << ":" << static_cast<int>(terrain_map[row][col]);
     return terrain_map[row][col];
 }
 

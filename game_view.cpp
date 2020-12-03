@@ -54,8 +54,12 @@ game_view::game_view(QWidget *parent) :
 	connect(gameTickTimer, SIGNAL(timeout()), this, SLOT(gameTickUpdate()));
 
 	// Init select sound
-	selectSound = new QMediaPlayer();
-	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+	selectSoundEffect = new QMediaPlayer();
+	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+	deathSoundEffect = new QMediaPlayer();
+	deathSoundEffect->setMedia(QUrl("qrc:/assets/sound/death.wav"));
+	gameOverSoundEffect = new QMediaPlayer();
+	gameOverSoundEffect->setMedia(QUrl("qrc:/assets/sound/gameOver.mp3"));
 }
 
 game_view::~game_view()
@@ -75,7 +79,9 @@ game_view::~game_view()
 	}
 	terrain_pixmaps.clear();
 
-	delete selectSound;
+	delete selectSoundEffect;
+	delete deathSoundEffect;
+	delete gameOverSoundEffect;
 }
 
 void game_view::render_game_map(){
@@ -153,7 +159,7 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 void game_view::on_pushButton_clicked()
 {
 	/* Play sound effect */
-	selectSound->play();
+	selectSoundEffect->play();
 
 	/* Remove previous contents */
 	remove_game_content();
@@ -245,7 +251,9 @@ void game_view::on_pushButton_clicked()
 }
 
 void game_view::reset_view(){
-    timer->stop();
+	gameTickTimer->stop();
+	gameTickCount = 0;
+	timer->stop();
     timeCount = 0;
     ui->pushButton->setVisible(true);
 	// TODO: ED: if this part is reset everything, remember to avoid memory leak and dangling pointer
@@ -291,6 +299,18 @@ void game_view::gameTickUpdate() {
 	// Overflow prevention
 	if (gameTickCount >= LLONG_MAX)
 		gameTickCount = 0;
+
+	/* Game Over Condition Checking */
+	if(is_game_over()){
+		// Play sound effect
+		deathSoundEffect->play();
+		gameOverSoundEffect->play();
+
+		// Stop timer and game update
+		gameTickTimer->stop();
+		timer->stop();
+		emit game_over_signal();
+	}
 
 	/* Update movemnt & UI */
 	/* Movement will update according to the Entity's speed
@@ -344,9 +364,6 @@ void game_view::gameTickUpdate() {
 		if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
 			// Avoid wall collison checking
 			GhostBody* currentGhostBody = *it;
-			qDebug() << "asd";
-			qDebug() << static_cast<int>(currentGhostBody->get_headingDirection());
-			qDebug() << "EDDD";
 			do {
 				MovingEntity::Direction currentHeadingDirection = currentGhostBody->get_headingDirection();
 				while (next_move_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), currentHeadingDirection))	{
@@ -368,10 +385,18 @@ void game_view::gameTickUpdate() {
 	}
 
 	/* Collision checking */
-	// TODO
+	// Check if snake collide with wall
+	if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
+		snake->set_health(0);
+		qDebug() << "Snake GG!";
+	}
+	// More stuff TODO on collision checking :^ )
+}
 
-	/* Game Over Condition Checking */
-	// TODO
+bool game_view::is_game_over() const {
+	if (snake->get_health() <= 0)
+		return true;
+	return false;
 }
 
 bool game_view::next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const {

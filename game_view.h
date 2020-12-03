@@ -39,6 +39,7 @@ private slots:
 
 signals:
     void snake_collided(QList<QGraphicsItem*> collisions);
+	void game_over_signal();
 
 private:
     QGraphicsScene scene;
@@ -48,6 +49,7 @@ private:
     bool eventFilter(QObject*, QEvent*) override;
 
 	// Detect will the Entity collide with the wall in it's next movement
+	bool is_game_over() const;
 	bool next_move_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
 	void remove_game_content();
 
@@ -66,7 +68,9 @@ private:
 
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
-	QMediaPlayer* selectSound;
+	QMediaPlayer* selectSoundEffect;
+	QMediaPlayer* deathSoundEffect;
+	QMediaPlayer* gameOverSoundEffect;
 };
 
 #endif // GAME_VIEW_H

@@ -48,5 +48,6 @@
         <file>assets/sprite/snake-tail-right.psd</file>
         <file>assets/sprite/snake-tail-up.png</file>
         <file>assets/sprite/snake-tail-up.psd</file>
+        <file>assets/sound/gameOver.mp3</file>
     </qresource>
 </RCC>

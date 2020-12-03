@@ -33,37 +33,37 @@ main_container::main_container(QWidget *parent)
     connect(ui->stackedWidget->widget(2), SIGNAL(previous_menu()), this, SLOT(bring_back()));
     connect(ui->stackedWidget->widget(3), SIGNAL(previous_menu()), this, SLOT(bring_back()));
 
-	selectSound = new QMediaPlayer();
-	selectSound->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+	selectSoundEffect = new QMediaPlayer();
+	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
 }
 
 main_container::~main_container()
 {
-	delete selectSound;
+	delete selectSoundEffect;
     delete ui;
 }
 
 void main_container::on_startButton_clicked()
 {
-	selectSound->play();
+	selectSoundEffect->play();
     ui->stackedWidget->setCurrentIndex(1);
 }
 
 void main_container::on_achButton_clicked()
 {
-	selectSound->play();
+	selectSoundEffect->play();
 	ui->stackedWidget->setCurrentIndex(2);
 }
 
 void main_container::on_creditsButton_clicked()
 {
-	selectSound->play();
+	selectSoundEffect->play();
 	ui->stackedWidget->setCurrentIndex(3);
 }
 
 void main_container::on_leaveButton_clicked()
 {
-	selectSound->play();
+	selectSoundEffect->play();
 	QCoreApplication::exit(0);
 }
 
