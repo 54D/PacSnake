@@ -15,7 +15,7 @@ Snake::Snake(int row, int col, int speed, Direction headingDirection, int max_he
 		this->length = MAX_LENGTH;
 	else
 		this->length = length;
-
+    longest_length = length;
 	// Initialise SnakeBody by creating a linked list
     int temp_row = row;
     int temp_col = col;
@@ -72,6 +72,14 @@ std::deque<PowerUp*> Snake::get_pu_inventory() const {
 
 const PowerUp* Snake::get_pu_activate() const {
 	return pu_activate;
+}
+
+int Snake::get_longest_length(){
+    return longest_length;
+}
+
+void Snake::set_longest_length(int length){
+    longest_length = length;
 }
 
 void Snake::set_headingDirection(Direction headingDirection) {

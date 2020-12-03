@@ -8,6 +8,7 @@ class Achievement
 public:
     Achievement(std::string);
 
+
 private:
     std::string path;
 };

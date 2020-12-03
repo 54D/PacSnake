@@ -15,6 +15,7 @@
 #include "entities/snake/SnakeBody.h"
 #include "entities/snake/Snake.h"
 #include "achievements/achievements_container.h"
+#include "achievements/Achievement.h"
 #include "credits/credits_container.h"
 #include "credits/credits_view.h"
 #include "game_view.h"
