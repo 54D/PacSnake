@@ -1,7 +1,7 @@
 #include "SnakeBody.h"
 #include "game_view.h"
 
-SnakeBody::~SnakeBody() {}
+/* PUBLIC */
 
 SnakeBody* SnakeBody::get_prev() const {
     return prev;
@@ -52,9 +52,13 @@ void SnakeBody::refresh_pixmap(){
     return;
 }
 
-SnakeBody::SnakeBody(int row, int col, int speed, Direction headingDirection, SnakeBody* prev, SnakeBody* next) :
-MovingEntity(row, col, speed, headingDirection) , prev(prev), next(next) {
+/* PROTECTED */
+
+SnakeBody::SnakeBody(int row, int col, int speed, Direction headingDirection, SnakeBody* prev, SnakeBody* next)
+	: MovingEntity(row, col, speed, headingDirection) , prev(prev), next(next) {
 }
+
+SnakeBody::~SnakeBody() {}
 
 void SnakeBody::move_forward() {
 	switch(headingDirection) {

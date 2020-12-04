@@ -12,6 +12,8 @@
 #include "GameMap.h"
 #include <entities/Entity.h>
 
+/* PUBLIC */
+
 GameMap::GameMap() {}
 
 GameMap::~GameMap() {

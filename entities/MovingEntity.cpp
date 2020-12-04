@@ -2,7 +2,7 @@
 #include <ctime>
 #include "MovingEntity.h"
 
-MovingEntity::~MovingEntity() {}
+/* PUBLIC */
 
 int MovingEntity::get_speed() const {
     return speed;
@@ -25,15 +25,6 @@ void MovingEntity::set_headingDirection(MovingEntity::Direction headingDirection
     this->headingDirection = headingDirection;
 }
 
-void MovingEntity::move_forward() {
-    switch(headingDirection) {
-	case Direction::NORTH:	set_relative_coordinate(-1, 0);	break;
-	case Direction::EAST:	set_relative_coordinate(0, 1);	break;
-	case Direction::SOUTH:	set_relative_coordinate(1, 0);	break;
-	case Direction::WEST:	set_relative_coordinate(0, -1);	break;
-    }
-}
-
 MovingEntity::Direction MovingEntity::get_rotated_headingDirection() {
 	switch (headingDirection) {
 		case MovingEntity::Direction::NORTH:	return MovingEntity::Direction::EAST;	break;
@@ -43,10 +34,15 @@ MovingEntity::Direction MovingEntity::get_rotated_headingDirection() {
 	}
 }
 
+/* PROTECTED */
+
 MovingEntity::MovingEntity() {}
 
 MovingEntity::MovingEntity(int row, int col, int speed, Direction headingDirection) :
         Entity(row, col), speed(speed), headingDirection(headingDirection) {}
+
+
+MovingEntity::~MovingEntity() {}
 
 void MovingEntity::set_random_headingDirection() {
     srand(time(NULL));
@@ -56,4 +52,13 @@ void MovingEntity::set_random_headingDirection() {
 	case 2: headingDirection = Direction::SOUTH;	break;
 	case 3: headingDirection = Direction::WEST;		break;
     }
+}
+
+void MovingEntity::move_forward() {
+	switch(headingDirection) {
+	case Direction::NORTH:	set_relative_coordinate(-1, 0);	break;
+	case Direction::EAST:	set_relative_coordinate(0, 1);	break;
+	case Direction::SOUTH:	set_relative_coordinate(1, 0);	break;
+	case Direction::WEST:	set_relative_coordinate(0, -1);	break;
+	}
 }

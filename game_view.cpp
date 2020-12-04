@@ -77,14 +77,13 @@ game_view::game_view(QWidget *parent) :
     gameOverSoundEffect = new QMediaPlayer();
     gameOverSoundEffect->setMedia(QUrl("qrc:/assets/sound/gameOver.mp3"));
     gameOverSoundEffect->setVolume(50);
-
-    //ui->volume_control->setVisible(true);
-    //ui->volume_control->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+    ui->volume_control->setVisible(true);
+    ui->volume_control->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     QPixmap pixmap(":/assets/volume_control.png");
     QIcon ButtonIcon(pixmap);
-    //ui->volume_control->setIcon(pixmap);
-    //ui->volume_control->setIconSize(QSize(32,32));
-    //ui->vol_Slider->setVisible(false);
+    ui->volume_control->setIcon(pixmap);
+    ui->volume_control->setIconSize(QSize(32,32));
+    ui->vol_Slider->setVisible(false);
 }
 
 game_view::~game_view()
@@ -377,11 +376,16 @@ void game_view::on_pushButton_clicked()
 void game_view::on_pauseButton_clicked(){
 	if(isPlaying){
         ui->pauseButton->setText("Resume");
+        timer->stop();
+        gameTickTimer->stop();
+
     }else{
         ui->pauseButton->setText("Pause");
+        timer->start(1000);
+        gameTickTimer->start(GAME_TICK_UPDATE_TIME);
     }
     isPlaying = !isPlaying;
-    // TODO: 54D: pausing functionality is not implemented
+    // set keyboard input boolean
 }
 
 void game_view::on_resetButton_clicked(){
@@ -395,6 +399,7 @@ void game_view::on_resetButton_clicked(){
     ui->pauseButton->setVisible(false);
     ui->resetButton->setVisible(false);
     ui->Timer_label->setText(parseTime(timeCount));
+    remove_game_content();
 }
 
 void game_view::on_back_button_clicked()
@@ -427,6 +432,7 @@ void game_view::reset_view(){
     if(snake!=nullptr){
 		disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
     }
+    remove_game_content();
 }
 
 void game_view::stackedWidgetChanged(int index){
@@ -1041,6 +1047,8 @@ void game_view::gameTickUpdate() {
             // Instant death
             snake->set_health(0);
             qDebug() << "Snake hits the wall!";
+			// UI update
+			update_health();
             return;
         }
 
@@ -1049,7 +1057,9 @@ void game_view::gameTickUpdate() {
             if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
                 // Instant death
                 snake->set_health(0);
-                qDebug() << "Snake hits itslef";
+				qDebug() << "Snake hits itslef";
+				// UI update
+				update_health();
                 return;
             }
         }
@@ -1057,8 +1067,10 @@ void game_view::gameTickUpdate() {
         // Check if snake (head) collide with ghosts
 		if (!snake->is_ghost_immunity() && game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
             // Instant death
-			snake->set_health(0);
-            qDebug() << "Snake (head) hits a ghost!";
+            snake->set_health(0);
+			qDebug() << "Snake (head) hits a ghost!";
+			// UI update
+			update_health();
             return;
         }
 
@@ -1075,7 +1087,9 @@ void game_view::gameTickUpdate() {
 
                 qDebug() << "Snake (body) hits a ghost!";
                 snake->set_relative_health(-1);
-                qDebug() << "Health" << snake->get_health() << snake->get_max_health();
+				qDebug() << "Health" << snake->get_health() << snake->get_max_health();
+				// UI update
+				update_health();
 
                 // Search for the Ghost and change its headingDirection to avoid multiple hits
                 GhostBody* collidedGhostBody = nullptr;
@@ -1211,20 +1225,20 @@ void game_view::remove_game_content() {
 }
 
 void game_view::on_volume_control_clicked()
-{/*
+{
     if (ui->vol_Slider->isVisible()){
         ui->vol_Slider->setVisible(false);
     }else{
         ui->vol_Slider->setVisible(true);
-    }*/
+    }
 }
 
 void game_view::on_vol_Slider_valueChanged(int value)
-{/*
+{
     selectSoundEffect->setVolume(value);
     hurtSoundEffect->setVolume(value);
     deathSoundEffect->setVolume(value);
-    gameOverSoundEffect->setVolume(value);*/
+    gameOverSoundEffect->setVolume(value);
 }
 
 
