@@ -379,11 +379,13 @@ void game_view::on_pushButton_clicked()
 
 void game_view::on_pauseButton_clicked(){
 	if(isPlaying){
+		allowKeyboardInput = false;
         ui->pauseButton->setText("Resume");
         timer->stop();
         gameTickTimer->stop();
 
     }else{
+		allowKeyboardInput = true;
         ui->pauseButton->setText("Pause");
         timer->start(1000);
         gameTickTimer->start(GAME_TICK_UPDATE_TIME);
@@ -463,6 +465,9 @@ void game_view::refresh_powerUp_list(){
         case PowerUp::PowerUpType::SHIELD:
             path = PU_Shield::get_resourceURI();
             break;
+		case PowerUp::PowerUpType::HEAL:
+			path = PU_Heal::get_resourceURI();
+			break;
         default:
             qDebug() << "refresh_powerUp_list | Invalid PowerUpType specified";
             break;
