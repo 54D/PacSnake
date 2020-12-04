@@ -200,16 +200,18 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::fruit_instantiation() {
     int row, col;
+	int picId;
     do {
 		row	= random(0, game_map->get_num_rows());
 		col = random(0, game_map->get_num_cols());
+		picId = random(0, 5);
     } while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
     Fruit* fruit_temp = new Fruit {row, col};
     game_map->set_terrainState(fruit_temp->get_row(), fruit_temp->get_col(), GameMap::TerrainState::FRUIT_OCCUPIED);
     fruits.push_back(fruit_temp);
 
     // Init UI
-	QPixmap pic(Fruit::image_lookup[random(0, 5)]);
+	QPixmap pic(Fruit::image_lookup[picId]);
     QGraphicsPixmapItem* fruit_pic = scene.addPixmap(pic);
     fruit_temp->register_view(fruit_pic);
     fruit_pic->setZValue(998);
@@ -252,6 +254,66 @@ void game_view::powerUp_instantiation() {
 	powerups.back()->register_view(fruit_pic);
 	fruit_pic->setZValue(998);
 	fruit_pic->setOffset(powerups.back()->get_col() * 32, powerups.back()->get_row() * 32);
+}
+
+void game_view::normalGhost_instantiation() {
+	int row, col;
+	int picId;
+	int speed;
+	do {
+		row	= random(0, game_map->get_num_rows());
+		col = random(0, game_map->get_num_cols());
+		picId = random(0, 5);
+		speed = random(1, static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2));
+	} while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
+	NormalGhost* currentGhost = new NormalGhost {row, col, speed};
+	normalGhosts.push_back(currentGhost);
+
+	// Record the OCCUPIED state on game_map
+	game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+
+	// Init UI
+	QPixmap pic(NormalGhost::image_lookup[picId]);
+	QGraphicsPixmapItem* ghost_pic = scene.addPixmap(pic);
+	currentGhost->register_view(ghost_pic);
+	ghost_pic->setZValue(999);
+	ghost_pic->setOffset(currentGhost->get_col() * 32, currentGhost->get_row() * 32);
+}
+
+void game_view::bigGhost_instantiation() {
+	int row, col;
+	int speed;
+	do {
+		row	= random(0, game_map->get_num_rows());
+		col = random(0, game_map->get_num_cols());
+		speed = random(1, static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4));
+	} while ((game_map->get_terrainState(row	, col)		!= GameMap::TerrainState::EMPTY) ||
+			 (game_map->get_terrainState(row	, col + 1)	!= GameMap::TerrainState::EMPTY) ||
+			 (game_map->get_terrainState(row + 1, col + 1)	!= GameMap::TerrainState::EMPTY) ||
+			 (game_map->get_terrainState(row + 1, col)		!= GameMap::TerrainState::EMPTY));
+	BigGhost* currentGhost = new BigGhost {row, col, speed};
+	bigGhosts.push_back(currentGhost);
+
+	// Record the OCCUPIED state on game_map
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			game_map->set_terrainState(currentGhost->get_row() + i, currentGhost->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+		}
+	}
+
+	// Init UI
+	int ghostBody_count = 0;
+	GhostBody* currentGhostBody = currentGhost;
+	do {
+		QPixmap pic(BigGhost::image_lookup[ghostBody_count]);
+		QGraphicsPixmapItem* ghostBody_pic = scene.addPixmap(pic);
+		currentGhostBody->register_view(ghostBody_pic);
+		ghostBody_pic->setZValue(999);
+		ghostBody_pic->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
+
+		currentGhostBody = currentGhostBody->get_next();
+		ghostBody_count++;
+	} while (currentGhostBody != currentGhost);
 }
 
 void game_view::on_pushButton_clicked()
@@ -300,60 +362,12 @@ void game_view::on_pushButton_clicked()
     /* NORMAL GHOSTS */
 	// Generate noraml ghosts
     for (int i = 0; i < NUM_OF_NORMAL_GHOST; i++) {
-        int row, col;
-        do {
-			row	= random(0, game_map->get_num_rows());
-			col = random(0, game_map->get_num_cols());
-        } while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
-		int speed = random(1, static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2));
-        NormalGhost* currentGhost = new NormalGhost {row, col, speed};
-        normalGhosts.push_back(currentGhost);
-
-        // Record the OCCUPIED state on game_map
-        game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
-
-		// Init U
-		QPixmap pic(NormalGhost::image_lookup[random(0, 5)]);
-        QGraphicsPixmapItem* ghost_pic = scene.addPixmap(pic);
-        currentGhost->register_view(ghost_pic);
-        ghost_pic->setZValue(999);
-        ghost_pic->setOffset(currentGhost->get_col() * 32, currentGhost->get_row() * 32);
+		normalGhost_instantiation();
     }
 
     /* BIG GHOSTS */
     for (int i = 0; i < NUM_OF_BIG_GHOST; i++) {
-        int row, col;
-        do {
-			row	= random(0, game_map->get_num_rows());
-			col = random(0, game_map->get_num_cols());
-        } while ((game_map->get_terrainState(row	, col)		!= GameMap::TerrainState::EMPTY) ||
-                 (game_map->get_terrainState(row	, col + 1)	!= GameMap::TerrainState::EMPTY) ||
-                 (game_map->get_terrainState(row + 1, col + 1)	!= GameMap::TerrainState::EMPTY) ||
-                 (game_map->get_terrainState(row + 1, col)		!= GameMap::TerrainState::EMPTY));
-		int speed = random(1, static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4));
-        BigGhost* currentGhost = new BigGhost {row, col, speed};
-        bigGhosts.push_back(currentGhost);
-
-        // Record the OCCUPIED state on game_map
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                game_map->set_terrainState(currentGhost->get_row() + i, currentGhost->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
-            }
-        }
-
-        // Init UI
-        int ghostBody_count = 0;
-        GhostBody* currentGhostBody = currentGhost;
-        do {
-            QPixmap pic(BigGhost::image_lookup[ghostBody_count]);
-            QGraphicsPixmapItem* ghostBody_pic = scene.addPixmap(pic);
-            currentGhostBody->register_view(ghostBody_pic);
-            ghostBody_pic->setZValue(999);
-            ghostBody_pic->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
-
-            currentGhostBody = currentGhostBody->get_next();
-            ghostBody_count++;
-        } while (currentGhostBody != currentGhost);
+		bigGhost_instantiation();
     }
 
     /* FRUITS */

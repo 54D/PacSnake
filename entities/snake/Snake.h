@@ -79,6 +79,7 @@ private:
     // Power Up (PU)
     std::deque<PowerUp*> pu_inventory;
     PowerUp* pu_activate {nullptr};
+	QMediaPlayer* no_pu_SoundEffect;
 };
 
 #endif /* SNAKE_H_ */

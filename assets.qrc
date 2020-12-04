@@ -90,5 +90,7 @@
         <file>assets/sprite/snake-tail-up-shielding.png</file>
         <file>assets/sprite/snake-corner-down-right-shielding.png</file>
         <file>assets/sprite/snake-corner-down-right-dashing.png</file>
+        <file>assets/sound/no_power_up.wav</file>
+        <file>assets/sound/powerup_deactivate.wav</file>
     </qresource>
 </RCC>

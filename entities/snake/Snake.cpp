@@ -32,6 +32,10 @@ Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection,
         currentSnakeBody->prev = prevSnakeBody;
         prevSnakeBody = currentSnakeBody;
     }
+
+	no_pu_SoundEffect = new QMediaPlayer();
+	no_pu_SoundEffect->setMedia(QUrl("qrc:/assets/sound/no_power_up.wav"));
+	no_pu_SoundEffect->setVolume(50);
 }
 
 Snake::~Snake() {
@@ -48,6 +52,8 @@ Snake::~Snake() {
 		delete (*it);
 	}
 	pu_inventory.clear();
+
+	delete no_pu_SoundEffect;
 }
 
 int Snake::get_max_health() const {
@@ -273,6 +279,13 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
 	if (pu_inventory.empty() || pu_activate != nullptr) {
+		// Play sound effect
+		if (no_pu_SoundEffect->state() == QMediaPlayer::PlayingState) {
+			no_pu_SoundEffect->setPosition(0);
+		}
+		else if (no_pu_SoundEffect->state() == QMediaPlayer::StoppedState) {
+			no_pu_SoundEffect->play();
+		}
 		qDebug() << "No power up to use / power up activating";
 		return;
 	}

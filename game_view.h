@@ -66,6 +66,8 @@ private:
 
 	void powerUp_instantiation();
 	void fruit_instantiation();
+	void normalGhost_instantiation();
+	void bigGhost_instantiation();
 
 	// Detect will the Entity collide with the wall or ghost on its next movement
 	bool next_move_ghost_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;

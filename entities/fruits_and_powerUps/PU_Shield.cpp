@@ -26,11 +26,11 @@ void PU_Shield::activate(Snake *snake) {
 	}
 	qDebug() << "SHIELD activated!";
 	// Play sound effect
-	if (activateSound->state() == QMediaPlayer::PlayingState) {
-		activateSound->setPosition(0);
+	if (activateSoundEffect->state() == QMediaPlayer::PlayingState) {
+		activateSoundEffect->setPosition(0);
 	}
-	else if (activateSound->state() == QMediaPlayer::StoppedState) {
-		activateSound->play();
+	else if (activateSoundEffect->state() == QMediaPlayer::StoppedState) {
+		activateSoundEffect->play();
 	}
 
 	pu_owner = snake;
@@ -50,6 +50,8 @@ void PU_Shield::deactivate() {
 		return;
 	}
 	qDebug() << "SHIELD deactivated!";
+	// Play sound effect
+	deactivateSoundEffect->play();
 	deactivateCountDown->stop();
 	// Reset immunity
 	pu_owner->set_pu_activate(nullptr);

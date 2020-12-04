@@ -25,11 +25,11 @@ void PU_Heal::activate(Snake* snake) {
 
 	qDebug() << "HEAL activated";
 	// Play sound effect
-	if (activateSound->state() == QMediaPlayer::PlayingState) {
-		activateSound->setPosition(0);
+	if (activateSoundEffect->state() == QMediaPlayer::PlayingState) {
+		activateSoundEffect->setPosition(0);
 	}
-	else if (activateSound->state() == QMediaPlayer::StoppedState) {
-		activateSound->play();
+	else if (activateSoundEffect->state() == QMediaPlayer::StoppedState) {
+		activateSoundEffect->play();
 	}
 
 	pu_owner = snake;
@@ -51,6 +51,7 @@ void PU_Heal::deactivate() {
 		return;
 	}
 	qDebug() << "HEAL deactivated";
+
 	deactivateCountDown->stop();
 
 	pu_owner->set_pu_activate(nullptr);
