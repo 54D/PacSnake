@@ -12,8 +12,11 @@ achievements_container::achievements_container(QWidget *parent) :
     ui->setupUi(this);
 
 	// disable interaction with achievement list
-    ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableView->setSelectionMode(QAbstractItemView::NoSelection);
+	ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui->tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+
+	// load achievements
+	load_achievements();
 
 	// set sound effects
 	selectSoundEffect = new QMediaPlayer();
@@ -24,6 +27,10 @@ achievements_container::~achievements_container()
 {
 	delete selectSoundEffect;
     delete ui;
+}
+
+void achievements_container::load_achievements(){
+	ui->tableWidget->clear();
 }
 
 /* PRIVATE, SLOTS */

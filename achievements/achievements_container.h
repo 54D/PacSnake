@@ -25,6 +25,11 @@ public:
 	 */
     ~achievements_container();
 
+	/**
+	 * Loads achievements into `tableView`.
+	 */
+	void load_achievements();
+
 private slots:
 
 	/**
