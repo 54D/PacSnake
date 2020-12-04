@@ -1,5 +1,6 @@
 #include <string>
 #include "Stats.h"
+#include <QDebug>
 
 Stats::Stats() = default;
 
@@ -18,6 +19,8 @@ void Stats::update_survival_time(long time){
 void Stats::update_snake_length(int length){
     longest_snake_length = length;
 }
+
+
 
 int Stats::get_ingame_distance(){
     return in_game_distance;

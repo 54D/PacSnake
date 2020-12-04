@@ -1,5 +1,6 @@
 #include <string>
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 #include <QMessageBox>
 #include <QTextStream>
@@ -8,6 +9,16 @@
 Achievement::Achievement(std::string path)
     :path(path)
 {
+    //check and create file if not exist
+    QFileInfo check_file(QString::fromStdString(path));
+    if (!(check_file.exists() && check_file.isFile())) {
+        QFile createFile(QString::fromStdString(path));
+        createFile.open(QIODevice::WriteOnly);
+        QTextStream stream(&createFile);
+        stream << "0" << endl << "0" << endl << "0" << endl << "0" << endl << "0" << endl;
+        createFile.close();
+    }
+    //read file
     QFile file(QString::fromStdString(path));
     if(!file.open(QIODevice::ReadOnly)) {
         QMessageBox::information(0, "Achievment file error", file.errorString());
@@ -27,27 +38,20 @@ Achievement::Achievement(std::string path)
         }
         i++;
     }
-
     file.close();
 }
 
-void Achievement::update_achievement(int type, int value){
-    QFile file(QString::fromStdString(path));
-          if(file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
-          {
-
-              //Streaming text to the file
-              QTextStream stream(&writefile);
-
-              stream << get_ingame_distance() << endl << get_survival_time() << get_fruits_eaten() << endl << get_longest_snake_length() << endl << get_play_count();
-              //stream << "Center Point: " << iter_result[0] << "  " << iter_result[1]
-              //          << "  " << iter_result[2] << " Rotation: " << iter_result[3] <<'\n';
-              //
-              writefile.close();
-              qDebug() << "Writing finished";
+void Achievement::update_achievement_stat(){
+    QFile writefile(QString::fromStdString(path));
+    writefile.open(QFile::WriteOnly);
+    //Streaming text to the file
+    QTextStream stream(&writefile);
+    stream << get_ingame_distance() << endl << get_survival_time() << endl << get_fruits_eaten() << endl << get_longest_snake_length() << endl << get_play_count();
+    qDebug() << get_ingame_distance() << get_survival_time() << get_fruits_eaten();
+    writefile.close();
+    qDebug() << "Writing finished";
 
 }
-
 
 void Achievement::compare_stat(Stats temp){
     if (temp.get_ingame_distance() > this->get_ingame_distance()){

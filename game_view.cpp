@@ -6,6 +6,7 @@
 #include <string>
 
 #include <QDebug>
+#include <QDir>
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -114,6 +115,7 @@ game_view::~game_view()
 }
 
 void game_view::render_game_map(){
+    qDebug() << curr_stats->get_ingame_distance();
     // Clear previous content
     for(int i=0;i<terrain_pixmaps.size();i++){
         scene.removeItem(terrain_pixmaps.at(i));
@@ -540,9 +542,11 @@ void game_view::gameTickUpdate() {
         curr_stats->update_survival_time(timeCount);
         curr_stats->update_snake_length(snake->get_longest_length());
         curr_stats->update_play_count(curr_stats->get_play_count() + 1);
-        Achievement temp(":/data/stat.txt");
-        temp.compare_stat(*curr_stats);
-        temp.update_achievement_stat();
+
+        QString temp = QDir::currentPath() + "/stat.txt";
+        Achievement temp2(temp.toStdString());
+        temp2.compare_stat(*curr_stats);
+        temp2.update_achievement_stat();
 
         // Play sound effect
         deathSoundEffect->play();
@@ -713,6 +717,7 @@ void game_view::gameTickUpdate() {
 
 			// Move forward
 			snake->move_forward();
+            //qDebug() << curr_stats->get_ingame_distance();
 			if (!allowKeyboardInput)
 				allowKeyboardInput = true;
 
@@ -725,7 +730,6 @@ void game_view::gameTickUpdate() {
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
             currentSnakeBody->refresh_pixmap();
-            curr_stats->update_in_game_distance(curr_stats->get_ingame_distance()+1);
         }
 		// Update health UI
         update_health();

@@ -18,13 +18,12 @@ public:
     int get_longest_snake_length();
     int get_play_count();
 
-
 private:
-    int in_game_distance = 0;
-    long survival_time = 0;
-    int fruits_eaten = 0;
-    int longest_snake_length = 0;
-    int play_count = 0;
+    int in_game_distance{0};
+    long survival_time{0};
+    int fruits_eaten{0};
+    int longest_snake_length{0};
+    int play_count{0};
 };
 
 #endif // STAT_H

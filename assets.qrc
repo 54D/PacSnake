@@ -47,6 +47,5 @@
         <file>assets/sprite/empty-health.png</file>
         <file>assets/sprite/full-health.png</file>
         <file>assets/volume_control.png</file>
-        <file>data/stat.txt</file>
     </qresource>
 </RCC>
