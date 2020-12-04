@@ -83,6 +83,11 @@ background-color: rgb(48, 48, 48);</string>
      <height>421</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(47, 47, 47);
+color: rgb(255, 255, 255);
+font: 11pt &quot;Lucida Console&quot;;</string>
+   </property>
    <property name="verticalScrollBarPolicy">
     <enum>Qt::ScrollBarAlwaysOff</enum>
    </property>
