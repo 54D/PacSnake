@@ -1,15 +1,18 @@
 #include "GhostBody.h"
 
+/* PUBLIC */
 GhostBody::~GhostBody() {}
-
-GhostBody::GhostBody(int row, int col, int speed, Direction headingDirection, GhostBody* next) :
-    MovingEntity(row, col, speed, headingDirection), next(next) {
-    //this->pixmap = QPixmap(":/assets/image");
-}
 
 GhostBody* GhostBody::get_next() const {
 	return next;
 }
+
+/* PROTECTED */
+
+GhostBody::GhostBody(int row, int col, int speed, Direction headingDirection, GhostBody* next) :
+	MovingEntity(row, col, speed, headingDirection), next(next) {
+}
+
 
 void GhostBody::move_forward() {
 	switch(headingDirection) {

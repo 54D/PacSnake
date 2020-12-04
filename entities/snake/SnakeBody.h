@@ -6,7 +6,15 @@
 
 class SnakeBody : public MovingEntity {
 public:
+	/**
+	 * Plublic const
+	 * @param	image_lookup	Store directory of SnakeBody's images
+	 */
 	static const QString image_lookup[4][4][4];
+
+	/**
+	 * Friend class.
+	 */
 	friend class Snake;
 
 	/**
@@ -18,12 +26,12 @@ public:
 	 * Obtains the next linked SnakeBody.
 	 * @return	next	Next linked SnakeBody. `nullptr` if tail.
 	 */
-    SnakeBody* get_next() const;
+	SnakeBody* get_next() const;
 	/**
 	 * Refreshes the pixmap representation of SnakeBody.
 	 * Called to update the orientation and corner positioning upon snake movement.
 	 */
-    void refresh_pixmap();
+	void refresh_pixmap();
 
 protected:
 
@@ -44,7 +52,7 @@ protected:
 	virtual ~SnakeBody();
 
 	/**
-	 * Moves this MovingEntity by 1 unit, direction specified by `headingDirection`.
+	 * Moves this SnakeBody by 1 unit, direction specified by `headingDirection`.
 	 */
 	virtual void move_forward() override;
 	/**
@@ -52,9 +60,9 @@ protected:
 	 * This does not update the Snake length, which must be processed from a Snake object.
 	 */
 	void remove_tail();
-    
-    SnakeBody* prev {nullptr};
-    SnakeBody* next {nullptr};
+	
+	SnakeBody* prev {nullptr};
+	SnakeBody* next {nullptr};
 
 	PowerUp::PowerUpType current_powerUpState {PowerUp::PowerUpType::NONE};
 };

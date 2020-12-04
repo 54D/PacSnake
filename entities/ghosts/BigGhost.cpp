@@ -2,6 +2,7 @@
 #include <ctime>
 #include "BigGhost.h"
 
+/* PUBLIC */
 const QString BigGhost::image_lookup[4] {
 	":/assets/sprite/big1.png",
 	":/assets/sprite/big2.png",
