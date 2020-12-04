@@ -25,7 +25,8 @@ protected:
 	PowerUp::PowerUpType type {PowerUp::PowerUpType::NONE};
 	Snake* pu_owner {nullptr};
 
-	QMediaPlayer* activateSound;
+	QMediaPlayer* activateSoundEffect;
+	QMediaPlayer* deactivateSoundEffect;
 	QTimer* deactivateCountDown;
 };
 

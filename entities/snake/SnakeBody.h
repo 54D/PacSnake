@@ -1,11 +1,12 @@
 #ifndef SNAKEBODY_H_
 #define SNAKEBODY_H_
 
-#include <entities/MovingEntity.h>
+#include "entities/MovingEntity.h"
+#include "entities/fruits_and_powerUps/PowerUp.h"
 
 class SnakeBody : public MovingEntity {
 public:
-
+	static const QString image_lookup[4][4][4];
 	friend class Snake;
 
 	/**
@@ -55,6 +56,7 @@ protected:
     SnakeBody* prev {nullptr};
     SnakeBody* next {nullptr};
 
+	PowerUp::PowerUpType current_powerUpState {PowerUp::PowerUpType::NONE};
 };
 
 #endif /* SNAKEBODY_H_ */

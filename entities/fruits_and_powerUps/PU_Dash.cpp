@@ -29,19 +29,19 @@ void PU_Dash::activate(Snake* snake) {
 
 	qDebug() << "DASH activated!";
 	// Play sound effect
-	if (activateSound->state() == QMediaPlayer::PlayingState) {
-		activateSound->setPosition(0);
+	if (activateSoundEffect->state() == QMediaPlayer::PlayingState) {
+		activateSoundEffect->setPosition(0);
 	}
-	else if (activateSound->state() == QMediaPlayer::StoppedState) {
-		activateSound->play();
+	else if (activateSoundEffect->state() == QMediaPlayer::StoppedState) {
+		activateSoundEffect->play();
 	}
 
-	pu_owner = snake;
-	int newSpeed = MovingEntity::MAX_SPEED;
-    snake->set_speed(newSpeed);
 
 	// Set activated power up
-	snake->set_pu_activate(this);
+	pu_owner = snake;
+	pu_owner->set_pu_activate(this);
+	pu_owner->updatePowerUpState();
+	pu_owner->set_speed(MovingEntity::MAX_GAMETICK_SPEED);
 
 	deactivateCountDown = new QTimer(this);
 	connect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
@@ -57,6 +57,8 @@ void PU_Dash::deactivate() {
 	deactivateCountDown->stop();
     // Reset speed
 	pu_owner->set_pu_activate(nullptr);
+	pu_owner->updatePowerUpState();
+
 	int newSpeed = pu_owner->calculate_level_speed();
 	pu_owner->set_speed(newSpeed);
 

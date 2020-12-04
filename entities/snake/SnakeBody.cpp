@@ -2,6 +2,105 @@
 #include "game_view.h"
 
 /* PUBLIC */
+const QString SnakeBody::image_lookup[4][4][4] {
+	{	// No power up
+		{
+			":/assets/sprite/snake-head-up.png",
+			":/assets/sprite/snake-head-down.png",
+			":/assets/sprite/snake-head-left.png",
+			":/assets/sprite/snake-head-right.png",
+		},
+		{
+			":/assets/sprite/snake-body-vertical.png",
+			":/assets/sprite/snake-body-horizontal.png",
+		},
+		{
+			":/assets/sprite/snake-corner-up-left.png",
+			":/assets/sprite/snake-corner-up-right.png",
+			":/assets/sprite/snake-corner-down-left.png",
+			":/assets/sprite/snake-corner-down-right.png",
+		},
+		{
+			":/assets/sprite/snake-tail-up.png",
+			":/assets/sprite/snake-tail-down.png",
+			":/assets/sprite/snake-tail-left.png",
+			":/assets/sprite/snake-tail-right.png",
+		}
+	},
+	{	// Dash Power Up
+		{
+			":/assets/sprite/snake-head-up-dashing.png",
+			":/assets/sprite/snake-head-down-dashing.png",
+			":/assets/sprite/snake-head-left-dashing.png",
+			":/assets/sprite/snake-head-right-dashing.png",
+		},
+		{
+			":/assets/sprite/snake-body-vertical-dashing.png",
+			":/assets/sprite/snake-body-horizontal-dashing.png",
+		},
+		{
+			":/assets/sprite/snake-corner-up-left-dashing.png",
+			":/assets/sprite/snake-corner-up-right-dashing.png",
+			":/assets/sprite/snake-corner-down-left-dashing.png",
+			":/assets/sprite/snake-corner-down-right-dashing.png",
+		},
+		{
+			":/assets/sprite/snake-tail-up-dashing.png",
+			":/assets/sprite/snake-tail-down-dashing.png",
+			":/assets/sprite/snake-tail-left-dashing.png",
+			":/assets/sprite/snake-tail-right-dashing.png",
+		}
+	},
+	{	// Heal Power Up
+		{
+			":/assets/sprite/snake-head-up-healing.png",
+			":/assets/sprite/snake-head-down-healing.png",
+			":/assets/sprite/snake-head-left-healing.png",
+			":/assets/sprite/snake-head-right-healing.png",
+		},
+		{
+			":/assets/sprite/snake-body-vertical-healing.png",
+			":/assets/sprite/snake-body-horizontal-healing.png",
+		},
+		{
+			":/assets/sprite/snake-corner-up-left-healing.png",
+			":/assets/sprite/snake-corner-up-right-healing.png",
+			":/assets/sprite/snake-corner-down-left-healing.png",
+			":/assets/sprite/snake-corner-down-right-healing.png",
+		},
+		{
+			":/assets/sprite/snake-tail-up-healing.png",
+			":/assets/sprite/snake-tail-down-healing.png",
+			":/assets/sprite/snake-tail-left-healing.png",
+			":/assets/sprite/snake-tail-right-healing.png",
+		}
+	},
+	{	// Shield Power Up
+		{
+			":/assets/sprite/snake-head-up-shielding.png",
+			":/assets/sprite/snake-head-down-shielding.png",
+			":/assets/sprite/snake-head-left-shielding.png",
+			":/assets/sprite/snake-head-right-shielding.png",
+		},
+		{
+			":/assets/sprite/snake-body-vertical-shielding.png",
+			":/assets/sprite/snake-body-horizontal-shielding.png",
+		},
+		{
+			":/assets/sprite/snake-corner-up-left-shielding.png",
+			":/assets/sprite/snake-corner-up-right-shielding.png",
+			":/assets/sprite/snake-corner-down-left-shielding.png",
+			":/assets/sprite/snake-corner-down-right-shielding.png",
+		},
+		{
+			":/assets/sprite/snake-tail-up-shielding.png",
+			":/assets/sprite/snake-tail-down-shielding.png",
+			":/assets/sprite/snake-tail-left-shielding.png",
+			":/assets/sprite/snake-tail-right-shielding.png",
+		}
+	}
+};
+
 
 SnakeBody* SnakeBody::get_prev() const {
     return prev;
@@ -12,9 +111,10 @@ SnakeBody* SnakeBody::get_next() const {
 }
 
 void SnakeBody::refresh_pixmap(){
+	int currentPUState = static_cast<int>(current_powerUpState);
     int pic_ref = -1;
-    if (this->get_prev() == nullptr) pic_ref = 0;
     if (this->get_next() == nullptr) pic_ref = 3;
+	if (this->get_prev() == nullptr) pic_ref = 0;
     if (this->get_prev() != nullptr && this->get_next() != nullptr){
         if (this->get_next()->get_headingDirection()!= this->get_headingDirection()) pic_ref = 2;
     }
@@ -27,10 +127,10 @@ void SnakeBody::refresh_pixmap(){
 
     if (pic_ref == 1){
         if (curr_dir == 0 || curr_dir == 1){
-			QPixmap pic(Snake::image_lookup[1][0]);
+			QPixmap pic(SnakeBody::image_lookup[currentPUState][1][0]);
             this->get_pixmap()->setPixmap(pic);
         }else{
-			QPixmap pic(Snake::image_lookup[1][1]);
+			QPixmap pic(SnakeBody::image_lookup[currentPUState][1][1]);
             this->get_pixmap()->setPixmap(pic);
         }
     }else if (pic_ref == 2){
@@ -43,10 +143,10 @@ void SnakeBody::refresh_pixmap(){
         if (this->get_headingDirection() == Direction::NORTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 1;
         if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::EAST) dir = 2;
         if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 3;
-		QPixmap pic(Snake::image_lookup[pic_ref][dir]);
+		QPixmap pic(SnakeBody::image_lookup[currentPUState][pic_ref][dir]);
         this->get_pixmap()->setPixmap(pic);
     }else{
-		QPixmap pic(Snake::image_lookup[pic_ref][curr_dir]);
+		QPixmap pic(SnakeBody::image_lookup[currentPUState][pic_ref][curr_dir]);
         this->get_pixmap()->setPixmap(pic);
     }
     return;

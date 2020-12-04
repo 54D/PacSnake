@@ -34,6 +34,8 @@
 #include "entities/fruits_and_powerUps/PU_Heal.h"
 #include "entities/fruits_and_powerUps/PU_Shield.h"
 
+#include<cstdlib>
+
 // util
 static QString parseTime(long seconds){
     long hh = (long)( (seconds / (60*60)) % 24 );
@@ -57,7 +59,7 @@ game_view::game_view(QWidget *parent, Achievement *achievement) :
     ui->setupUi(this);
 
     // Generate ramdom seed
-    srand(time(NULL));
+	srand(time(NULL));
 
     // Gametick for game update
     gameTickTimer = new QTimer(this);
@@ -172,6 +174,11 @@ void game_view::keyPressEvent(QKeyEvent *event) {
 	}
 }
 
+// Return [lower, upper)
+int game_view::random(int lower, int upper) const {
+	return (rand() % (upper - lower)) + lower;
+}
+
 bool game_view::eventFilter(QObject *obj, QEvent *event)
 {
     QKeyEvent *keyEvent = NULL;     // event data, if this is a keystroke event
@@ -193,16 +200,18 @@ bool game_view::eventFilter(QObject *obj, QEvent *event)
 
 void game_view::fruit_instantiation() {
     int row, col;
+	int picId;
     do {
-        row	= rand() % game_map->get_num_rows();
-        col = rand() % game_map->get_num_cols();
+		row	= random(0, game_map->get_num_rows());
+		col = random(0, game_map->get_num_cols());
+		picId = random(0, 5);
     } while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
     Fruit* fruit_temp = new Fruit {row, col};
     game_map->set_terrainState(fruit_temp->get_row(), fruit_temp->get_col(), GameMap::TerrainState::FRUIT_OCCUPIED);
     fruits.push_back(fruit_temp);
 
     // Init UI
-    QPixmap pic(Fruit::image_lookup[rand() % 5]);
+	QPixmap pic(Fruit::image_lookup[picId]);
     QGraphicsPixmapItem* fruit_pic = scene.addPixmap(pic);
     fruit_temp->register_view(fruit_pic);
     fruit_pic->setZValue(998);
@@ -212,11 +221,11 @@ void game_view::fruit_instantiation() {
 void game_view::powerUp_instantiation() {
 	int row, col;
 	do {
-		row	= rand() % game_map->get_num_rows();
-		col = rand() % game_map->get_num_cols();
+		row	= random(0, game_map->get_num_rows());
+		col = random(0, game_map->get_num_cols());
 	} while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
 
-	switch (rand() % 3) {
+	switch (random(0, 3)) {
 		case 0: {
 			PU_Dash* pu_temp = new PU_Dash {row, col};
 			powerups.push_back(pu_temp);
@@ -247,6 +256,66 @@ void game_view::powerUp_instantiation() {
 	fruit_pic->setOffset(powerups.back()->get_col() * 32, powerups.back()->get_row() * 32);
 }
 
+void game_view::normalGhost_instantiation() {
+	int row, col;
+	int picId;
+	int speed;
+	do {
+		row	= random(0, game_map->get_num_rows());
+		col = random(0, game_map->get_num_cols());
+		picId = random(0, 5);
+		speed = random(1, static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2));
+	} while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
+	NormalGhost* currentGhost = new NormalGhost {row, col, speed};
+	normalGhosts.push_back(currentGhost);
+
+	// Record the OCCUPIED state on game_map
+	game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+
+	// Init UI
+	QPixmap pic(NormalGhost::image_lookup[picId]);
+	QGraphicsPixmapItem* ghost_pic = scene.addPixmap(pic);
+	currentGhost->register_view(ghost_pic);
+	ghost_pic->setZValue(999);
+	ghost_pic->setOffset(currentGhost->get_col() * 32, currentGhost->get_row() * 32);
+}
+
+void game_view::bigGhost_instantiation() {
+	int row, col;
+	int speed;
+	do {
+		row	= random(0, game_map->get_num_rows());
+		col = random(0, game_map->get_num_cols());
+		speed = random(1, static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4));
+	} while ((game_map->get_terrainState(row	, col)		!= GameMap::TerrainState::EMPTY) ||
+			 (game_map->get_terrainState(row	, col + 1)	!= GameMap::TerrainState::EMPTY) ||
+			 (game_map->get_terrainState(row + 1, col + 1)	!= GameMap::TerrainState::EMPTY) ||
+			 (game_map->get_terrainState(row + 1, col)		!= GameMap::TerrainState::EMPTY));
+	BigGhost* currentGhost = new BigGhost {row, col, speed};
+	bigGhosts.push_back(currentGhost);
+
+	// Record the OCCUPIED state on game_map
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			game_map->set_terrainState(currentGhost->get_row() + i, currentGhost->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+		}
+	}
+
+	// Init UI
+	int ghostBody_count = 0;
+	GhostBody* currentGhostBody = currentGhost;
+	do {
+		QPixmap pic(BigGhost::image_lookup[ghostBody_count]);
+		QGraphicsPixmapItem* ghostBody_pic = scene.addPixmap(pic);
+		currentGhostBody->register_view(ghostBody_pic);
+		ghostBody_pic->setZValue(999);
+		ghostBody_pic->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
+
+		currentGhostBody = currentGhostBody->get_next();
+		ghostBody_count++;
+	} while (currentGhostBody != currentGhost);
+}
+
 void game_view::on_pushButton_clicked()
 {
     /* Play sound effect */
@@ -268,7 +337,7 @@ void game_view::on_pushButton_clicked()
 
     /* SNAKE */
     // Init Snake
-	snake = new Snake {20, 25, 5, MovingEntity::Direction::NORTH, 3, 10};
+	snake = new Snake {20, 25};
     // Init UI
     SnakeBody* currentSnakeBody = snake;
     for (int i = 0; i <= snake->get_length(); i++){
@@ -279,7 +348,7 @@ void game_view::on_pushButton_clicked()
             if (currentSnakeBody->get_prev()->get_headingDirection()!= currentSnakeBody->get_next()->get_headingDirection()) pic_ref = 2;
         }
         if (pic_ref == -1) pic_ref = 1;
-		QPixmap pic(Snake::image_lookup[0][pic_ref]);
+		QPixmap pic(SnakeBody::image_lookup[0][0][pic_ref]);
         QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
         currentSnakeBody->register_view(snake_pic);
         snake_pic->setZValue(999);
@@ -291,66 +360,14 @@ void game_view::on_pushButton_clicked()
     }
 
     /* NORMAL GHOSTS */
-    // Generate two noraml ghosts
+	// Generate noraml ghosts
     for (int i = 0; i < NUM_OF_NORMAL_GHOST; i++) {
-        int row, col;
-        do {
-            row	= rand() % game_map->get_num_rows();
-            col = rand() % game_map->get_num_cols();
-        } while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
-        int upperNGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 2);
-        int lowerNGSpeed = static_cast<int>(1);
-        int speed = rand() % (upperNGSpeed - lowerNGSpeed + 1) + lowerNGSpeed;
-        NormalGhost* currentGhost = new NormalGhost {row, col, speed};
-        normalGhosts.push_back(currentGhost);
-
-        // Record the OCCUPIED state on game_map
-        game_map->set_terrainState(currentGhost->get_row(), currentGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
-
-        // Init UI
-        QPixmap pic(NormalGhost::image_lookup[rand() % 5]);
-        QGraphicsPixmapItem* ghost_pic = scene.addPixmap(pic);
-        currentGhost->register_view(ghost_pic);
-        ghost_pic->setZValue(999);
-        ghost_pic->setOffset(currentGhost->get_col() * 32, currentGhost->get_row() * 32);
+		normalGhost_instantiation();
     }
 
     /* BIG GHOSTS */
     for (int i = 0; i < NUM_OF_BIG_GHOST; i++) {
-        int row, col;
-        do {
-            row	= rand() % game_map->get_num_rows();
-            col = rand() % game_map->get_num_cols();
-        } while ((game_map->get_terrainState(row	, col)		!= GameMap::TerrainState::EMPTY) ||
-                 (game_map->get_terrainState(row	, col + 1)	!= GameMap::TerrainState::EMPTY) ||
-                 (game_map->get_terrainState(row + 1, col + 1)	!= GameMap::TerrainState::EMPTY) ||
-                 (game_map->get_terrainState(row + 1, col)		!= GameMap::TerrainState::EMPTY));
-        int upperBGSpeed = static_cast<int>(MovingEntity::MAX_SPEED * 1 / 4);
-        int lowerBGSpeed = static_cast<int>(1);
-        int speed = rand() % (upperBGSpeed - lowerBGSpeed + 1) + lowerBGSpeed;
-        BigGhost* currentGhost = new BigGhost {row, col, speed};
-        bigGhosts.push_back(currentGhost);
-
-        // Record the OCCUPIED state on game_map
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                game_map->set_terrainState(currentGhost->get_row() + i, currentGhost->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
-            }
-        }
-
-        // Init UI
-        int ghostBody_count = 0;
-        GhostBody* currentGhostBody = currentGhost;
-        do {
-            QPixmap pic(BigGhost::image_lookup[ghostBody_count]);
-            QGraphicsPixmapItem* ghostBody_pic = scene.addPixmap(pic);
-            currentGhostBody->register_view(ghostBody_pic);
-            ghostBody_pic->setZValue(999);
-            ghostBody_pic->setOffset(currentGhostBody->get_col() * 32, currentGhostBody->get_row() * 32);
-
-            currentGhostBody = currentGhostBody->get_next();
-            ghostBody_count++;
-        } while (currentGhostBody != currentGhost);
+		bigGhost_instantiation();
     }
 
     /* FRUITS */
@@ -521,7 +538,7 @@ void game_view::gameTickUpdate() {
      * - Collision checking
      */
     gameTickCount++;
-    // Overflow prevention
+	// Overflow prevention
 	if (gameTickCount >= LLONG_MAX) {
         gameTickCount = 0;
 	}
@@ -568,7 +585,7 @@ void game_view::gameTickUpdate() {
 
         /* SNAKE */
         // Movement update
-        if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+		if ((snake->get_speed() > 0) && (gameTickCount % (MovingEntity::MAX_GAMETICK_SPEED - snake->get_speed() + 1) == 0)) {
 			// Update game_map occupied state for collision avoiding
 			for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
 				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
@@ -740,7 +757,7 @@ void game_view::gameTickUpdate() {
         /* NORMAL GHOSTS */
         for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
 			// Movement update
-            if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			if (((*it)->get_speed() > 0) && (gameTickCount % (MovingEntity::MAX_GAMETICK_SPEED - (*it)->get_speed() + 1) == 0)) {
 				bool noMove = false;
 				// If snake has no ghost immunity
 				if (!snake->is_ghost_immunity()) {
@@ -794,7 +811,7 @@ void game_view::gameTickUpdate() {
         /* BIG GHOST*/
         for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
             // Movement update
-            if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			if (((*it)->get_speed() > 0) && (gameTickCount % (MovingEntity::MAX_GAMETICK_SPEED - (*it)->get_speed() + 1) == 0)) {
 				// Avoid collison checking
 				bool noMove = false;
 				// If the snkae has no ghost immunity
@@ -993,7 +1010,7 @@ void game_view::gameTickUpdate() {
                 while (lastSnakeBody->get_next() != nullptr) {
                     lastSnakeBody = lastSnakeBody->get_next();
                 }
-				QPixmap pic(Snake::image_lookup[0][3]);
+				QPixmap pic(SnakeBody::image_lookup[0][0][3]);
                 QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
                 lastSnakeBody->register_view(snake_pic);
                 snake_pic->setZValue(999);

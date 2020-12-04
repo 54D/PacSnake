@@ -4,31 +4,6 @@
 #include <entities/Entity.h>
 #include <entities/snake/Snake.h>
 
-const QString Snake::image_lookup[4][4] {
-	{
-		":/assets/sprite/snake-head-up.png",
-		":/assets/sprite/snake-head-down.png",
-		":/assets/sprite/snake-head-left.png",
-		":/assets/sprite/snake-head-right.png",
-	},
-	{
-		":/assets/sprite/snake-body-vertical.png",
-		":/assets/sprite/snake-body-horizontal.png",
-	},
-	{
-		":/assets/sprite/snake-corner-up-left.png",
-		":/assets/sprite/snake-corner-up-right.png",
-		":/assets/sprite/snake-corner-down-left.png",
-		":/assets/sprite/snake-corner-down-right.png",
-	},
-	{
-		":/assets/sprite/snake-tail-up.png",
-		":/assets/sprite/snake-tail-down.png",
-		":/assets/sprite/snake-tail-left.png",
-		":/assets/sprite/snake-tail-right.png",
-	}
-};
-
 Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection, int max_health, int length) :
 		SnakeBody(row, col, given_init_speed, headingDirection), GIVEN_INIT_SPEED(given_init_speed),
 		max_health(max_health), health(max_health), num_fruits_eaten(0),
@@ -57,6 +32,10 @@ Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection,
         currentSnakeBody->prev = prevSnakeBody;
         prevSnakeBody = currentSnakeBody;
     }
+
+	no_pu_SoundEffect = new QMediaPlayer();
+	no_pu_SoundEffect->setMedia(QUrl("qrc:/assets/sound/no_power_up.wav"));
+	no_pu_SoundEffect->setVolume(50);
 }
 
 Snake::~Snake() {
@@ -73,6 +52,8 @@ Snake::~Snake() {
 		delete (*it);
 	}
 	pu_inventory.clear();
+
+	delete no_pu_SoundEffect;
 }
 
 int Snake::get_max_health() const {
@@ -181,10 +162,12 @@ void Snake::move_forward() {
 }
 
 void Snake::set_speed(int speed) {
-	if (speed < 0)
-		speed = 0;
-	else if (speed > MAX_SPEED)
-		speed = MAX_SPEED;
+	if (pu_activate == nullptr) {
+		if (speed < 0)
+			speed = 0;
+		else if (speed > MAX_SPEED)
+			speed = MAX_SPEED;
+	}
 
     SnakeBody* currentSnakeBody = this;
     while (currentSnakeBody != nullptr) {
@@ -295,6 +278,13 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
 	if (pu_inventory.empty() || pu_activate != nullptr) {
+		// Play sound effect
+		if (no_pu_SoundEffect->state() == QMediaPlayer::PlayingState) {
+			no_pu_SoundEffect->setPosition(0);
+		}
+		else if (no_pu_SoundEffect->state() == QMediaPlayer::StoppedState) {
+			no_pu_SoundEffect->play();
+		}
 		qDebug() << "No power up to use / power up activating";
 		return;
 	}
@@ -303,4 +293,18 @@ void Snake::usePU() {
     pu_inventory.pop_front();
 	pu->activate(this);
 	qDebug() << "Snake activated: " << static_cast<int>(pu->get_type());
+}
+
+void Snake::updatePowerUpState() {
+	if (pu_activate == nullptr) {
+		for (SnakeBody* currentSnakeBody = this; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+			currentSnakeBody->current_powerUpState = PowerUp::PowerUpType::NONE;
+		}
+		return;
+	}
+	else {
+		for (SnakeBody* currentSnakeBody = this; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+			currentSnakeBody->current_powerUpState = pu_activate->get_type();
+		}
+	}
 }

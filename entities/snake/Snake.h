@@ -10,7 +10,6 @@
 class Snake final : public SnakeBody {
     Q_OBJECT
 public:
-	static const QString image_lookup[4][4];
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
 	static const int INIT_SPEED = 2;
@@ -56,6 +55,7 @@ public:
 
     void addPUToInventory(PowerUp* powerUp);
     void usePU();
+	void updatePowerUpState();
 
     int get_longest_length();
     void set_longest_length(int length);
@@ -79,6 +79,7 @@ private:
     // Power Up (PU)
     std::deque<PowerUp*> pu_inventory;
     PowerUp* pu_activate {nullptr};
+	QMediaPlayer* no_pu_SoundEffect;
 };
 
 #endif /* SNAKE_H_ */
