@@ -1,7 +1,9 @@
 #include <QMediaPlayer>
-
+#include <QDir>
+#include <QDebug>
 #include "achievements_container.h"
 #include "ui_achievements_container.h"
+#include "Achievement.h"
 
 achievements_container::achievements_container(QWidget *parent) :
     QWidget(parent),
@@ -13,6 +15,8 @@ achievements_container::achievements_container(QWidget *parent) :
 
 	selectSoundEffect = new QMediaPlayer();
 	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+    Achievement curr_achievement(":/data/stat.txt");
+    curr_ach = &curr_achievement;
 }
 
 achievements_container::~achievements_container()

@@ -494,12 +494,13 @@ void game_view::gameTickUpdate() {
         qDebug() << "GAME OVER!";
         qDebug() << "Fruits eaten:" << snake->get_num_fruits_eaten();
         qDebug() << "Survival time:" << timeCount;
-        qDebug() << "Fruits eaten:" << snake->get_longest_length();
+        qDebug() << "Longest length:" << snake->get_longest_length();
         curr_stats->update_fruits_eaten(snake->get_num_fruits_eaten());
         curr_stats->update_survival_time(timeCount);
         curr_stats->update_snake_length(snake->get_longest_length());
-
-
+        curr_stats->update_play_count(curr_stats->get_play_count() + 1);
+        //Achievement temp;
+        //temp
         // Play sound effect
         deathSoundEffect->play();
         gameOverSoundEffect->play();
@@ -539,7 +540,7 @@ void game_view::gameTickUpdate() {
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
             currentSnakeBody->refresh_pixmap();
-            curr_stats->add_in_game_distance();
+            curr_stats->update_in_game_distance(curr_stats->get_ingame_distance()+1);
         }
         update_health();
 
