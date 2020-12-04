@@ -2,6 +2,7 @@
 #include <QMediaPlayer>
 #include <QDir>
 #include <QDebug>
+#include <sstream>
 #include "achievements_container.h"
 #include "ui_achievements_container.h"
 #include "Achievement.h"
@@ -44,6 +45,20 @@ void achievements_container::stackedWidgetChanged(int index){
 	}
 }
 
+static QString parseTime(long seconds){
+    long hh = (long)( (seconds / (60*60)) % 24 );
+    int mm = (int)( (seconds / (60)) % 60 );
+    int ss = (int)( seconds%60 );
+    std::ostringstream builder;
+    if(hh<10)builder << "0";
+    builder << hh << ":";
+    if(mm<10)builder << "0";
+    builder << mm << ":";
+    if(ss<10)builder << "0";
+    builder << ss;
+    return QString::fromStdString(builder.str());
+}
+
 void achievements_container::load_achievements(){
 	QTableWidgetItem *ingame_distance_display = new QTableWidgetItem("Distance traveled");
 	ui->tableWidget->setItem(0,0,ingame_distance_display);
@@ -57,7 +72,7 @@ void achievements_container::load_achievements(){
 	QTableWidgetItem *survival_time_display = new QTableWidgetItem("Time survived");
 	ui->tableWidget->setItem(1,0,survival_time_display);
 	entries.append(survival_time_display);
-	QTableWidgetItem *survival_time_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_survival_time())));
+    QTableWidgetItem *survival_time_stat = new QTableWidgetItem(parseTime(curr_ach->get_survival_time()));
 	survival_time_stat->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	ui->tableWidget->setItem(1,1,survival_time_stat);
 	entries.append(survival_time_stat);
