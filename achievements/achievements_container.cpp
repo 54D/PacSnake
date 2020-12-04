@@ -29,12 +29,14 @@ achievements_container::achievements_container(QWidget *parent) :
 
 achievements_container::~achievements_container()
 {
+	//clear all widget items
 	delete selectSoundEffect;
     delete ui;
 }
 
 void achievements_container::load_achievements(){
 	ui->tableWidget->clear();
+	QTableWidgetItem *twi = new QTableWidgetItem("Total distance traveled");
 }
 
 /* PRIVATE, SLOTS */
