@@ -535,8 +535,8 @@ void game_view::gameTickUpdate() {
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
             currentSnakeBody->refresh_pixmap();
-        }
-        update_health();
+		}
+		update_health();
 
         /* NORMAL GHOSTS */
         for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
@@ -699,6 +699,8 @@ void game_view::gameTickUpdate() {
             // Instant death
             snake->set_health(0);
             qDebug() << "Snake hits the wall!";
+			// UI update
+			update_health();
             return;
         }
 
@@ -707,7 +709,9 @@ void game_view::gameTickUpdate() {
             if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
                 // Instant death
                 snake->set_health(0);
-                qDebug() << "Snake hits itslef";
+				qDebug() << "Snake hits itslef";
+				// UI update
+				update_health();
                 return;
             }
         }
@@ -716,7 +720,9 @@ void game_view::gameTickUpdate() {
         if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
             // Instant death
             snake->set_health(0);
-            qDebug() << "Snake (head) hits a ghost!";
+			qDebug() << "Snake (head) hits a ghost!";
+			// UI update
+			update_health();
             return;
         }
 
@@ -733,7 +739,9 @@ void game_view::gameTickUpdate() {
 
                 qDebug() << "Snake (body) hits a ghost!";
                 snake->set_relative_health(-1);
-                qDebug() << "Health" << snake->get_health() << snake->get_max_health();
+				qDebug() << "Health" << snake->get_health() << snake->get_max_health();
+				// UI update
+				update_health();
 
                 // Search for the Ghost and change its headingDirection to avoid multiple hits
                 GhostBody* collidedGhostBody = nullptr;
