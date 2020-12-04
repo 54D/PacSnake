@@ -31,16 +31,18 @@ main_container::main_container(QWidget *parent)
     ui->setupUi(this);
 
 	// Initialize subwidgets and add them to the stackedWidget.
-    game_view *gv = {new game_view};
-    ui->stackedWidget->addWidget(gv);
-    ui->stackedWidget->addWidget(new achievements_container);
+	achievements_container *av = {new achievements_container};
+	ui->stackedWidget->addWidget(av);
+	game_view *gv = new game_view(this,av->get_achievement_object());
+	ui->stackedWidget->addWidget(gv);
     ui->stackedWidget->addWidget(new credits_container);
 
 	// Connects the previous_menu() signal such that stackedWidget brings the view back to the main menu when needed.
     connect(ui->stackedWidget->widget(1), SIGNAL(previous_menu()), this, SLOT(bring_back()));
     connect(ui->stackedWidget->widget(2), SIGNAL(previous_menu()), this, SLOT(bring_back()));
-    connect(ui->stackedWidget->widget(3), SIGNAL(previous_menu()), this, SLOT(bring_back()));
-    connect(this, SIGNAL(stackedWidgetChange(int)), gv, SLOT(stackedWidgetChanged(int)));
+	connect(ui->stackedWidget->widget(3), SIGNAL(previous_menu()), this, SLOT(bring_back()));
+	connect(this, SIGNAL(stackedWidgetChange(int)), gv, SLOT(stackedWidgetChanged(int)));
+	connect(this, SIGNAL(stackedWidgetChange(int)), av, SLOT(stackedWidgetChanged(int)));
 
 	// Setup sound effect.
 	selectSoundEffect = new QMediaPlayer();
@@ -58,13 +60,13 @@ main_container::~main_container()
 void main_container::on_startButton_clicked()
 {
 	selectSoundEffect->play();
-    ui->stackedWidget->setCurrentIndex(1);
+	ui->stackedWidget->setCurrentIndex(2);
 }
 
 void main_container::on_achButton_clicked()
 {
 	selectSoundEffect->play();
-	ui->stackedWidget->setCurrentIndex(2);
+	ui->stackedWidget->setCurrentIndex(1);
 }
 
 void main_container::on_creditsButton_clicked()

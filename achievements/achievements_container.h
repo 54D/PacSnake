@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMediaPlayer>
+#include <QTableWidgetItem>
 #include "Achievement.h"
 
 namespace Ui {
@@ -31,7 +32,17 @@ public:
 	 */
 	void load_achievements();
 
+	/**
+	 * Obtains the stored Achievement object.
+	 */
+	Achievement* get_achievement_object();
+
 private slots:
+
+	/**
+	 * Handler for `stackedWidget` switching to the achievements view.
+	 */
+	void stackedWidgetChanged(int index);
 
 	/**
 	 * Handler for `back_button`.
@@ -49,6 +60,9 @@ private:
     Ui::achievements_container *ui;
 	QMediaPlayer* selectSoundEffect;
     Achievement* curr_ach;
+	QList<QTableWidgetItem*> entries;
+
+	bool backButtonPressed = false;
 };
 
 #endif // ACHIEVEMENTS_CONTAINER_H

@@ -12,6 +12,7 @@
 #include <entities/fruits_and_powerUps/PowerUp.h>
 #include "GameMap.h"
 #include "achievements/Stats.h"
+#include "achievements/Achievement.h"
 
 namespace Ui {
 class game_view;
@@ -22,7 +23,7 @@ class game_view : public QWidget
     Q_OBJECT
 
 public:
-    game_view(QWidget *parent = nullptr);
+	game_view(QWidget *parent = nullptr, Achievement *achievement = nullptr);
 	~game_view();
     void Game_start();
     static const int GAME_TICK_UPDATE_TIME = 50;
@@ -40,6 +41,9 @@ private slots:
     void on_pauseButton_clicked();
     void on_resetButton_clicked();
     void on_back_button_clicked();
+	/**
+	 * Handler for `stackedWidget` switching to the game view.
+	 */
     void stackedWidgetChanged(int index);
     void refresh_powerUp_list();
 	void update_timer();

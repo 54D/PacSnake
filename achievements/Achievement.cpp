@@ -8,7 +8,8 @@
 Achievement::Achievement(std::string path)
     :path(path)
 {
-    QFile file(QString::fromStdString(path));
+	//QFile file(QString::fromStdString(path));
+	QFile file(QString::fromStdString("D:/Projects/PacSnake/repo/data/stat.txt"));
     if(!file.open(QIODevice::ReadOnly)) {
         QMessageBox::information(0, "Achievment file error", file.errorString());
     }
@@ -16,16 +17,16 @@ Achievement::Achievement(std::string path)
     QTextStream in(&file);
     int i = 0;
     while(!in.atEnd()) {
-        QString line = in.readLine();
-        //QStringList fields = line.split("\n");
-        qDebug() << line;
+		QString line = in.readLine();
+		qDebug() << line;
+		qDebug() << std::stoi(line.toStdString());
         switch (i) {
-            case 0: update_in_game_distance(std::stoi(line.toStdString())); break;
+			case 0: update_in_game_distance(std::stoi(line.toStdString())); break;
             case 1: update_survival_time(std::stoi(line.toStdString())); break;
             case 2: update_fruits_eaten(std::stoi(line.toStdString())); break;
             case 3: update_snake_length(std::stoi(line.toStdString())); break;
         }
-        i++;
+		i++;
     }
 
     file.close();

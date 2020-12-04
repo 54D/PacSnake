@@ -48,7 +48,7 @@ static QString parseTime(long seconds){
     return QString::fromStdString(builder.str());
 }
 
-game_view::game_view(QWidget *parent) :
+game_view::game_view(QWidget *parent, Achievement *achievement) :
     QWidget(parent),
     ui(new Ui::game_view)
 {
@@ -86,8 +86,7 @@ game_view::game_view(QWidget *parent) :
     ui->volume_control->setIconSize(QSize(32,32));
     ui->vol_Slider->setVisible(false);
 
-    Stats gamestats;
-    curr_stats = &gamestats;
+	curr_stats = achievement;
 }
 
 game_view::~game_view()
@@ -390,8 +389,7 @@ void game_view::on_pauseButton_clicked(){
         timer->start(1000);
         gameTickTimer->start(GAME_TICK_UPDATE_TIME);
     }
-    isPlaying = !isPlaying;
-    // set keyboard input boolean
+	isPlaying = !isPlaying;
 }
 
 void game_view::on_resetButton_clicked(){
