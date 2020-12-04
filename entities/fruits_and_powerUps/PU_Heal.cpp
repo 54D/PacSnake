@@ -38,6 +38,8 @@ void PU_Heal::activate(Snake* snake) {
 
 	// Set activated power up
 	snake->set_pu_activate(this);
+	snake->updatePowerUpState();
+
 	deactivateCountDown = new QTimer(this);
 	connect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	deactivateCountDown->start(DURATION);
@@ -52,6 +54,8 @@ void PU_Heal::deactivate() {
 	deactivateCountDown->stop();
 
 	pu_owner->set_pu_activate(nullptr);
+	pu_owner->updatePowerUpState();
+
 	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	delete deactivateCountDown;
 }

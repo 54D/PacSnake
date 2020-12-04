@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QMediaPlayer>
+#include <random>
 
 #include <entities/snake/Snake.h>
 #include <entities/ghosts/NormalGhost.h>
@@ -57,6 +58,7 @@ signals:
 private:
     QGraphicsScene scene;
     Ui::game_view *ui;
+	int random(int lower, int upper) const;
     bool eventFilter(QObject*, QEvent*) override;
     void setup_view();
     void reset_view();
@@ -71,7 +73,6 @@ private:
 	bool next_move_snake_collision(int row, int col, MovingEntity::Direction headingDirection) const;
 	// Detect will the Entity collide with the ghost on its next movemebt
 	bool next_move_ghost_collision(int row, int col, MovingEntity::Direction headingDirection) const;
-
 
 	bool is_game_over() const;
 	void remove_game_content();

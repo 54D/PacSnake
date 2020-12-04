@@ -42,6 +42,7 @@ void PU_Dash::activate(Snake* snake) {
 
 	// Set activated power up
 	snake->set_pu_activate(this);
+	snake->updatePowerUpState();
 
 	deactivateCountDown = new QTimer(this);
 	connect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
@@ -57,6 +58,8 @@ void PU_Dash::deactivate() {
 	deactivateCountDown->stop();
     // Reset speed
 	pu_owner->set_pu_activate(nullptr);
+	pu_owner->updatePowerUpState();
+
 	int newSpeed = pu_owner->calculate_level_speed();
 	pu_owner->set_speed(newSpeed);
 

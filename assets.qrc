@@ -48,5 +48,47 @@
         <file>assets/sprite/full-health.png</file>
         <file>assets/volume_control.png</file>
         <file>data/stat.txt</file>
+        <file>assets/sprite/snake-body-horizontal-dashing.png</file>
+        <file>assets/sprite/snake-body-horizontal-healing.png</file>
+        <file>assets/sprite/snake-body-horizontal-shielding.png</file>
+        <file>assets/sprite/snake-body-vertical-dashing.png</file>
+        <file>assets/sprite/snake-body-vertical-healing.png</file>
+        <file>assets/sprite/snake-body-vertical-shielding.png</file>
+        <file>assets/sprite/snake-corner-down-left-dashing.png</file>
+        <file>assets/sprite/snake-corner-down-left-healing.png</file>
+        <file>assets/sprite/snake-corner-down-left-shielding.png</file>
+        <file>assets/sprite/snake-corner-down-right-healing.png</file>
+        <file>assets/sprite/snake-corner-up-left-dashing.png</file>
+        <file>assets/sprite/snake-corner-up-left-healing.png</file>
+        <file>assets/sprite/snake-corner-up-left-shielding.png</file>
+        <file>assets/sprite/snake-corner-up-right-dashing.png</file>
+        <file>assets/sprite/snake-corner-up-right-healing.png</file>
+        <file>assets/sprite/snake-corner-up-right-shielding.png</file>
+        <file>assets/sprite/snake-head-down-dashing.png</file>
+        <file>assets/sprite/snake-head-down-healing.png</file>
+        <file>assets/sprite/snake-head-down-shielding.png</file>
+        <file>assets/sprite/snake-head-left-dashing.png</file>
+        <file>assets/sprite/snake-head-left-healing.png</file>
+        <file>assets/sprite/snake-head-left-shielding.png</file>
+        <file>assets/sprite/snake-head-right-dashing.png</file>
+        <file>assets/sprite/snake-head-right-healing.png</file>
+        <file>assets/sprite/snake-head-right-shielding.png</file>
+        <file>assets/sprite/snake-head-up-dashing.png</file>
+        <file>assets/sprite/snake-head-up-healing.png</file>
+        <file>assets/sprite/snake-head-up-shielding.png</file>
+        <file>assets/sprite/snake-tail-down-dashing.png</file>
+        <file>assets/sprite/snake-tail-down-shielding.png</file>
+        <file>assets/sprite/snake-tail-healing.png</file>
+        <file>assets/sprite/snake-tail-left-dashing.png</file>
+        <file>assets/sprite/snake-tail-left-healing.png</file>
+        <file>assets/sprite/snake-tail-left-shielding.png</file>
+        <file>assets/sprite/snake-tail-right-dashing.png</file>
+        <file>assets/sprite/snake-tail-right-healing.png</file>
+        <file>assets/sprite/snake-tail-right-shielding.png</file>
+        <file>assets/sprite/snake-tail-up-dashing.png</file>
+        <file>assets/sprite/snake-tail-up-healing.png</file>
+        <file>assets/sprite/snake-tail-up-shielding.png</file>
+        <file>assets/sprite/snake-corner-down-right-shielding.png</file>
+        <file>assets/sprite/snake-corner-down-right-dashing.png</file>
     </qresource>
 </RCC>

@@ -37,6 +37,8 @@ void PU_Shield::activate(Snake *snake) {
 	snake->set_ghost_immunity(true);
 	// Set activated power up
 	snake->set_pu_activate(this);
+	snake->updatePowerUpState();
+
 	deactivateCountDown = new QTimer(this);
 	connect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	deactivateCountDown->start(DURATION);
@@ -51,7 +53,10 @@ void PU_Shield::deactivate() {
 	deactivateCountDown->stop();
 	// Reset immunity
 	pu_owner->set_pu_activate(nullptr);
+	pu_owner->updatePowerUpState();
+
 	pu_owner->set_ghost_immunity(false);
+
 	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	delete deactivateCountDown;
 }
