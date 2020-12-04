@@ -30,7 +30,7 @@ Achievement::Achievement(std::string path)
 
     file.close();
 }
-
+/*
 void Achievement::update_achievement(int type, int value){
     QFile file(QString::fromStdString(path));
           if(file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
@@ -45,3 +45,4 @@ void Achievement::update_achievement(int type, int value){
               qDebug() << "Writing finished";
           }
 }
+*/
