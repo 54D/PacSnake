@@ -52,3 +52,15 @@ void Achievement::update_achievement_file(){
     writefile.close();
     qDebug() << "Writing file finished";
 }
+
+void Achievement::compare_stat(Stats temp){
+    if (temp.get_survival_time() > this->get_survival_time()){
+        this->update_survival_time(temp.get_survival_time());
+    }
+    if (temp.get_fruits_eaten() > this->get_fruits_eaten()){
+        this->update_fruits_eaten(temp.get_fruits_eaten());
+    }
+    if (temp.get_longest_snake_length() > this->get_longest_snake_length()){
+        this->update_snake_length(temp.get_longest_snake_length());
+    }
+}
