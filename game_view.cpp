@@ -439,6 +439,7 @@ void game_view::setup_view(){
     ui->graphicsView->installEventFilter(this);
     update_health();
     connect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
+	qDebug() << "setup_view";
 }
 
 void game_view::reset_view(){
@@ -453,15 +454,16 @@ void game_view::reset_view(){
 		disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
     }
     remove_game_content();
+	qDebug() << "reset_view";
 }
 
 void game_view::stackedWidgetChanged(int index){
-    if(index!=1&&backButtonPressed){
-        backButtonPressed = false;
-        reset_view();
-    }else{
-        setup_view();
-    }
+	if(index==2){
+		setup_view();
+	}else if(backButtonPressed){
+		backButtonPressed = false;
+		reset_view();
+	}
 }
 
 void game_view::refresh_powerUp_list(){
@@ -505,6 +507,7 @@ void game_view::refresh_powerUp_list(){
 }
 
 void game_view::update_timer(){
+	qDebug() << "Update timer";
     ++timeCount;
     ui->Timer_label->setText(parseTime(timeCount));
 }
