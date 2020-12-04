@@ -42,7 +42,7 @@ Achievement::Achievement(std::string path)
     file.close();
 }
 
-void Achievement::update_achievement_stat(){
+void Achievement::update_achievement_file(){
     QFile writefile(QString::fromStdString(path));
     writefile.open(QFile::WriteOnly);
     //Streaming text to the file
@@ -50,41 +50,5 @@ void Achievement::update_achievement_stat(){
     stream << get_ingame_distance() << endl << get_survival_time() << endl << get_fruits_eaten() << endl << get_longest_snake_length() << endl << get_play_count();
     //qDebug() << get_ingame_distance() << get_survival_time() << get_fruits_eaten();
     writefile.close();
-    qDebug() << "Writing finished";
-
+    qDebug() << "Writing file finished";
 }
-
-void Achievement::compare_stat(Stats temp){
-    if (temp.get_ingame_distance() > this->get_ingame_distance()){
-        this->update_in_game_distance(temp.get_ingame_distance());
-    }
-    if (temp.get_survival_time() > this->get_survival_time()){
-        this->update_survival_time(temp.get_survival_time());
-    }
-    if (temp.get_fruits_eaten() > this->get_fruits_eaten()){
-        this->update_fruits_eaten(temp.get_fruits_eaten());
-    }
-    if (temp.get_longest_snake_length() > this->get_longest_snake_length()){
-        this->update_snake_length(temp.get_longest_snake_length());
-    }
-    if (temp.get_play_count() > this->get_play_count()){
-        this->update_play_count(temp.get_play_count());
-    }
-}
-
-/*
-void Achievement::update_achievement(int type, int value){
-    QFile file(QString::fromStdString(path));
-          if(file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
-          {
-              //Streaming text to the file
-              QTextStream stream(&file);
-
-              //stream << "Center Point: " << iter_result[0] << "  " << iter_result[1]
-              //          << "  " << iter_result[2] << " Rotation: " << iter_result[3] <<'\n';
-              //
-              file.close();
-              qDebug() << "Writing finished";
-          }
-}
-*/

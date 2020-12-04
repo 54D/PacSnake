@@ -90,7 +90,6 @@ void GameMap::load_terrian_map(const std::string& filename) {
                 case TERRAIN_BLOCKED_CHAR:
                     terrain_map[row][col] = TerrainState::BLOCKED;
                     // Create obstacle object
-                    // TODO: Add image
                     Entity* temp_obstacle = new Entity(row, col);
                     obstacle.push_back(temp_obstacle);
                     break;
