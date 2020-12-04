@@ -293,11 +293,12 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
 }
 
 
-// TODO
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
-    if (pu_inventory.empty() || pu_activate != nullptr)
-        return;
+	if (pu_inventory.empty() || pu_activate != nullptr) {
+		qDebug() << "No power up to use / power up activating";
+		return;
+	}
     
     PowerUp* pu = pu_inventory.front();
     pu_inventory.pop_front();
