@@ -37,10 +37,10 @@ achievements_container::~achievements_container()
 }
 
 void achievements_container::stackedWidgetChanged(int index){
-	if(index!=2&&backButtonPressed){
-		backButtonPressed = false;
-	}else{
+	if(index==1){
 		load_achievements();
+	}else if(backButtonPressed){
+		backButtonPressed = false;
 	}
 }
 
