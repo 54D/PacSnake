@@ -2,6 +2,7 @@
 #include <QMediaPlayer>
 #include <QDir>
 #include <QDebug>
+#include <sstream>
 #include "achievements_container.h"
 #include "ui_achievements_container.h"
 #include "Achievement.h"
@@ -37,11 +38,26 @@ achievements_container::~achievements_container()
 }
 
 void achievements_container::stackedWidgetChanged(int index){
-	if(index==1){
-		load_achievements();
-	}else if(backButtonPressed){
+	if(index!=2&&backButtonPressed){
 		backButtonPressed = false;
+	}else{
+		load_achievements();
 	}
+}
+
+// util
+static QString parseTime(long seconds){
+    long hh = (long)( (seconds / (60*60)) % 24 );
+    int mm = (int)( (seconds / (60)) % 60 );
+    int ss = (int)( seconds%60 );
+    std::ostringstream builder;
+    if(hh<10)builder << "0";
+    builder << hh << ":";
+    if(mm<10)builder << "0";
+    builder << mm << ":";
+    if(ss<10)builder << "0";
+    builder << ss;
+    return QString::fromStdString(builder.str());
 }
 
 void achievements_container::load_achievements(){
@@ -79,7 +95,7 @@ void achievements_container::load_achievements(){
     QTableWidgetItem *play_count_display = new QTableWidgetItem("Longest time survived");
 	ui->tableWidget->setItem(4,0,play_count_display);
 	entries.append(play_count_display);
-    QTableWidgetItem *play_count_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_survival_time())));
+    QTableWidgetItem *play_count_stat = new QTableWidgetItem(parseTime(curr_ach->get_survival_time()));
 	play_count_stat->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	ui->tableWidget->setItem(4,1,play_count_stat);
 	entries.append(play_count_stat);
