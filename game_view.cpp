@@ -564,6 +564,7 @@ void game_view::gameTickUpdate() {
         //Set the location of the file to the current path
         QString temp = QDir::currentPath() + "/stat.txt";
         Achievement temp2(temp.toStdString());
+        temp2.compare_stat(*curr_stats);
         temp2.update_achievement_file();
 
         // Play sound effect
