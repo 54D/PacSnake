@@ -45,7 +45,6 @@ MovingEntity::Direction MovingEntity::get_rotated_headingDirection() {
 /* PROTECTED */
 
 void MovingEntity::set_random_headingDirection() {
-    srand(time(NULL));
     switch (rand() % 4) {
 	case 0: headingDirection = Direction::NORTH;	break;
 	case 1: headingDirection = Direction::EAST;		break;
