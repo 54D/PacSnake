@@ -9,6 +9,8 @@ class Achievement : public Stats
 public:
     Achievement(std::string);
     void update_achievement();
+    void update_achievement_stat();
+    void compare_stat(Stats temp);
 
 private:
     std::string path;

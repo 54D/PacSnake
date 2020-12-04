@@ -25,7 +25,8 @@ achievements_container::achievements_container(QWidget *parent) :
 	// set sound effects
 	selectSoundEffect = new QMediaPlayer();
 	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
-	curr_ach = new Achievement(":/data/stat.txt");
+    QString temp = QDir::currentPath() + "/stat.txt";
+    curr_ach = new Achievement(temp.toStdString());
 }
 
 achievements_container::~achievements_container()

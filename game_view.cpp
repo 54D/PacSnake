@@ -6,6 +6,7 @@
 #include <string>
 
 #include <QDebug>
+#include <QDir>
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -544,6 +545,11 @@ void game_view::gameTickUpdate() {
         curr_stats->update_survival_time(timeCount);
         curr_stats->update_snake_length(snake->get_longest_length());
         curr_stats->update_play_count(curr_stats->get_play_count() + 1);
+
+        QString temp = QDir::currentPath() + "/stat.txt";
+        Achievement temp2(temp.toStdString());
+        temp2.compare_stat(*curr_stats);
+        temp2.update_achievement_stat();
         //Achievement temp;
         //temp
         // Play sound effect
@@ -715,6 +721,7 @@ void game_view::gameTickUpdate() {
 
 			// Move forward
 			snake->move_forward();
+            curr_stats->update_in_game_distance(curr_stats->get_ingame_distance()+1);
 			if (!allowKeyboardInput)
 				allowKeyboardInput = true;
 
@@ -727,7 +734,6 @@ void game_view::gameTickUpdate() {
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
             currentSnakeBody->refresh_pixmap();
-            curr_stats->update_in_game_distance(curr_stats->get_ingame_distance()+1);
         }
 		// Update health UI
         update_health();
