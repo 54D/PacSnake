@@ -14,6 +14,7 @@
 #include <QMediaPlayer>
 #include <QTimer>
 
+#include "achievements/Stats.h"
 #include "game_view.h"
 #include "ui_game_view.h"
 #include "main_container.h"
@@ -84,6 +85,9 @@ game_view::game_view(QWidget *parent) :
     ui->volume_control->setIcon(pixmap);
     ui->volume_control->setIconSize(QSize(32,32));
     ui->vol_Slider->setVisible(false);
+
+    Stats gamestats;
+    curr_stats = &gamestats;
 }
 
 game_view::~game_view()
@@ -529,6 +533,15 @@ void game_view::gameTickUpdate() {
 		allowKeyboardInput = false;
 
         qDebug() << "GAME OVER!";
+        qDebug() << "Fruits eaten:" << snake->get_num_fruits_eaten();
+        qDebug() << "Survival time:" << timeCount;
+        qDebug() << "Longest length:" << snake->get_longest_length();
+        curr_stats->update_fruits_eaten(snake->get_num_fruits_eaten());
+        curr_stats->update_survival_time(timeCount);
+        curr_stats->update_snake_length(snake->get_longest_length());
+        curr_stats->update_play_count(curr_stats->get_play_count() + 1);
+        //Achievement temp;
+        //temp
         // Play sound effect
         deathSoundEffect->play();
         gameOverSoundEffect->play();
@@ -710,6 +723,7 @@ void game_view::gameTickUpdate() {
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             currentSnakeBody->get_pixmap()->setOffset(currentSnakeBody->get_col() * 32, currentSnakeBody->get_row() * 32);
             currentSnakeBody->refresh_pixmap();
+            curr_stats->update_in_game_distance(curr_stats->get_ingame_distance()+1);
         }
 		// Update health UI
         update_health();
@@ -1042,6 +1056,9 @@ void game_view::gameTickUpdate() {
         // Check if snake collide with wall
         if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
             // Instant death
+            if (snake->get_length() > snake->get_longest_length()){
+                snake->set_longest_length(snake->get_length());
+            }
             snake->set_health(0);
             qDebug() << "Snake hits the wall!";
 			// UI update
@@ -1053,6 +1070,9 @@ void game_view::gameTickUpdate() {
         for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             if (snake->get_row() == currentSnakeBody->get_row() && snake->get_col() == currentSnakeBody->get_col()) {
                 // Instant death
+                if (snake->get_length() > snake->get_longest_length()){
+                    snake->set_longest_length(snake->get_length());
+                }
                 snake->set_health(0);
 				qDebug() << "Snake hits itslef";
 				// UI update
@@ -1064,6 +1084,9 @@ void game_view::gameTickUpdate() {
         // Check if snake (head) collide with ghosts
 		if (!snake->is_ghost_immunity() && game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
             // Instant death
+            if (snake->get_length() > snake->get_longest_length()){
+                snake->set_longest_length(snake->get_length());
+            }
             snake->set_health(0);
 			qDebug() << "Snake (head) hits a ghost!";
 			// UI update
@@ -1074,6 +1097,10 @@ void game_view::gameTickUpdate() {
         // Check if snake (body) collide with ghosts
 		for (SnakeBody* currentSnakeBody = snake->get_next(); !snake->is_ghost_immunity() && currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+                //Update max length
+                if (snake->get_length() > snake->get_longest_length()){
+                    snake->set_longest_length(snake->get_length());
+                }
                 // Play sound effecct
                 if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
                     hurtSoundEffect->setPosition(0);

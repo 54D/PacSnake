@@ -57,6 +57,9 @@ public:
     void addPUToInventory(PowerUp* powerUp);
     void usePU();
 
+    int get_longest_length();
+    void set_longest_length(int length);
+
 protected:
     //virtual QPixmap get_pixmap() override;
 
@@ -69,6 +72,7 @@ private:
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};
 	int num_fruits_eaten {0};
+    int longest_length{INIT_LENGTH};
 
 	// The snake body only will not be hitted by the ghost
 	bool ghost_immunity {false};

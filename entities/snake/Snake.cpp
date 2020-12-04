@@ -40,7 +40,7 @@ Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection,
 		this->length = MAX_LENGTH;
 	else
 		this->length = length;
-
+    longest_length = length;
 	// Initialise SnakeBody by creating a linked list
     int temp_row = row;
     int temp_col = col;
@@ -101,6 +101,14 @@ const PowerUp* Snake::get_pu_activate() const {
 
 bool Snake::is_ghost_immunity() const {
 	return ghost_immunity;
+}
+
+int Snake::get_longest_length(){
+    return longest_length;
+}
+
+void Snake::set_longest_length(int length){
+    longest_length = length;
 }
 
 void Snake::set_headingDirection(Direction headingDirection) {

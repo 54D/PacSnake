@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMediaPlayer>
+#include "Achievement.h"
 
 namespace Ui {
 class achievements_container;
@@ -47,7 +48,7 @@ signals:
 private:
     Ui::achievements_container *ui;
 	QMediaPlayer* selectSoundEffect;
-
+    Achievement* curr_ach;
 };
 
 #endif // ACHIEVEMENTS_CONTAINER_H

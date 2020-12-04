@@ -11,6 +11,7 @@
 #include <entities/fruits_and_powerUps/Fruit.h>
 #include <entities/fruits_and_powerUps/PowerUp.h>
 #include "GameMap.h"
+#include "achievements/Stats.h"
 
 namespace Ui {
 class game_view;
@@ -98,6 +99,9 @@ private:
 	QMediaPlayer* hurtSoundEffect;
 	QMediaPlayer* deathSoundEffect;
 	QMediaPlayer* gameOverSoundEffect;
+
+    //achievement
+    Stats* curr_stats;
 };
 
 #endif // GAME_VIEW_H

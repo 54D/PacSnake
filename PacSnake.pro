@@ -11,6 +11,7 @@ CONFIG += c++11
 
 SOURCES += \
     GameMap.cpp \
+    achievements/Stats.cpp \
     achievements/Achievement.cpp \
     achievements/achievements_container.cpp \
     credits/credits_container.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
 
 HEADERS += \
     GameMap.h \
+    achievements/Stats.h \
     achievements/Achievement.h \
     achievements/achievements_container.h \
     credits/credits_container.h \
@@ -64,9 +66,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-DISTFILES += \
-    data/stat.yml \
 
 RESOURCES += \
     assets.qrc
