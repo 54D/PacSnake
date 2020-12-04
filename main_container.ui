@@ -191,7 +191,7 @@ color: rgb(255, 255, 255);
 background-color: rgb(48, 48, 48);</string>
      </property>
      <property name="text">
-      <string>Credits</string>
+      <string>Statistics</string>
      </property>
     </widget>
     <widget class="QLabel" name="imageLabel">
