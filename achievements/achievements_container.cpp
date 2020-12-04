@@ -6,7 +6,7 @@
 /* PUBLIC */
 
 achievements_container::achievements_container(QWidget *parent) :
-    QWidget(parent),
+	QWidget(parent),
     ui(new Ui::achievements_container)
 {
     ui->setupUi(this);
