@@ -27,7 +27,7 @@ const QString SnakeBody::image_lookup[4][4][4] {
 			":/assets/sprite/snake-tail-right.png",
 		}
 	},
-	{	// Dash Power Up
+	{	// Dash power Up
 		{
 			":/assets/sprite/snake-head-up-dashing.png",
 			":/assets/sprite/snake-head-down-dashing.png",
@@ -51,7 +51,7 @@ const QString SnakeBody::image_lookup[4][4][4] {
 			":/assets/sprite/snake-tail-right-dashing.png",
 		}
 	},
-	{	// Heal Power Up
+	{	// Heal power Up
 		{
 			":/assets/sprite/snake-head-up-healing.png",
 			":/assets/sprite/snake-head-down-healing.png",
@@ -75,7 +75,7 @@ const QString SnakeBody::image_lookup[4][4][4] {
 			":/assets/sprite/snake-tail-right-healing.png",
 		}
 	},
-	{	// Shield Power Up
+	{	// Shield power Up
 		{
 			":/assets/sprite/snake-head-up-shielding.png",
 			":/assets/sprite/snake-head-down-shielding.png",
@@ -103,53 +103,53 @@ const QString SnakeBody::image_lookup[4][4][4] {
 
 
 SnakeBody* SnakeBody::get_prev() const {
-    return prev;
+	return prev;
 }
 
 SnakeBody* SnakeBody::get_next() const {
-    return next;
+	return next;
 }
 
 void SnakeBody::refresh_pixmap(){
 	int currentPUState = static_cast<int>(current_powerUpState);
-    int pic_ref = -1;
-    if (this->get_next() == nullptr) pic_ref = 3;
+	int pic_ref = -1;
+	if (this->get_next() == nullptr) pic_ref = 3;
 	if (this->get_prev() == nullptr) pic_ref = 0;
-    if (this->get_prev() != nullptr && this->get_next() != nullptr){
-        if (this->get_next()->get_headingDirection()!= this->get_headingDirection()) pic_ref = 2;
-    }
-    if (pic_ref == -1) pic_ref = 1;
-    int curr_dir = -1;
-    if (this->get_headingDirection() == Direction::NORTH) curr_dir = 0;
-    if (this->get_headingDirection() == Direction::SOUTH) curr_dir = 1;
-    if (this->get_headingDirection() == Direction::WEST) curr_dir = 2;
-    if (this->get_headingDirection() == Direction::EAST) curr_dir = 3;
+	if (this->get_prev() != nullptr && this->get_next() != nullptr){
+		if (this->get_next()->get_headingDirection()!= this->get_headingDirection()) pic_ref = 2;
+	}
+	if (pic_ref == -1) pic_ref = 1;
+	int curr_dir = -1;
+	if (this->get_headingDirection() == Direction::NORTH) curr_dir = 0;
+	if (this->get_headingDirection() == Direction::SOUTH) curr_dir = 1;
+	if (this->get_headingDirection() == Direction::WEST) curr_dir = 2;
+	if (this->get_headingDirection() == Direction::EAST) curr_dir = 3;
 
-    if (pic_ref == 1){
-        if (curr_dir == 0 || curr_dir == 1){
+	if (pic_ref == 1){
+		if (curr_dir == 0 || curr_dir == 1){
 			QPixmap pic(SnakeBody::image_lookup[currentPUState][1][0]);
-            this->get_pixmap()->setPixmap(pic);
-        }else{
+			this->get_pixmap()->setPixmap(pic);
+		}else{
 			QPixmap pic(SnakeBody::image_lookup[currentPUState][1][1]);
-            this->get_pixmap()->setPixmap(pic);
-        }
-    }else if (pic_ref == 2){
-        int dir = -1;
-        if (this->get_headingDirection() == Direction::EAST && this->get_next()->get_headingDirection() == Direction::NORTH) dir = 3;
-        if (this->get_headingDirection() == Direction::EAST && this->get_next()->get_headingDirection() == Direction::SOUTH) dir = 1;
-        if (this->get_headingDirection() == Direction::WEST && this->get_next()->get_headingDirection() == Direction::NORTH) dir = 2;
-        if (this->get_headingDirection() == Direction::WEST && this->get_next()->get_headingDirection() == Direction::SOUTH) dir = 0;
-        if (this->get_headingDirection() == Direction::NORTH && this->get_next()->get_headingDirection() == Direction::EAST) dir = 0;
-        if (this->get_headingDirection() == Direction::NORTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 1;
-        if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::EAST) dir = 2;
-        if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 3;
+			this->get_pixmap()->setPixmap(pic);
+		}
+	}else if (pic_ref == 2){
+		int dir = -1;
+		if (this->get_headingDirection() == Direction::EAST && this->get_next()->get_headingDirection() == Direction::NORTH) dir = 3;
+		if (this->get_headingDirection() == Direction::EAST && this->get_next()->get_headingDirection() == Direction::SOUTH) dir = 1;
+		if (this->get_headingDirection() == Direction::WEST && this->get_next()->get_headingDirection() == Direction::NORTH) dir = 2;
+		if (this->get_headingDirection() == Direction::WEST && this->get_next()->get_headingDirection() == Direction::SOUTH) dir = 0;
+		if (this->get_headingDirection() == Direction::NORTH && this->get_next()->get_headingDirection() == Direction::EAST) dir = 0;
+		if (this->get_headingDirection() == Direction::NORTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 1;
+		if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::EAST) dir = 2;
+		if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 3;
 		QPixmap pic(SnakeBody::image_lookup[currentPUState][pic_ref][dir]);
-        this->get_pixmap()->setPixmap(pic);
-    }else{
+		this->get_pixmap()->setPixmap(pic);
+	}else{
 		QPixmap pic(SnakeBody::image_lookup[currentPUState][pic_ref][curr_dir]);
-        this->get_pixmap()->setPixmap(pic);
-    }
-    return;
+		this->get_pixmap()->setPixmap(pic);
+	}
+	return;
 }
 
 /* PROTECTED */
@@ -170,8 +170,8 @@ void SnakeBody::move_forward() {
 }
 
 void SnakeBody::remove_tail() {
-    if (next->next != nullptr)
-        next->remove_tail();
-    delete next;
-    next = nullptr;
+	if (next->next != nullptr)
+		next->remove_tail();
+	delete next;
+	next = nullptr;
 }

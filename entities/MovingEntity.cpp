@@ -4,6 +4,14 @@
 
 /* PUBLIC */
 
+MovingEntity::MovingEntity() {}
+
+MovingEntity::MovingEntity(int row, int col, int speed, Direction headingDirection) :
+        Entity(row, col), speed(speed), headingDirection(headingDirection) {}
+
+
+MovingEntity::~MovingEntity() {}
+
 int MovingEntity::get_speed() const {
     return speed;
 }
@@ -35,14 +43,6 @@ MovingEntity::Direction MovingEntity::get_rotated_headingDirection() {
 }
 
 /* PROTECTED */
-
-MovingEntity::MovingEntity() {}
-
-MovingEntity::MovingEntity(int row, int col, int speed, Direction headingDirection) :
-        Entity(row, col), speed(speed), headingDirection(headingDirection) {}
-
-
-MovingEntity::~MovingEntity() {}
 
 void MovingEntity::set_random_headingDirection() {
     srand(time(NULL));
