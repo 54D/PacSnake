@@ -24,9 +24,20 @@ class game_view : public QWidget
     Q_OBJECT
 
 public:
+	/**
+	 * Constructor for game_view
+	 * @param	parent			This constructor must accept its parent node as a parameter as specified by Qt.
+	 * @param	achievement		The achievement object to track the data.
+	*/
 	game_view(QWidget *parent = nullptr, Achievement *achievement = nullptr);
+	/**
+	 * Destructor for game_view
+	*/
 	~game_view();
-    void Game_start();
+
+	/**
+	 * Public const. 
+	*/
 	static const int GAME_TICK_UPDATE_TIME = 10;
 
 	static const int NUM_OF_NORMAL_GHOST = 4;
@@ -35,6 +46,10 @@ public:
 	static const int MAX_NUM_OF_POWERUP = 2;
 
 protected:
+	/**
+	 * Handler for key presses
+	 * @param	even	The event to process.
+	*/
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
