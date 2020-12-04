@@ -19,6 +19,11 @@ public:
 	};
 	static const char TERRAIN_EMPTY_CHAR {' '};
 	static const char TERRAIN_BLOCKED_CHAR {'#'};
+	struct terrain_info {
+		int row;
+		int col;
+		GameMap::TerrainState state;
+	};
 
 	/**
 	 * Constructor for GameMap.
@@ -60,6 +65,7 @@ public:
 	 * @param	filename	Path of the resource.
 	 */
 	void load_terrian_map(const std::string& filename);
+	void update_terrain_map(std::vector<GameMap::terrain_info>& game_map_info);
 
 private:
 

@@ -24,12 +24,12 @@ public:
     game_view(QWidget *parent = nullptr);
 	~game_view();
     void Game_start();
-    static const QString image_lookup[4][4];
     static const int GAME_TICK_UPDATE_TIME = 50;
 
 	static const int NUM_OF_NORMAL_GHOST = 4;
 	static const int NUM_OF_BIG_GHOST = 2;
 	static const int MAX_MUN_OF_FRUIT = 15;
+	static const int MAX_NUM_OF_POWERUP = 2;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -51,6 +51,7 @@ signals:
     void snake_collided(QList<QGraphicsItem*> collisions);
     void previous_menu();
 	void game_over_signal();
+	void powerUp_added();
 
 private:
     QGraphicsScene scene;
@@ -60,10 +61,16 @@ private:
     void reset_view();
     void render_game_map();
 
+	void powerUp_instantiation();
 	void fruit_instantiation();
 
-	// Detect will the Entity collide with the wall or ghost in it's next movement
+	// Detect will the Entity collide with the wall or ghost on its next movement
 	bool next_move_ghost_wall_collision(int row, int col, MovingEntity::Direction headingDirection) const;
+	// Detect will the Entity collide with the snake on its next movement
+	bool next_move_snake_collision(int row, int col, MovingEntity::Direction headingDirection) const;
+	// Detect will the Entity collide with the ghost on its next movemebt
+	bool next_move_ghost_collision(int row, int col, MovingEntity::Direction headingDirection) const;
+
 
 	bool is_game_over() const;
 	void remove_game_content();
@@ -76,6 +83,7 @@ private:
 	QList<Fruit*> fruits;
 	QList<PowerUp*> powerups;
 
+	bool allowKeyboardInput {false};
     bool isPlaying = false;
 	QTimer* gameTickTimer;
 	long long gameTickCount {0};
@@ -86,6 +94,7 @@ private:
     //QGraphicsPixmapItem *snake_pixmap;
     QList<QGraphicsPixmapItem*> terrain_pixmaps;
 	QMediaPlayer* selectSoundEffect;
+	QMediaPlayer* eatSoundEffect;
 	QMediaPlayer* hurtSoundEffect;
 	QMediaPlayer* deathSoundEffect;
 	QMediaPlayer* gameOverSoundEffect;

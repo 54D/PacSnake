@@ -27,10 +27,10 @@ void SnakeBody::refresh_pixmap(){
 
     if (pic_ref == 1){
         if (curr_dir == 0 || curr_dir == 1){
-            QPixmap pic(game_view::image_lookup[1][0]);
+			QPixmap pic(Snake::image_lookup[1][0]);
             this->get_pixmap()->setPixmap(pic);
         }else{
-            QPixmap pic(game_view::image_lookup[1][1]);
+			QPixmap pic(Snake::image_lookup[1][1]);
             this->get_pixmap()->setPixmap(pic);
         }
     }else if (pic_ref == 2){
@@ -43,10 +43,10 @@ void SnakeBody::refresh_pixmap(){
         if (this->get_headingDirection() == Direction::NORTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 1;
         if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::EAST) dir = 2;
         if (this->get_headingDirection() == Direction::SOUTH && this->get_next()->get_headingDirection() == Direction::WEST) dir = 3;
-        QPixmap pic(game_view::image_lookup[pic_ref][dir]);
+		QPixmap pic(Snake::image_lookup[pic_ref][dir]);
         this->get_pixmap()->setPixmap(pic);
     }else{
-        QPixmap pic(game_view::image_lookup[pic_ref][curr_dir]);
+		QPixmap pic(Snake::image_lookup[pic_ref][curr_dir]);
         this->get_pixmap()->setPixmap(pic);
     }
     return;
