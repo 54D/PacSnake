@@ -2,7 +2,6 @@
 #include <QMediaPlayer>
 #include <QDir>
 #include <QDebug>
-#include <sstream>
 #include "achievements_container.h"
 #include "ui_achievements_container.h"
 #include "Achievement.h"
@@ -25,7 +24,7 @@ achievements_container::achievements_container(QWidget *parent) :
 
 	// set sound effects
 	selectSoundEffect = new QMediaPlayer();
-	selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
+    selectSoundEffect->setMedia(QUrl("qrc:/assets/sound/select.wav"));
     QString temp = QDir::currentPath() + "/stat.txt";
     curr_ach = new Achievement(temp.toStdString());
 }
@@ -38,45 +37,32 @@ achievements_container::~achievements_container()
 }
 
 void achievements_container::stackedWidgetChanged(int index){
-	if(index==1){
-		load_achievements();
-	}else if(backButtonPressed){
+	if(index!=2&&backButtonPressed){
 		backButtonPressed = false;
+	}else{
+		load_achievements();
 	}
 }
 
-static QString parseTime(long seconds){
-    long hh = (long)( (seconds / (60*60)) % 24 );
-    int mm = (int)( (seconds / (60)) % 60 );
-    int ss = (int)( seconds%60 );
-    std::ostringstream builder;
-    if(hh<10)builder << "0";
-    builder << hh << ":";
-    if(mm<10)builder << "0";
-    builder << mm << ":";
-    if(ss<10)builder << "0";
-    builder << ss;
-    return QString::fromStdString(builder.str());
-}
-
 void achievements_container::load_achievements(){
-	QTableWidgetItem *ingame_distance_display = new QTableWidgetItem("Distance traveled");
+    curr_ach->load_achievement();
+    QTableWidgetItem *ingame_distance_display = new QTableWidgetItem("Total distance traveled");
 	ui->tableWidget->setItem(0,0,ingame_distance_display);
 	entries.append(ingame_distance_display);
-	qDebug() << curr_ach;
-	qDebug() << curr_ach->get_ingame_distance();
+    //qDebug() << curr_ach;
+    //qDebug() << curr_ach->get_ingame_distance();
 	QTableWidgetItem *ingame_distance_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_ingame_distance())));
 	ingame_distance_stat->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	ui->tableWidget->setItem(0,1,ingame_distance_stat);
 	entries.append(ingame_distance_stat);
-	QTableWidgetItem *survival_time_display = new QTableWidgetItem("Time survived");
+    QTableWidgetItem *survival_time_display = new QTableWidgetItem("Times played");
 	ui->tableWidget->setItem(1,0,survival_time_display);
 	entries.append(survival_time_display);
-    QTableWidgetItem *survival_time_stat = new QTableWidgetItem(parseTime(curr_ach->get_survival_time()));
+    QTableWidgetItem *survival_time_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_play_count())));
 	survival_time_stat->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	ui->tableWidget->setItem(1,1,survival_time_stat);
 	entries.append(survival_time_stat);
-	QTableWidgetItem *fruits_eaten_display = new QTableWidgetItem("Fruits eaten");
+    QTableWidgetItem *fruits_eaten_display = new QTableWidgetItem("Highest numbers of fruits eaten");
 	ui->tableWidget->setItem(2,0,fruits_eaten_display);
 	entries.append(fruits_eaten_display);
 	QTableWidgetItem *fruits_eaten_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_fruits_eaten())));
@@ -90,10 +76,10 @@ void achievements_container::load_achievements(){
 	longest_snake_length_stat->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	ui->tableWidget->setItem(3,1,longest_snake_length_stat);
 	entries.append(longest_snake_length_stat);
-	QTableWidgetItem *play_count_display = new QTableWidgetItem("Times played");
+    QTableWidgetItem *play_count_display = new QTableWidgetItem("Longest time survived");
 	ui->tableWidget->setItem(4,0,play_count_display);
 	entries.append(play_count_display);
-	QTableWidgetItem *play_count_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_play_count())));
+    QTableWidgetItem *play_count_stat = new QTableWidgetItem(QString::fromStdString(std::to_string(curr_ach->get_survival_time())));
 	play_count_stat->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	ui->tableWidget->setItem(4,1,play_count_stat);
 	entries.append(play_count_stat);
