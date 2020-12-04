@@ -20,8 +20,10 @@ PowerUp::PowerUpType PU_Shield::get_type() const {
 
 void PU_Shield::activate(Snake *snake) {
 	// Only one power up can be activated at the same time
-	if (snake->get_pu_activate() != nullptr)
+	if (snake->get_pu_activate() != nullptr) {
+		qDebug() << "[ERROR] No power up in inventory";
 		return;
+	}
 	qDebug() << "SHIELD activated!";
 	// Play sound effect
 	if (activateSound->state() == QMediaPlayer::PlayingState) {
@@ -41,10 +43,12 @@ void PU_Shield::activate(Snake *snake) {
 }
 
 void PU_Shield::deactivate() {
+	if (pu_owner->get_pu_activate() == nullptr) {
+		qDebug() << "[ERROR] No power up to deactivate";
+		return;
+	}
 	qDebug() << "SHIELD deactivated!";
 	deactivateCountDown->stop();
-	if (pu_owner->get_pu_activate() == nullptr)
-		return;
 	// Reset immunity
 	pu_owner->set_pu_activate(nullptr);
 	pu_owner->set_ghost_immunity(false);

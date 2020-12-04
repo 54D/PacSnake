@@ -8,6 +8,9 @@
 class Snake;
 
 class PowerUp : public Entity {
+public slots:
+	virtual void deactivate() = 0;
+
 public:
 	enum class PowerUpType {NONE, DASH, HEAL ,SHIELD};
     virtual ~PowerUp();
@@ -15,7 +18,6 @@ public:
 	virtual PowerUp::PowerUpType get_type() const;
     
     virtual void activate(Snake* snake) = 0;
-	virtual void deactivate() = 0;
 	virtual const QString get_image_lookup() = 0;
 
 protected:

@@ -510,8 +510,9 @@ void game_view::gameTickUpdate() {
      */
     gameTickCount++;
     // Overflow prevention
-    if (gameTickCount >= LLONG_MAX)
+	if (gameTickCount >= LLONG_MAX) {
         gameTickCount = 0;
+	}
 
     /* Game Over Condition Checking */
 	if (is_game_over()) {
@@ -707,6 +708,8 @@ void game_view::gameTickUpdate() {
         }
 		// Update health UI
         update_health();
+		// Update power up inventory
+		refresh_powerUp_list();
 
         /* NORMAL GHOSTS */
         for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {

@@ -19,6 +19,7 @@ PowerUp::PowerUpType PU_Heal::get_type() const {
 void PU_Heal::activate(Snake* snake) {
 	// Only one power up can be activated at the same time
 	if (snake->get_pu_activate() != nullptr) {
+		qDebug() << "[ERROR] No power up in inventory";
 		return;
 	}
 
@@ -43,10 +44,12 @@ void PU_Heal::activate(Snake* snake) {
 }
 
 void PU_Heal::deactivate() {
+	if (pu_owner->get_pu_activate() == nullptr)	{
+		qDebug() << "[ERROR] No power up to deactivate";
+		return;
+	}
 	qDebug() << "HEAL deactivated";
 	deactivateCountDown->stop();
-	if (pu_owner->get_pu_activate() == nullptr)
-		return;
 
 	pu_owner->set_pu_activate(nullptr);
 	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate(snake)));

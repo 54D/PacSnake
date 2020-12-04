@@ -23,6 +23,7 @@ PowerUp::PowerUpType PU_Dash::get_type() const {
 void PU_Dash::activate(Snake* snake) {
 	// Only one power up can be activated at the same time
 	if (snake->get_pu_activate() != nullptr) {
+		qDebug() << "[ERROR] No power up in inventory";
 		return;
 	}
 
@@ -48,10 +49,12 @@ void PU_Dash::activate(Snake* snake) {
 }
 
 void PU_Dash::deactivate() {
+	if (pu_owner->get_pu_activate() == nullptr) {
+		qDebug() << "[ERROR] No power up to deactivate";
+		return;
+	}
 	qDebug() << "DASH activated!";
 	deactivateCountDown->stop();
-	if (pu_owner->get_pu_activate() == nullptr)
-        return;
     // Reset speed
 	pu_owner->set_pu_activate(nullptr);
 	int newSpeed = pu_owner->calculate_level_speed();
