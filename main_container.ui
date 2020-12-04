@@ -170,7 +170,7 @@ color: rgb(255, 255, 255);
 background-color: rgb(48, 48, 48);</string>
      </property>
      <property name="text">
-      <string>Achievements</string>
+      <string>Statistics</string>
      </property>
     </widget>
     <widget class="QPushButton" name="creditsButton">
