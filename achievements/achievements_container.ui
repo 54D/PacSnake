@@ -52,7 +52,7 @@ background-color: rgb(48, 48, 48);</string>
     </font>
    </property>
    <property name="text">
-    <string>Achievements</string>
+    <string>Statistics</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
