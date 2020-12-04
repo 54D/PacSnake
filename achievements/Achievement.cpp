@@ -31,11 +31,11 @@ Achievement::Achievement(std::string path)
     file.close();
 }
 
-void Achievement::update_achievement_stat(){
-    QFile writefile(QString::fromStdString(path));
-    if(!writefile.open(QFile::WriteOnly | QFile::Text)) {
-        QMessageBox::information(0, "Achievment file error", writefile.errorString());
-    }
+void Achievement::update_achievement(int type, int value){
+    QFile file(QString::fromStdString(path));
+          if(file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+          {
+
               //Streaming text to the file
               QTextStream stream(&writefile);
 
@@ -47,6 +47,7 @@ void Achievement::update_achievement_stat(){
               qDebug() << "Writing finished";
 
 }
+
 
 void Achievement::compare_stat(Stats temp){
     if (temp.get_ingame_distance() > this->get_ingame_distance()){
