@@ -456,12 +456,12 @@ void game_view::reset_view(){
 }
 
 void game_view::stackedWidgetChanged(int index){
-    if(index!=1&&backButtonPressed){
-        backButtonPressed = false;
-        reset_view();
-    }else{
-        setup_view();
-    }
+	if(index==2){
+		setup_view();
+	}else if(backButtonPressed){
+		backButtonPressed = false;
+		reset_view();
+	}
 }
 
 void game_view::refresh_powerUp_list(){
