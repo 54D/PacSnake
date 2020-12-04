@@ -1,6 +1,5 @@
 #include "Fruit.h"
 
-// TODO: Change picture, thx
 const QString Fruit::image_lookup[5] {
 	":/assets/sprite/apple.png",
 	":/assets/sprite/grape.png",
