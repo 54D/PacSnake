@@ -52,7 +52,7 @@ void PU_Shield::deactivate() {
 	// Reset immunity
 	pu_owner->set_pu_activate(nullptr);
 	pu_owner->set_ghost_immunity(false);
-	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate(snake)));
+	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	delete deactivateCountDown;
 }
 

@@ -52,7 +52,7 @@ void PU_Heal::deactivate() {
 	deactivateCountDown->stop();
 
 	pu_owner->set_pu_activate(nullptr);
-	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate(snake)));
+	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	delete deactivateCountDown;
 }
 

@@ -60,7 +60,7 @@ void PU_Dash::deactivate() {
 	int newSpeed = pu_owner->calculate_level_speed();
 	pu_owner->set_speed(newSpeed);
 
-	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate(snake)));
+	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
 	delete deactivateCountDown;
 }
 
