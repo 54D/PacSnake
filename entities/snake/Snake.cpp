@@ -4,6 +4,8 @@
 #include <entities/Entity.h>
 #include <entities/snake/Snake.h>
 
+/* PUBLIC */
+
 Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection, int max_health, int length) :
 		SnakeBody(row, col, given_init_speed, headingDirection), GIVEN_INIT_SPEED(given_init_speed),
 		max_health(max_health), health(max_health), num_fruits_eaten(0),
@@ -88,10 +90,6 @@ int Snake::get_longest_length(){
     return longest_length;
 }
 
-void Snake::set_longest_length(int length){
-    longest_length = length;
-}
-
 void Snake::set_headingDirection(Direction headingDirection) {
     // Avoid setting the headingDirection the opposite of the current headingDirection
 	if ((this->headingDirection == Direction::NORTH && headingDirection == Direction::SOUTH)	||
@@ -135,6 +133,10 @@ void Snake::set_pu_activate(PowerUp* powerUp) {
 
 void Snake::set_ghost_immunity(bool state) {
 	ghost_immunity = state;
+}
+
+void Snake::set_longest_length(int length){
+	longest_length = length;
 }
 
 void Snake::move_forward() {
@@ -273,7 +275,6 @@ void Snake::addPUToInventory(PowerUp* powerUp) {
         pu_inventory.pop_front();
     }
 }
-
 
 void Snake::usePU() {
     // If no power up to use or already activated a power up , ignored
