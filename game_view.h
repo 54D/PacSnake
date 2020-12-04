@@ -26,7 +26,7 @@ public:
     game_view(QWidget *parent = nullptr);
 	~game_view();
     void Game_start();
-    static const int GAME_TICK_UPDATE_TIME = 50;
+	static const int GAME_TICK_UPDATE_TIME = 10;
 
 	static const int NUM_OF_NORMAL_GHOST = 4;
 	static const int NUM_OF_BIG_GHOST = 2;

@@ -6,7 +6,7 @@
 
 class SnakeBody : public MovingEntity {
 public:
-
+	static const QString image_lookup[4][4][4];
 	friend class Snake;
 
 	/**

@@ -36,13 +36,12 @@ void PU_Dash::activate(Snake* snake) {
 		activateSound->play();
 	}
 
-	pu_owner = snake;
-	int newSpeed = MovingEntity::MAX_SPEED;
-    snake->set_speed(newSpeed);
 
 	// Set activated power up
-	snake->set_pu_activate(this);
-	snake->updatePowerUpState();
+	pu_owner = snake;
+	pu_owner->set_pu_activate(this);
+	pu_owner->updatePowerUpState();
+	pu_owner->set_speed(MovingEntity::MAX_GAMETICK_SPEED);
 
 	deactivateCountDown = new QTimer(this);
 	connect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));

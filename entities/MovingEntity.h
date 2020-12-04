@@ -8,7 +8,12 @@
 class MovingEntity : public Entity {
 
 public:
-
+	/**
+	* Plublic const
+	* @param MAX_GAMETICK_SPEED	Maximum speed allowed for game tick update
+	* @param MAX_SPEED			Maximum speed allowed for Entity (no power up activated)
+	*/
+	static const int MAX_GAMETICK_SPEED = 20;
 	static const int MAX_SPEED = 10;
 	enum class Direction {NORTH, EAST, SOUTH, WEST};
 

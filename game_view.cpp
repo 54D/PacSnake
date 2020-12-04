@@ -275,7 +275,7 @@ void game_view::on_pushButton_clicked()
 
     /* SNAKE */
     // Init Snake
-	snake = new Snake {20, 25, 5, MovingEntity::Direction::NORTH, 3, 10};
+	snake = new Snake {20, 25};
     // Init UI
     SnakeBody* currentSnakeBody = snake;
     for (int i = 0; i <= snake->get_length(); i++){
@@ -286,7 +286,7 @@ void game_view::on_pushButton_clicked()
             if (currentSnakeBody->get_prev()->get_headingDirection()!= currentSnakeBody->get_next()->get_headingDirection()) pic_ref = 2;
         }
         if (pic_ref == -1) pic_ref = 1;
-		QPixmap pic(Snake::image_lookup[0][0][pic_ref]);
+		QPixmap pic(SnakeBody::image_lookup[0][0][pic_ref]);
         QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
         currentSnakeBody->register_view(snake_pic);
         snake_pic->setZValue(999);
@@ -527,7 +527,7 @@ void game_view::gameTickUpdate() {
      * - Collision checking
      */
     gameTickCount++;
-    // Overflow prevention
+	// Overflow prevention
 	if (gameTickCount >= LLONG_MAX) {
         gameTickCount = 0;
 	}
@@ -570,7 +570,7 @@ void game_view::gameTickUpdate() {
 
         /* SNAKE */
         // Movement update
-        if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+		if ((snake->get_speed() > 0) && (gameTickCount % (MovingEntity::MAX_GAMETICK_SPEED - snake->get_speed() + 1) == 0)) {
 			// Update game_map occupied state for collision avoiding
 			for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
 				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
@@ -742,7 +742,7 @@ void game_view::gameTickUpdate() {
         /* NORMAL GHOSTS */
         for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
 			// Movement update
-            if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			if (((*it)->get_speed() > 0) && (gameTickCount % (MovingEntity::MAX_GAMETICK_SPEED - (*it)->get_speed() + 1) == 0)) {
 				bool noMove = false;
 				// If snake has no ghost immunity
 				if (!snake->is_ghost_immunity()) {
@@ -796,7 +796,7 @@ void game_view::gameTickUpdate() {
         /* BIG GHOST*/
         for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
             // Movement update
-            if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
+			if (((*it)->get_speed() > 0) && (gameTickCount % (MovingEntity::MAX_GAMETICK_SPEED - (*it)->get_speed() + 1) == 0)) {
 				// Avoid collison checking
 				bool noMove = false;
 				// If the snkae has no ghost immunity
@@ -995,7 +995,7 @@ void game_view::gameTickUpdate() {
                 while (lastSnakeBody->get_next() != nullptr) {
                     lastSnakeBody = lastSnakeBody->get_next();
                 }
-				QPixmap pic(Snake::image_lookup[0][0][3]);
+				QPixmap pic(SnakeBody::image_lookup[0][0][3]);
                 QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
                 lastSnakeBody->register_view(snake_pic);
                 snake_pic->setZValue(999);

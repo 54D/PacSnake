@@ -4,105 +4,6 @@
 #include <entities/Entity.h>
 #include <entities/snake/Snake.h>
 
-const QString Snake::image_lookup[4][4][4] {
-	{	// No power up
-		{
-			":/assets/sprite/snake-head-up.png",
-			":/assets/sprite/snake-head-down.png",
-			":/assets/sprite/snake-head-left.png",
-			":/assets/sprite/snake-head-right.png",
-		},
-		{
-			":/assets/sprite/snake-body-vertical.png",
-			":/assets/sprite/snake-body-horizontal.png",
-		},
-		{
-			":/assets/sprite/snake-corner-up-left.png",
-			":/assets/sprite/snake-corner-up-right.png",
-			":/assets/sprite/snake-corner-down-left.png",
-			":/assets/sprite/snake-corner-down-right.png",
-		},
-		{
-			":/assets/sprite/snake-tail-up.png",
-			":/assets/sprite/snake-tail-down.png",
-			":/assets/sprite/snake-tail-left.png",
-			":/assets/sprite/snake-tail-right.png",
-		}
-	},
-	{	// Dash Power Up
-		{
-			":/assets/sprite/snake-head-up-dashing.png",
-			":/assets/sprite/snake-head-down-dashing.png",
-			":/assets/sprite/snake-head-left-dashing.png",
-			":/assets/sprite/snake-head-right-dashing.png",
-		},
-		{
-			":/assets/sprite/snake-body-vertical-dashing.png",
-			":/assets/sprite/snake-body-horizontal-dashing.png",
-		},
-		{
-			":/assets/sprite/snake-corner-up-left-dashing.png",
-			":/assets/sprite/snake-corner-up-right-dashing.png",
-			":/assets/sprite/snake-corner-down-left-dashing.png",
-			":/assets/sprite/snake-corner-down-right-dashing.png",
-		},
-		{
-			":/assets/sprite/snake-tail-up-dashing.png",
-			":/assets/sprite/snake-tail-down-dashing.png",
-			":/assets/sprite/snake-tail-left-dashing.png",
-			":/assets/sprite/snake-tail-right-dashing.png",
-		}
-	},
-	{	// Heal Power Up
-		{
-			":/assets/sprite/snake-head-up-healing.png",
-			":/assets/sprite/snake-head-down-healing.png",
-			":/assets/sprite/snake-head-left-healing.png",
-			":/assets/sprite/snake-head-right-healing.png",
-		},
-		{
-			":/assets/sprite/snake-body-vertical-healing.png",
-			":/assets/sprite/snake-body-horizontal-healing.png",
-		},
-		{
-			":/assets/sprite/snake-corner-up-left-healing.png",
-			":/assets/sprite/snake-corner-up-right-healing.png",
-			":/assets/sprite/snake-corner-down-left-healing.png",
-			":/assets/sprite/snake-corner-down-right-healing.png",
-		},
-		{
-			":/assets/sprite/snake-tail-up-healing.png",
-			":/assets/sprite/snake-tail-down-healing.png",
-			":/assets/sprite/snake-tail-left-healing.png",
-			":/assets/sprite/snake-tail-right-healing.png",
-		}
-	},
-	{	// Shield Power Up
-		{
-			":/assets/sprite/snake-head-up-shielding.png",
-			":/assets/sprite/snake-head-down-shielding.png",
-			":/assets/sprite/snake-head-left-shielding.png",
-			":/assets/sprite/snake-head-right-shielding.png",
-		},
-		{
-			":/assets/sprite/snake-body-vertical-shielding.png",
-			":/assets/sprite/snake-body-horizontal-shielding.png",
-		},
-		{
-			":/assets/sprite/snake-corner-up-left-shielding.png",
-			":/assets/sprite/snake-corner-up-right-shielding.png",
-			":/assets/sprite/snake-corner-down-left-shielding.png",
-			":/assets/sprite/snake-corner-down-right-shielding.png",
-		},
-		{
-			":/assets/sprite/snake-tail-up-shielding.png",
-			":/assets/sprite/snake-tail-down-shielding.png",
-			":/assets/sprite/snake-tail-left-shielding.png",
-			":/assets/sprite/snake-tail-right-shielding.png",
-		}
-	}
-};
-
 Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection, int max_health, int length) :
 		SnakeBody(row, col, given_init_speed, headingDirection), GIVEN_INIT_SPEED(given_init_speed),
 		max_health(max_health), health(max_health), num_fruits_eaten(0),
@@ -255,10 +156,12 @@ void Snake::move_forward() {
 }
 
 void Snake::set_speed(int speed) {
-	if (speed < 0)
-		speed = 0;
-	else if (speed > MAX_SPEED)
-		speed = MAX_SPEED;
+	if (pu_activate == nullptr) {
+		if (speed < 0)
+			speed = 0;
+		else if (speed > MAX_SPEED)
+			speed = MAX_SPEED;
+	}
 
     SnakeBody* currentSnakeBody = this;
     while (currentSnakeBody != nullptr) {

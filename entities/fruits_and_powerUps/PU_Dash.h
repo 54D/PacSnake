@@ -15,7 +15,7 @@ public slots:
 	virtual void deactivate() override;
 
 public:
-	static const int DURATION = 1500;
+	static const int DURATION = 50;
 	static const QString image_lookup;
 
     PU_Dash(int row, int col);
