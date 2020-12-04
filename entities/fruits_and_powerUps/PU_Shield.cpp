@@ -1,6 +1,10 @@
 #include "PowerUp.h"
 #include "PU_Shield.h"
 
+#include <QTimer>
+
+const QString PU_Shield::image_lookup = ":/assets/sprite/shield.png";
+
 PU_Shield::PU_Shield(int row, int col) :
     PowerUp(row, col, PowerUp::PowerUpType::SHIELD) {
     //this->pixmap = QPixmap(":/assets/image");
@@ -15,6 +19,10 @@ PowerUp::PowerUpType PU_Shield::get_type() const {
 }
 
 void PU_Shield::activate(Snake *snake) {
+	// Only one power up can be activated at the same time
+	if (snake->get_pu_activate() != nullptr)
+		return;
+	qDebug() << "SHIELD activated!";
 	// Play sound effect
 	if (activateSound->state() == QMediaPlayer::PlayingState) {
 		activateSound->setPosition(0);
@@ -23,21 +31,29 @@ void PU_Shield::activate(Snake *snake) {
 		activateSound->play();
 	}
 
-	// Only one power up can be activated at the same time
-	if (snake->get_pu_activate() != nullptr)
-		return;
-
+	pu_owner = snake;
 	snake->set_ghost_immunity(true);
 	// Set activated power up
 	snake->set_pu_activate(this);
+	deactivateCountDown = new QTimer(this);
+	connect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate()));
+	deactivateCountDown->start(DURATION);
 }
 
-void PU_Shield::deactivate(Snake *snake) {
-	if (snake->get_pu_activate() == nullptr)
+void PU_Shield::deactivate() {
+	qDebug() << "SHIELD deactivated!";
+	deactivateCountDown->stop();
+	if (pu_owner->get_pu_activate() == nullptr)
 		return;
 	// Reset immunity
-	snake->set_pu_activate(nullptr);
-	snake->set_ghost_immunity(false);
+	pu_owner->set_pu_activate(nullptr);
+	pu_owner->set_ghost_immunity(false);
+	disconnect(deactivateCountDown, SIGNAL(timeout()), this, SLOT(deactivate(snake)));
+	delete deactivateCountDown;
+}
+
+const QString PU_Shield::get_image_lookup() {
+	return PU_Shield::image_lookup;
 }
 
 QString PU_Shield::get_resourceURI(){

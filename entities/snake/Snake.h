@@ -10,13 +10,14 @@
 class Snake final : public SnakeBody {
     Q_OBJECT
 public:
+	static const QString image_lookup[4][4];
     static const int INIT_HEALTH = 3;
     static const int INIT_LENGTH = 3;
-    static const int INIT_SPEED = 1;
+	static const int INIT_SPEED = 2;
     static const int MAX_PU = 3;
 	static const int MAX_LENGTH = 50;
 
-    Snake(int row, int col, int speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
+	Snake(int row, int col, int given_init_speed = INIT_SPEED, Direction headingDirection = Direction::NORTH, int max_health = INIT_HEALTH, int length = INIT_LENGTH);
     virtual ~Snake();
 
     int get_max_health() const;
@@ -25,6 +26,7 @@ public:
 	int get_num_fruits_eaten() const;
     std::deque<PowerUp*> get_pu_inventory() const;
     const PowerUp* get_pu_activate() const;
+	bool is_ghost_immunity() const;
 
     virtual void set_headingDirection(Direction headingDirection) override;
     void set_health(int health);
@@ -65,12 +67,14 @@ signals:
     void powerUp_added();
 
 private:
+	const int GIVEN_INIT_SPEED;
     int max_health {INIT_HEALTH};
     int health {INIT_HEALTH};
     int length {INIT_LENGTH};
 	int num_fruits_eaten {0};
     int longest_length{INIT_LENGTH};
 
+	// The snake body only will not be hitted by the ghost
 	bool ghost_immunity {false};
     // Power Up (PU)
     std::deque<PowerUp*> pu_inventory;

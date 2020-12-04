@@ -4,8 +4,33 @@
 #include <entities/Entity.h>
 #include <entities/snake/Snake.h>
 
-Snake::Snake(int row, int col, int speed, Direction headingDirection, int max_health, int length) :
-        SnakeBody(row, col, speed, headingDirection),
+const QString Snake::image_lookup[4][4] {
+	{
+		":/assets/sprite/snake-head-up.png",
+		":/assets/sprite/snake-head-down.png",
+		":/assets/sprite/snake-head-left.png",
+		":/assets/sprite/snake-head-right.png",
+	},
+	{
+		":/assets/sprite/snake-body-vertical.png",
+		":/assets/sprite/snake-body-horizontal.png",
+	},
+	{
+		":/assets/sprite/snake-corner-up-left.png",
+		":/assets/sprite/snake-corner-up-right.png",
+		":/assets/sprite/snake-corner-down-left.png",
+		":/assets/sprite/snake-corner-down-right.png",
+	},
+	{
+		":/assets/sprite/snake-tail-up.png",
+		":/assets/sprite/snake-tail-down.png",
+		":/assets/sprite/snake-tail-left.png",
+		":/assets/sprite/snake-tail-right.png",
+	}
+};
+
+Snake::Snake(int row, int col, int given_init_speed, Direction headingDirection, int max_health, int length) :
+		SnakeBody(row, col, given_init_speed, headingDirection), GIVEN_INIT_SPEED(given_init_speed),
 		max_health(max_health), health(max_health), num_fruits_eaten(0),
 		pu_activate(nullptr)
 {
@@ -72,6 +97,10 @@ std::deque<PowerUp*> Snake::get_pu_inventory() const {
 
 const PowerUp* Snake::get_pu_activate() const {
 	return pu_activate;
+}
+
+bool Snake::is_ghost_immunity() const {
+	return ghost_immunity;
 }
 
 int Snake::get_longest_length(){
@@ -173,7 +202,7 @@ int Snake::calculate_level_speed() const {
 
     int newSpeed;
     // TODO: Change an appropriate value (/ 10?)
-	newSpeed = num_fruits_eaten / 5 + INIT_SPEED;
+	newSpeed = num_fruits_eaten / 5 + GIVEN_INIT_SPEED;
 
 	// New speed should not exceed the maximum allowed speed
 	if (newSpeed > MAX_SPEED)
@@ -273,5 +302,5 @@ void Snake::usePU() {
     PowerUp* pu = pu_inventory.front();
     pu_inventory.pop_front();
 	pu->activate(this);
-	// emit signal to wait for deactivate (time out)
+	qDebug() << "Snake activated: " << static_cast<int>(pu->get_type());
 }

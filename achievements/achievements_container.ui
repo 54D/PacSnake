@@ -58,16 +58,6 @@ background-color: rgb(48, 48, 48);</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QTableView" name="tableView">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>100</y>
-     <width>701</width>
-     <height>421</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="imageLabel">
    <property name="geometry">
     <rect>
@@ -84,10 +74,20 @@ background-color: rgb(48, 48, 48);</string>
     <string/>
    </property>
   </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>100</y>
+     <width>701</width>
+     <height>421</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>imageLabel</zorder>
   <zorder>label</zorder>
-  <zorder>tableView</zorder>
   <zorder>back_button</zorder>
+  <zorder>tableWidget</zorder>
  </widget>
  <resources/>
  <connections/>

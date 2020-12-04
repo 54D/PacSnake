@@ -1,5 +1,12 @@
 #include "Entity.h"
 
+/* PUBLIC */
+
+Entity::Entity() {}
+
+Entity::Entity(int row, int col) :
+		row(row), col(col) {}
+
 Entity::~Entity() {}
 
 int Entity::get_row() const {
@@ -32,12 +39,6 @@ void Entity::register_view(QGraphicsPixmapItem *pixmap){
     this->pixmap = pixmap;
 }
 
-
 QGraphicsPixmapItem* Entity::get_pixmap() {
     return this->pixmap;
 }
-
-Entity::Entity() {}
-
-Entity::Entity(int row, int col) :
-        row(row), col(col) {}
