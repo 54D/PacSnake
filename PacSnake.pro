@@ -18,8 +18,8 @@ SOURCES += \
     entities/Entity.cpp \
     entities/MovingEntity.cpp \
     entities/fruits_and_powerUps/Fruit.cpp \
-    entities/fruits_and_powerUps/HealItem.cpp \
     entities/fruits_and_powerUps/PU_Dash.cpp \
+	entities/fruits_and_powerUps/PU_Heal.cpp \
     entities/fruits_and_powerUps/PU_Shield.cpp \
     entities/fruits_and_powerUps/PowerUp.cpp \
     entities/ghosts/BigGhost.cpp \
@@ -40,8 +40,8 @@ HEADERS += \
     entities/Entity.h \
     entities/MovingEntity.h \
     entities/fruits_and_powerUps/Fruit.h \
-    entities/fruits_and_powerUps/HealItem.h \
     entities/fruits_and_powerUps/PU_Dash.h \
+	entities/fruits_and_powerUps/PU_Heal.h \
     entities/fruits_and_powerUps/PU_Shield.h \
     entities/fruits_and_powerUps/PowerUp.h \
     entities/ghosts/BigGhost.h \

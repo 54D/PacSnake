@@ -29,6 +29,7 @@
 #include "ui_achievements_container.h"
 #include "GameMap.h"
 #include "entities/fruits_and_powerUps/PU_Dash.h"
+#include "entities/fruits_and_powerUps/PU_Heal.h"
 #include "entities/fruits_and_powerUps/PU_Shield.h"
 
 // util
@@ -45,31 +46,6 @@ static QString parseTime(long seconds){
     builder << ss;
     return QString::fromStdString(builder.str());
 }
-
-const QString game_view::image_lookup[4][4] {
-    {
-        ":/assets/sprite/snake-head-up.png",
-        ":/assets/sprite/snake-head-down.png",
-        ":/assets/sprite/snake-head-left.png",
-        ":/assets/sprite/snake-head-right.png",
-    },
-    {
-        ":/assets/sprite/snake-body-vertical.png",
-        ":/assets/sprite/snake-body-horizontal.png",
-    },
-    {
-        ":/assets/sprite/snake-corner-up-left.png",
-        ":/assets/sprite/snake-corner-up-right.png",
-        ":/assets/sprite/snake-corner-down-left.png",
-        ":/assets/sprite/snake-corner-down-right.png",
-    },
-    {
-        ":/assets/sprite/snake-tail-up.png",
-        ":/assets/sprite/snake-tail-down.png",
-        ":/assets/sprite/snake-tail-left.png",
-        ":/assets/sprite/snake-tail-right.png",
-    }
-};
 
 game_view::game_view(QWidget *parent) :
     QWidget(parent),
@@ -187,6 +163,10 @@ void game_view::keyPressEvent(QKeyEvent *event) {
         snake->set_headingDirection(MovingEntity::Direction::SOUTH);
 		allowKeyboardInput = false;
     }
+	else if (event->key() == Qt::Key_Space) {
+		snake->usePU();
+		allowKeyboardInput = false;
+	}
 }
 
 bool game_view::eventFilter(QObject *obj, QEvent *event)
@@ -226,6 +206,44 @@ void game_view::fruit_instantiation() {
     fruit_pic->setOffset(fruit_temp->get_col() * 32, fruit_temp->get_row() * 32);
 }
 
+void game_view::powerUp_instantiation() {
+	int row, col;
+	do {
+		row	= rand() % game_map->get_num_rows();
+		col = rand() % game_map->get_num_cols();
+	} while (game_map->get_terrainState(row, col) != GameMap::TerrainState::EMPTY);
+
+	switch (rand() % 3) {
+		case 0: {
+			PU_Dash* pu_temp = new PU_Dash {row, col};
+			powerups.push_back(pu_temp);
+			break;
+		}
+		case 1: {
+			PU_Heal* pu_temp = new PU_Heal {row, col};
+			powerups.push_back(pu_temp);
+			break;
+		}
+		case 2: {
+				PU_Shield* pu_temp = new PU_Shield {row, col};
+				powerups.push_back(pu_temp);
+				break;
+		}
+		default: {
+			qDebug() << "Something wen wrong with powerUp_instantiation()";
+			break;
+		}
+	}
+	game_map->set_terrainState(row, col, GameMap::TerrainState::POWERUP_OCCUPIED);
+
+	// Init UI
+	QPixmap pic(powerups.back()->get_image_lookup());
+	QGraphicsPixmapItem* fruit_pic = scene.addPixmap(pic);
+	powerups.back()->register_view(fruit_pic);
+	fruit_pic->setZValue(998);
+	fruit_pic->setOffset(powerups.back()->get_col() * 32, powerups.back()->get_row() * 32);
+}
+
 void game_view::on_pushButton_clicked()
 {
     /* Play sound effect */
@@ -247,7 +265,7 @@ void game_view::on_pushButton_clicked()
 
     /* SNAKE */
     // Init Snake
-    snake = new Snake {20, 25};
+	snake = new Snake {20, 25, 5, MovingEntity::Direction::NORTH, 3, 10};
     // Init UI
     SnakeBody* currentSnakeBody = snake;
     for (int i = 0; i <= snake->get_length(); i++){
@@ -258,7 +276,7 @@ void game_view::on_pushButton_clicked()
             if (currentSnakeBody->get_prev()->get_headingDirection()!= currentSnakeBody->get_next()->get_headingDirection()) pic_ref = 2;
         }
         if (pic_ref == -1) pic_ref = 1;
-        QPixmap pic(image_lookup[0][pic_ref]);
+		QPixmap pic(Snake::image_lookup[0][pic_ref]);
         QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
         currentSnakeBody->register_view(snake_pic);
         snake_pic->setZValue(999);
@@ -338,8 +356,10 @@ void game_view::on_pushButton_clicked()
     }
 
     /* POWER UPS */
-    // TODO
-    connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+	connect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+	for (int i = 0; i < MAX_NUM_OF_POWERUP; i++) {
+		powerUp_instantiation();
+	}
 
     /* START TIMER */
     // Start gameTickTimer update every GAME_TICK_UPDATE_TIME ms
@@ -405,7 +425,7 @@ void game_view::reset_view(){
     ui->graphicsView->removeEventFilter(this);
     disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
     if(snake!=nullptr){
-        disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
+		disconnect(snake, SIGNAL(powerUp_added()), this, SLOT(refresh_powerUp_list()));
     }
 }
 
@@ -494,7 +514,7 @@ void game_view::gameTickUpdate() {
         gameTickCount = 0;
 
     /* Game Over Condition Checking */
-    if(is_game_over()){
+	if (is_game_over()) {
         // Stop timer and game update
         gameTickTimer->stop();
         timer->stop();
@@ -523,9 +543,162 @@ void game_view::gameTickUpdate() {
         /* SNAKE */
         // Movement update
         if ((gameTickCount % static_cast<int>(1.0 / snake->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-            snake->move_forward();
+			// Update game_map occupied state for collision avoiding
+			for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::EMPTY);
+			}
+
+			// If the snake has ghost immunity and about to hit the ghost
+			if (snake->is_ghost_immunity() && next_move_ghost_collision(snake->get_row(), snake->get_col(), snake->get_headingDirection())) {
+				/* Find the ghost and force the ghost to move forward*/
+				int row = snake->get_row();
+				int col = snake->get_col();
+				switch (snake->get_headingDirection()) {
+					case MovingEntity::Direction::NORTH:	row -= 1;	break;
+					case MovingEntity::Direction::EAST:		col += 1;	break;
+					case MovingEntity::Direction::SOUTH:	row += 1;	break;
+					case MovingEntity::Direction::WEST:		col -= 1;	break;
+				}
+
+				// NORMAL GHOST
+				NormalGhost* collideNGhost  = nullptr;
+				// Find the collided NormalGhost
+				for (auto it = normalGhosts.begin(); it != normalGhosts.end() && collideNGhost == nullptr; it++) {
+					if ((*it)->get_row() == row && (*it)->get_col() == col)
+						collideNGhost = *it;
+				}
+				// If the NormalGhost is found, do avoid collision
+				if (collideNGhost != nullptr) {
+					bool noMove = false;
+					int num_of_rotation = 0;
+					// Avoid wall and snake collison checking
+					int collideNGhost_row = collideNGhost->get_row();
+					int collideNGhost_col = collideNGhost->get_col();
+					while ((next_move_ghost_wall_collision(collideNGhost_row, collideNGhost_col, collideNGhost->get_headingDirection()) ||
+						   next_move_snake_collision(collideNGhost_row, collideNGhost_col, collideNGhost->get_headingDirection()))) {
+						// Rotate heading direction of Normal ghost
+						collideNGhost->set_headingDirection(collideNGhost->get_rotated_headingDirection());
+						num_of_rotation++;
+						if (num_of_rotation == 4) {
+							noMove = true;
+							break;
+						}
+					}
+					if (!noMove){
+						qDebug() << "Snake ghost immunity: ON - Can push the ghost away";
+						// Update game_map state for collision avoiding
+						game_map->set_terrainState(collideNGhost->get_row(), collideNGhost->get_col(), GameMap::TerrainState::EMPTY);
+
+						// Move forward
+						collideNGhost->move_forward();
+					}
+					else {
+						qDebug() << "Snake ghost immunity: ON - but cannot push the ghost away";
+					}
+					// Update game_map state for collision avoiding
+					game_map->set_terrainState(collideNGhost->get_row(), collideNGhost->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
+
+				}
+				// BIG GHOST
+				if (collideNGhost == nullptr) {
+					BigGhost* collidBG = nullptr;
+					for (auto it = bigGhosts.begin(); it != bigGhosts.end() && collidBG	== nullptr; it++) {
+						for (int i = 0; i < 2; i++) {
+							for (int j = 0; j < 2; j++) {
+								if ((*it)->get_row() + i == row && (*it)->get_col() + j == col)
+									collidBG = *it;
+							}
+						}
+					}
+					// If the collided big ghost is found
+					if (collidBG != nullptr) {
+						// Avoid collison checking
+						bool noMove = false;
+						// If the snkae has no ghost immunity
+						int num_of_rotation = 0;
+						bool changeDir = false;
+						do {
+							int collidBG_row = collidBG->get_row();
+							int collidBG_col = collidBG->get_col();
+							MovingEntity::Direction collidBG_headingDir = collidBG->get_headingDirection();
+							// Determine any obstacle in front of the BigGhost
+							switch (collidBG->get_headingDirection()) {
+								case MovingEntity::Direction::NORTH: {
+									changeDir = next_move_ghost_wall_collision(collidBG_row		, collidBG_col		, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row			, collidBG_col		, collidBG_headingDir) ||
+												next_move_ghost_wall_collision(collidBG_row		, collidBG_col + 1	, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row			, collidBG_col + 1	, collidBG_headingDir);
+									break;
+								}
+								case MovingEntity::Direction::EAST: {
+									changeDir = next_move_ghost_wall_collision(collidBG_row		, collidBG_col + 1	, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row			, collidBG_col + 1	, collidBG_headingDir) ||
+												next_move_ghost_wall_collision(collidBG_row + 1	, collidBG_col + 1	, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row + 1		, collidBG_col + 1	, collidBG_headingDir);
+									break;
+								}
+								case MovingEntity::Direction::SOUTH: {
+									changeDir = next_move_ghost_wall_collision(collidBG_row + 1	, collidBG_col + 1	, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row + 1		, collidBG_col + 1	, collidBG_headingDir)||
+												next_move_ghost_wall_collision(collidBG_row + 1	, collidBG_col		, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row + 1		, collidBG_col		, collidBG_headingDir);
+									break;
+								}
+								case MovingEntity::Direction::WEST: {
+									changeDir = next_move_ghost_wall_collision(collidBG_row + 1	, collidBG_col, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row + 1		, collidBG_col, collidBG_headingDir) ||
+												next_move_ghost_wall_collision(collidBG_row		, collidBG_col, collidBG_headingDir) ||
+												next_move_snake_collision(collidBG_row			, collidBG_col, collidBG_headingDir);
+									break;
+								}
+							}
+							if (changeDir) {
+								// Rotate heading direction of whole Big ghost
+								qDebug() << "Dir changed";
+								collidBG->set_headingDirection(collidBG->get_rotated_headingDirection());
+								num_of_rotation++;
+							}
+							if (num_of_rotation == 4) {
+								noMove = true;
+								break;
+							}
+						} while (changeDir && num_of_rotation <= 4);
+
+						if (!noMove){
+							qDebug() << "Snake ghost immunity: ON - Can push the ghost away";
+							// Update game_map state for collision avoiding
+							for (int i = 0; i < 2; i ++) {
+								for (int j = 0; j < 2; j++) {
+									game_map->set_terrainState(collidBG->get_row() + i, collidBG->get_col() + j, GameMap::TerrainState::EMPTY);
+								}
+							}
+
+							// Move forward
+							collidBG->move_forward();
+						}
+						else {
+							qDebug() << "Snake ghost immunity: ON - but cannot push the ghost away";
+						}
+
+						// Update game_map state for collision avoiding
+						for (int i = 0; i < 2; i ++) {
+							for (int j = 0; j < 2; j++) {
+								game_map->set_terrainState(collidBG->get_row() + i, collidBG->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+							}
+						}
+					}
+				}
+			}
+
+			// Move forward
+			snake->move_forward();
 			if (!allowKeyboardInput)
 				allowKeyboardInput = true;
+
+			// update game_map occupied state for collision avoiding
+			for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+				game_map->set_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col(), GameMap::TerrainState::SNAKE_OCCUPIED);
+			}
         }
         // UI update
         for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
@@ -539,18 +712,48 @@ void game_view::gameTickUpdate() {
         for (auto it = normalGhosts.begin(); it != normalGhosts.end(); it++) {
 			// Movement update
             if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-				// Update game_map state for collision avoiding
-                game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
+				bool noMove = false;
+				// If snake has no ghost immunity
+				if (!snake->is_ghost_immunity()) {
+					int num_of_rotation = 0;
+					// Avoid wall collison checking
+					while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection())) {
+						// Rotate heading direction of Normal ghost
+						(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+						num_of_rotation++;
+						if (num_of_rotation == 4) {
+							qDebug() << "Ghost is trapped!";
+							noMove = true;
+							break;
+						}
+					}
+				}
+				// If snake has ghost immunnity
+				else {
+					int num_of_rotation = 0;
+					// Avoid wall and snake collison checking
+					while ((next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection()) ||
+						   next_move_snake_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection()))) {
+						// Rotate heading direction of Normal ghost
+						(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+						num_of_rotation++;
+						if (num_of_rotation == 4) {
+							qDebug() << "Ghost is trapped!";
+							noMove = true;
+							break;
+						}
+					}
+				}
 
-                // Avoid wall collison checking
-                while (next_move_ghost_wall_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection())) {
-                    // Rotate heading direction of Normal ghost
-                    (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
-                }
-
-				// Move forward
-                (*it)->move_forward();
-
+				if (!noMove){
+					// Update game_map state for collision avoiding
+					game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::EMPTY);
+					if (next_move_snake_collision((*it)->get_row(), (*it)->get_col(), (*it)->get_headingDirection())){
+						qDebug() << "idk I crash";
+					}
+					// Move forward
+					(*it)->move_forward();
+				}
 				// Update game_map state for collision avoiding
 				game_map->set_terrainState((*it)->get_row(), (*it)->get_col(), GameMap::TerrainState::GHOST_OCCUPIED);
             }
@@ -563,33 +766,121 @@ void game_view::gameTickUpdate() {
         for (auto it = bigGhosts.begin(); it != bigGhosts.end(); it++) {
             // Movement update
             if ((gameTickCount % static_cast<int>(1.0 / (*it)->get_speed() * MovingEntity::MAX_SPEED)) == 0) {
-				// Update game_map state for collision avoiding
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0; j < 2; j++) {
-						game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::EMPTY);
+				// Avoid collison checking
+				bool noMove = false;
+				// If the snkae has no ghost immunity
+				if (!snake->is_ghost_immunity()) {
+					int num_of_rotation = 0;
+					bool changeDir = false;
+					do {
+						// Determine any obstacle in front of the BigGhost
+						int row = (*it)->get_row();
+						int col = (*it)->get_col();
+						MovingEntity::Direction dir = (*it)->get_headingDirection();
+						switch ((*it)->get_headingDirection()) {
+							case MovingEntity::Direction::NORTH: {
+								changeDir = next_move_ghost_wall_collision(row, col		, dir) ||
+											next_move_ghost_wall_collision(row, col + 1	, dir);
+								break;
+							}
+							case MovingEntity::Direction::EAST: {
+								changeDir = next_move_ghost_wall_collision(row		, col + 1, dir) ||
+											next_move_ghost_wall_collision(row + 1	, col + 1, dir);
+								break;
+							}
+							case MovingEntity::Direction::SOUTH: {
+								changeDir = next_move_ghost_wall_collision(row + 1, col + 1	, dir) ||
+											next_move_ghost_wall_collision(row + 1, col		, dir);
+								break;
+							}
+							case MovingEntity::Direction::WEST: {
+								changeDir = next_move_ghost_wall_collision(row + 1	, col, dir) ||
+											next_move_ghost_wall_collision(row		, col, dir);
+								break;
+							}
+						}
+						if (changeDir) {
+							// Rotate heading direction of whole Big ghost
+							(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+							num_of_rotation++;
+						}
+					} while (changeDir && num_of_rotation <= 4);
+
+					if (num_of_rotation == 4) {
+						qDebug() << "Snake ghost immunity: OFF - Ghost is trapped!";
+						noMove = true;
+						break;
+					}
+				}
+				else {
+					int num_of_rotation = 0;
+					bool changeDir = false;
+					do {
+						// Determine any obstacle in front of the BigGhost
+						int row = (*it)->get_row();
+						int col = (*it)->get_col();
+						MovingEntity::Direction dir = (*it)->get_headingDirection();
+						switch ((*it)->get_headingDirection()) {
+							case MovingEntity::Direction::NORTH: {
+								changeDir = next_move_ghost_wall_collision(	row	, col		, dir) ||
+											next_move_snake_collision(		row	, col		, dir) ||
+											next_move_ghost_wall_collision(	row	, col + 1	, dir) ||
+											next_move_snake_collision(		row	, col + 1	, dir);
+								break;
+							}
+							case MovingEntity::Direction::EAST: {
+								changeDir = next_move_ghost_wall_collision(	row		, col + 1, dir) ||
+											next_move_snake_collision(		row		, col + 1, dir) ||
+											next_move_ghost_wall_collision(	row + 1	, col + 1, dir) ||
+											next_move_snake_collision(		row + 1	, col + 1, dir);
+								break;
+							}
+							case MovingEntity::Direction::SOUTH: {
+								changeDir = next_move_ghost_wall_collision(	row	+ 1	, col + 1	, dir) ||
+											next_move_snake_collision(		row	+ 1	, col +	1	, dir) ||
+											next_move_ghost_wall_collision(	row + 1	, col		, dir) ||
+											next_move_snake_collision(		row + 1	, col		, dir);
+								break;
+							}
+							case MovingEntity::Direction::WEST: {
+								changeDir = next_move_ghost_wall_collision(	row	+ 1	, col, dir) ||
+											next_move_snake_collision(		row	+ 1	, col, dir) ||
+											next_move_ghost_wall_collision(	row		, col, dir) ||
+											next_move_snake_collision(		row		, col, dir);
+								break;
+							}
+						}
+						if (changeDir) {
+							// Rotate heading direction of whole Big ghost
+							(*it)->set_headingDirection((*it)->get_rotated_headingDirection());
+							num_of_rotation++;
+						}
+					} while (changeDir && num_of_rotation <= 4);
+
+					if (num_of_rotation == 4) {
+						qDebug() << "Snake ghost immunity: ON - Ghost is trapped!";
+						noMove = true;
+						break;
 					}
 				}
 
-				// Avoid wall collison checking
-                // Check each part of BigGhost's GhostBody
-                GhostBody* currentGhostBody = *it;
-                do {
-                    while (next_move_ghost_wall_collision(currentGhostBody->get_row(), currentGhostBody->get_col(), (*it)->get_headingDirection()))	{
-                        // Rotate heading direction of whole Big ghost
-                        (*it)->set_headingDirection((*it)->get_rotated_headingDirection());
-                    }
-                    currentGhostBody = currentGhostBody->get_next();
-                } while (currentGhostBody != (*it));
+				if (!noMove) {
+					// Update game_map state for collision avoiding
+					for (int i = 0; i < 2; i++) {
+						for (int j = 0; j < 2; j++) {
+							game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::EMPTY);
+						}
+					}
+					// Move forward
+					(*it)->move_forward();
 
-				// Move forward
-                (*it)->move_forward();
-
-				// Update game_map state for collision avoiding
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0; j < 2; j++) {
-						game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+					// Update game_map state for collision avoiding
+					for (int i = 0; i < 2; i++) {
+						for (int j = 0; j < 2; j++) {
+							game_map->set_terrainState((*it)->get_row() + i, (*it)->get_col() + j, GameMap::TerrainState::GHOST_OCCUPIED);
+					   }
 				   }
-			   }
+				}
             }
             // UI Update
             GhostBody* currentGhostBody = (*it);
@@ -673,17 +964,15 @@ void game_view::gameTickUpdate() {
                 while (lastSnakeBody->get_next() != nullptr) {
                     lastSnakeBody = lastSnakeBody->get_next();
                 }
-                QPixmap pic(image_lookup[0][3]);
+				QPixmap pic(Snake::image_lookup[0][3]);
                 QGraphicsPixmapItem *snake_pic = scene.addPixmap(pic);
                 lastSnakeBody->register_view(snake_pic);
                 snake_pic->setZValue(999);
                 snake_pic->setOffset(lastSnakeBody->get_col()*32, lastSnakeBody->get_row()*32);
                 // Refresh UI
-                // TODO
                 for (SnakeBody* currentSnakeBody = snake; currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
                     currentSnakeBody->refresh_pixmap();
                 }
-
 
                 // Update snake speed
                 snake->set_speed(snake->calculate_level_speed());
@@ -698,7 +987,51 @@ void game_view::gameTickUpdate() {
         }
 
         // Check if snake collide with PowerUp
-        // TODO
+		if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::POWERUP_OCCUPIED) {
+			// Play sound effecct
+			if (eatSoundEffect->state() == QMediaPlayer::PlayingState) {
+				eatSoundEffect->setPosition(0);
+			}
+			else if (eatSoundEffect->state() == QMediaPlayer::StoppedState) {
+				eatSoundEffect->play();
+			}
+
+			int collidedPUIndex = -1;
+			PowerUp* power_up_collected = nullptr;
+			// Search for the Fruit being collided
+			for (int i = 0; i < powerups.size() && collidedPUIndex == -1; i++) {
+				if (powerups.at(i)->get_row() == snake->get_row() && powerups.at(i)->get_col() == snake->get_col()) {
+					collidedPUIndex = i;
+					power_up_collected = powerups.at(i);
+				}
+			}
+
+			// If the snake collided with the power up
+			if (collidedPUIndex != -1) {
+				qDebug() << "Power up collected";
+				// Remove power up from map
+				game_map->set_terrainState(power_up_collected->get_row(), power_up_collected->get_col(), GameMap::TerrainState::EMPTY);
+				scene.removeItem(power_up_collected->get_pixmap());
+				powerups.removeAt(collidedPUIndex);
+
+				snake->addPUToInventory(power_up_collected);
+				std::deque<PowerUp*> inv = snake->get_pu_inventory();
+
+				qDebug() << "Player inventory:";
+				for (auto it = inv.begin(); it != inv.end(); it++) {
+					qDebug("%d ", static_cast<int>((*it)->get_type()));
+				}
+				qDebug();
+				// Emit singal of adding power up to snake's inventory
+				emit powerUp_added();
+
+				// Generate a new power up on map
+				powerUp_instantiation();
+			}
+			else {
+				qDebug() << "[ERROR] Collided power up not found";
+			}
+		}
 
         // Check if snake collide with wall
         if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::BLOCKED) {
@@ -719,15 +1052,15 @@ void game_view::gameTickUpdate() {
         }
 
         // Check if snake (head) collide with ghosts
-        if (game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
+		if (!snake->is_ghost_immunity() && game_map->get_terrainState(snake->get_row(), snake->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
             // Instant death
-            snake->set_health(0);
+			snake->set_health(0);
             qDebug() << "Snake (head) hits a ghost!";
             return;
         }
 
         // Check if snake (body) collide with ghosts
-        for (SnakeBody* currentSnakeBody = snake->get_next(); currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
+		for (SnakeBody* currentSnakeBody = snake->get_next(); !snake->is_ghost_immunity() && currentSnakeBody != nullptr; currentSnakeBody = currentSnakeBody->get_next()) {
             if (game_map->get_terrainState(currentSnakeBody->get_row(), currentSnakeBody->get_col()) == GameMap::TerrainState::GHOST_OCCUPIED) {
                 // Play sound effecct
                 if (hurtSoundEffect->state() == QMediaPlayer::PlayingState) {
@@ -797,6 +1130,30 @@ bool game_view::next_move_ghost_wall_collision(int row, int col, MovingEntity::D
         game_map->get_terrainState(row, col) == GameMap::TerrainState::GHOST_OCCUPIED)
         return true;
     return false;
+}
+
+bool game_view::next_move_snake_collision(int row, int col, MovingEntity::Direction headingDirection) const {
+	switch(headingDirection) {
+		case MovingEntity::Direction::NORTH:row -= 1;	break;
+		case MovingEntity::Direction::EAST:	col += 1;	break;
+		case MovingEntity::Direction::SOUTH:row += 1;	break;
+		case MovingEntity::Direction::WEST:	col -= 1;	break;
+	}
+	if (game_map->get_terrainState(row, col) == GameMap::TerrainState::SNAKE_OCCUPIED)
+		return true;
+	return false;
+}
+
+bool game_view::next_move_ghost_collision(int row, int col, MovingEntity::Direction headingDirection) const {
+	switch(headingDirection) {
+		case MovingEntity::Direction::NORTH:row -= 1;	break;
+		case MovingEntity::Direction::EAST:	col += 1;	break;
+		case MovingEntity::Direction::SOUTH:row += 1;	break;
+		case MovingEntity::Direction::WEST:	col -= 1;	break;
+	}
+	if (game_map->get_terrainState(row, col) == GameMap::TerrainState::GHOST_OCCUPIED)
+		return true;
+	return false;
 }
 
 // TODO: merge into reset_view
