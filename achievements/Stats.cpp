@@ -25,25 +25,25 @@ void Stats::update_snake_length(int length){
 }
 
 int Stats::get_ingame_distance(){
-	qDebug() << "get_stats1 | " << in_game_distance;
+    //qDebug() << "get_stats1 | " << in_game_distance;
     return in_game_distance;
 }
 long Stats::get_survival_time(){
-	qDebug() << "get_stats2 | " << survival_time;
+    //qDebug() << "get_stats2 | " << survival_time;
     return survival_time;
 }
 
 int Stats::get_fruits_eaten(){
-	qDebug() << "get_stats3 | " << fruits_eaten;
+    //qDebug() << "get_stats3 | " << fruits_eaten;
     return fruits_eaten;
 }
 int Stats::get_longest_snake_length(){
-	qDebug() << "get_stats4 | " << longest_snake_length;
+    //qDebug() << "get_stats4 | " << longest_snake_length;
     return longest_snake_length;
 }
 
 int Stats::get_play_count(){
-	qDebug() << "get_stats5 | " << play_count;
+    //qDebug() << "get_stats5 | " << play_count;
     return play_count;
 }
 

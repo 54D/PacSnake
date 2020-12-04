@@ -430,8 +430,6 @@ void game_view::reset_view(){
     gameTickCount = 0;
     timer->stop();
     timeCount = 0;
-    // TODO: 54D: remove all moving snake
-    // scene.clear(); // TODO: this causes issues when reopening the widget.
     ui->graphicsView->removeEventFilter(this);
     disconnect(timer, SIGNAL(timeout()), this, SLOT(update_timer()));
     if(snake!=nullptr){
@@ -472,7 +470,7 @@ void game_view::refresh_powerUp_list(){
             break;
         }
         switch(pos){
-        case 0: // TODO: set to correct image
+        case 0:
             ui->powerUp1Label->setStyleSheet("QLabel { background-image: url(" + path + "); }");
             break;
         case 1:
@@ -546,12 +544,11 @@ void game_view::gameTickUpdate() {
         curr_stats->update_snake_length(snake->get_longest_length());
         curr_stats->update_play_count(curr_stats->get_play_count() + 1);
 
+        //Set the location of the file to the current path
         QString temp = QDir::currentPath() + "/stat.txt";
         Achievement temp2(temp.toStdString());
-        temp2.compare_stat(*curr_stats);
-        temp2.update_achievement_stat();
-        //Achievement temp;
-        //temp
+        temp2.update_achievement_file();
+
         // Play sound effect
         deathSoundEffect->play();
         gameOverSoundEffect->play();
@@ -1209,7 +1206,6 @@ bool game_view::next_move_ghost_collision(int row, int col, MovingEntity::Direct
 	return false;
 }
 
-// TODO: merge into reset_view
 void game_view::remove_game_content() {
     timer->stop();
     timeCount = 0;

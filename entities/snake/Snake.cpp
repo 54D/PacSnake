@@ -201,7 +201,6 @@ int Snake::calculate_level_speed() const {
         return speed;
 
     int newSpeed;
-    // TODO: Change an appropriate value (/ 10?)
 	newSpeed = num_fruits_eaten / 5 + GIVEN_INIT_SPEED;
 
 	// New speed should not exceed the maximum allowed speed
